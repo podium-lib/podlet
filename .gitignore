@@ -1,0 +1,8 @@
+coverage/
+.nyc_output/
+.idea/
+*.iml
+node_modules/
+*.log
+.vscode
+package-lock.json

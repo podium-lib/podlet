@@ -1,0 +1,20 @@
+{
+    "root": true,
+    "extends": [
+        "finn",
+        "finn/node",
+        "finn-prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2017,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        }
+    },
+    "overrides": [{
+        "files": "__tests__/**/*",
+        "env": {
+            "jest": true
+        }
+    }]
+}
