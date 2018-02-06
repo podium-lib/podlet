@@ -4,12 +4,11 @@ const nunjucks = require('nunjucks');
 const express = require('express');
 const Podlet = require('../../');
 
-const PORT = 8000;
-
 const podlet = new Podlet({
     version: `2.0.0-${Date.now().toString()}`,
     name: 'my-app',
 });
+
 const app = express();
 
 nunjucks.configure(
@@ -34,6 +33,6 @@ app.get('/fallback', (req, res, next) => {
 
 app.use('/assets', express.static('public'));
 
-app.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`);
+app.listen(7100, () => {
+    console.log(`http://localhost:7100`);
 });
