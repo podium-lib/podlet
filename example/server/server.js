@@ -20,15 +20,11 @@ app.use(podlet.middleware());
 app.use(podlet.router());
 
 app.get('/', (req, res, next) => {
-    res.status(200).render('content.njk', {
-        body: res.podium.template
-    });
+    res.status(200).render('content.njk');
 });
 
 app.get('/fallback', (req, res, next) => {
-    res.status(200).render('fallback.njk', {
-        body: res.podium.template
-    });
+    res.status(200).render('fallback.njk');
 });
 
 app.use('/assets', express.static('public'));
