@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet",
-  "version": "1.0.0",
+  "version": "2.0.0-beta.1",
   "main": "lib/podlet.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -21,14 +21,18 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "@podium/context": "2.0.0-beta.2",
+    "@podium/schemas": "2.1.0-beta.1",
+    "express": "^4.16.2",
+    "joi": "^13.1.2"
   },
   "devDependencies": {
-    "eslint": "^4.14.0",
+    "eslint": "^4.17.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
     "jest": "^22.0.4",
-    "prettier": "1.9.2"
+    "prettier": "1.10.2",
+    "nunjucks": "^3.0.1"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
