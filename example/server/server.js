@@ -5,10 +5,9 @@ const express = require('express');
 const Podlet = require('../../');
 
 const PORT = 8000;
-const VERSION = `2.0.0-${Date.now().toString()}`;
 
 const podlet = new Podlet({
-    version: VERSION,
+    version: `2.0.0-${Date.now().toString()}`,
     name: 'my-app',
 });
 const app = express();
