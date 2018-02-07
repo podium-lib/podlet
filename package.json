@@ -23,7 +23,6 @@
   "dependencies": {
     "@podium/context": "2.0.0-beta.2",
     "@podium/schemas": "2.1.0-beta.2",
-    "express": "^4.16.2",
     "joi": "^13.1.2"
   },
   "devDependencies": {
@@ -32,7 +31,8 @@
     "eslint-config-finn-prettier": "^3.0.1",
     "jest": "^22.0.4",
     "prettier": "1.10.2",
-    "nunjucks": "^3.0.1"
+    "nunjucks": "^3.0.1",
+    "express": "^4.16.2"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
