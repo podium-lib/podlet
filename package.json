@@ -21,7 +21,7 @@
     "registry": "http://npm.finntech.no/"
   },
   "dependencies": {
-    "@podium/context": "2.0.0-beta.2",
+    "@podium/context": "2.0.0-beta.3",
     "@podium/schemas": "2.1.0-beta.2",
     "joi": "^13.1.2"
   },
@@ -29,7 +29,7 @@
     "eslint": "^4.17.0",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
-    "jest": "^22.0.4",
+    "jest": "^22.2.1",
     "prettier": "1.10.2",
     "nunjucks": "^3.0.1",
     "express": "^4.16.2"

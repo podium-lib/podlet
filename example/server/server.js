@@ -3,7 +3,6 @@
 const nunjucks = require('nunjucks');
 const express = require('express');
 const Podlet = require('../../');
-// const Podlet = require('../extending/custom-podlet.js');
 
 const podlet = new Podlet({
     version: `2.0.0-${Date.now().toString()}`,
