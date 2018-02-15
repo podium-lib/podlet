@@ -30,7 +30,13 @@ app.get(podlet.manifest(), (req, res, next) => {
     res.status(200).json(podlet);
 });
 
-app.use('/assets', express.static('public'));
+app.get('/public', (req, res, next) => {
+    res.status(200).json({
+        status: 'OK'
+    });
+});
+
+app.use('/assets', express.static('assets'));
 podlet.css('/assets/module.css');
 podlet.js('/assets/module.js');
 
