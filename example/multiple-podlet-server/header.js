@@ -6,24 +6,19 @@ const Podlet = require('../../');
 
 const podlet = new Podlet({
     version: `2.0.0-${Date.now().toString()}`,
-    name: 'my-app',
+    name: 'header',
 });
 
-const app = express();
-
-nunjucks.configure(
-    ['./views', podlet.views('njk')],
-    { autoescape: true, express: app }
-);
+const app = express.Router();
 
 app.use(podlet.middleware());
 
 app.get(podlet.content(), (req, res, next) => {
-    res.status(200).render('content.njk');
+    res.status(200).render('header.content.njk');
 });
 
 app.get(podlet.fallback('/fallback'), (req, res, next) => {
-    res.status(200).render('fallback.njk');
+    res.status(200).render('header.content.njk');
 });
 
 app.get(podlet.manifest(), (req, res, next) => {
@@ -37,9 +32,6 @@ app.get('/public', (req, res, next) => {
 });
 
 app.use('/assets', express.static('assets'));
-podlet.css('/assets/module.css');
-podlet.js('/assets/module.js');
+podlet.css('http://localhost:7200/header/assets/header.css');
 
-app.listen(7100, () => {
-    console.log(`http://localhost:7100`);
-});
+module.exports = app;
