@@ -19,7 +19,11 @@ nunjucks.configure(
 app.use(podlet.middleware());
 
 app.get(podlet.content(), (req, res, next) => {
-    res.status(200).render('content.njk');
+    if (res.locals.podium.context.locale === 'nb-NO') {
+        res.status(200).render('content.no.njk');
+        return;
+    }
+    res.status(200).render('content.en.njk');
 });
 
 app.get(podlet.fallback('/fallback'), (req, res, next) => {
