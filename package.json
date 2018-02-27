@@ -8,7 +8,8 @@
     "url": "git@github.schibsted.io:Podium/podlet.git"
   },
   "files": [
-    "lib"
+    "lib",
+    "views"
   ],
   "scripts": {
     "lint": "eslint .",
@@ -26,12 +27,12 @@
     "joi": "^13.1.2"
   },
   "devDependencies": {
-    "eslint": "^4.17.0",
+    "eslint": "^4.18.1",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
-    "jest": "^22.3.0",
-    "prettier": "1.10.2",
-    "nunjucks": "^3.0.1",
+    "jest": "^22.4.2",
+    "prettier": "1.11.0",
+    "nunjucks": "^3.1.2",
     "express": "^4.16.2"
   },
   "jest": {
