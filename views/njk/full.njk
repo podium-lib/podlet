@@ -4,11 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <script src="{{js}}" defer></script>
         <link media="all" rel="stylesheet" type="text/css" href="{{css}}">
         <title>{{name}}</title>
     </head>
     <body>
+        <!-- START: Podlet -->
         {% block content %}{% endblock %}
-        <script src="{{js}}"></script>
+        <!-- END: Podlet -->
     </body>
 </html>
