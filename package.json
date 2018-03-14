@@ -24,6 +24,7 @@
   "dependencies": {
     "@podium/schemas": "2.1.0-beta.3",
     "@podium/utils": "2.0.0-beta.3",
+    "abslog": "^2.0.0",
     "joi": "^13.1.2"
   },
   "devDependencies": {
