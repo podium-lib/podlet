@@ -44,6 +44,8 @@ app.use('/assets', express.static('assets'));
 podlet.css('http://localhost:7100/assets/module.css');
 podlet.js('http://localhost:7100/assets/module.js');
 
+podlet.proxy('/test', 'http://api.finn.no/');
+
 app.listen(7100, () => {
     console.log(`http://localhost:7100`);
 });
