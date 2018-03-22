@@ -14,9 +14,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "jest",
-    "test:verbose": "jest --verbose",
-    "test:coverage": "jest --coverage"
+    "test": "echo no tests"
   },
   "publishConfig": {
     "registry": "http://npm.finntech.no/"
@@ -31,23 +29,8 @@
     "eslint": "^4.18.2",
     "eslint-config-finn": "^3.0.0",
     "eslint-config-finn-prettier": "^3.0.1",
-    "jest": "^22.4.2",
     "prettier": "1.11.1",
     "nunjucks": "^3.1.2",
     "express": "^4.16.3"
-  },
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "test/"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
-      }
-    },
-    "testEnvironment": "node"
   }
 }
