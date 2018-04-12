@@ -41,7 +41,6 @@ app.get(podlet.manifest(), (req, res, next) => {
 });
 
 app.get(podlet.proxy('/public', 'localApi'), (req, res, next) => {
-    console.log(res.locals.podium.context);
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.status(200).json({ say: 'hei verden' });
         return;
