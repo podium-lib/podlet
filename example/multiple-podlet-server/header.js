@@ -27,7 +27,7 @@ app.get(podlet.manifest(), (req, res, next) => {
 
 app.get('/public', (req, res, next) => {
     res.status(200).json({
-        status: 'OK'
+        status: 'OK',
     });
 });
 

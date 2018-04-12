@@ -14,10 +14,10 @@ const podlet = new Podlet({
 
 const app = express();
 
-nunjucks.configure(
-    ['./views', podlet.views('njk')],
-    { autoescape: true, express: app }
-);
+nunjucks.configure(['./views', podlet.views('njk')], {
+    autoescape: true,
+    express: app,
+});
 
 app.use('/header', header);
 app.use('/menu', menu);

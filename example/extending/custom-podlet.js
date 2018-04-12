@@ -15,6 +15,6 @@ const CustomPodlet = class CustomPodlet extends PodiumPodlet {
     get [Symbol.toStringTag]() {
         return 'CustomPodlet';
     }
-}
+};
 
 module.exports = CustomPodlet;
