@@ -132,12 +132,13 @@ app.use(podlet.middleware());
 ```
 
 
-### .content(path)
+### .content(pathname)
 
-Method for defining the mount point for the content of the Podlet.
+Method for defining the pathname for the content of the Podlet.
 
-This method returns the value of `path` and internally keeps track of the value of
-`path` for use when the podlet instance is serialized into manifest content.
+This method returns the value of `pathname` and internally keeps track of the
+value of `pathname` for use when the podlet instance is serialized into manifest
+content.
 
 Examples:
 
@@ -163,12 +164,13 @@ app.get(podlet.content('/foobar'), (req, res) => { ... });
 ```
 
 
-### .fallback(path)
+### .fallback(pathname)
 
-Method for defining the mount point for the fallback of the Podlet.
+Method for defining the pathname for the fallback of the Podlet.
 
-This method returns the value of `path` and internally keeps track of the value of
-`path` for use when the podlet instance is serialized into manifest content.
+This method returns the value of `pathname` and internally keeps track of the
+value of `pathname` for use when the podlet instance is serialized into manifest
+content.
 
 Examples:
 
@@ -194,13 +196,27 @@ app.get(podlet.fallback('/barfoo'), (req, res) => { ... });
 ```
 
 
-### .manifest(path)
 
-Method for defining the mount point for the manifest of the Podlet.
+### .js(pathname)
 
-This method returns the value of the `path` argument and internally keeps track
-of the value of `path` for use when the podlet instance is serialized into
-manifest content.
+
+
+### .css(pathname)
+
+
+
+
+### .proxy(target, name)
+
+
+
+### .manifest(pathname)
+
+Method for defining the pathname for the manifest of the Podlet.
+
+This method returns the value of the `pathname` argument and internally keeps
+track of the value of `pathname` for use when the podlet instance is serialized
+into manifest content.
 
 Examples:
 
@@ -239,4 +255,16 @@ app.get(podlet.manifest(), (req, res) => {
 
 This route will then respond with:
 
-// {"name":"myPodlet","version":"1.0.0","content":"/","fallback":"/fallback","assets":{"js":"","css":""},"proxy":{}}
+```json
+{
+    "name":"myPodlet",
+    "version":"1.0.0",
+    "content":"/",
+    "fallback":"/fallback",
+    "assets": {
+        "js":"",
+        "css":""
+        },
+    "proxy":{}
+}
+```
