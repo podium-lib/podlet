@@ -229,14 +229,49 @@ app.use('/assets', express.static('./app/files/assets'));
 podlet.js('/assets/main.js');
 ```
 
-Set absolute URI to where the javascript file:
+Set absolute URI to where the javascript file is:
 
 ```js
 podlet.js('http://cdn.mysite.com/assets/js/e7rfg76.js');
 ```
 
 
-### .css(pathname)
+### .css(source)
+
+Method for defining the source for the user facing CSS of the Podlet.
+
+Source can be a relative or absolute URI.
+
+This method returns the value of `source` and internally keeps track of the
+value of `source` for use when the podlet instance is serialized into manifest
+content.
+
+Examples:
+
+Serve CSS file on `/assets/main.css`:
+
+```js
+const app = express();
+app.get(podlet.css('/assets/main.css'), (req, res) => {
+    res.status(200).sendFile('./app/assets/main.css', (err) => {
+
+    });
+});
+```
+
+Serve assets from static file server and set relative URI to the CSS file:
+
+```js
+const app = express();
+app.use('/assets', express.static('./app/files/assets'));
+podlet.css('/assets/main.css');
+```
+
+Set absolute URI to where the css file is:
+
+```js
+podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
+```
 
 
 ### .proxy(target, name)
