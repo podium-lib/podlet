@@ -131,6 +131,8 @@ const app = express();
 app.use(podlet.middleware());
 ```
 
+Returns an Array of internal middleware performing the tasks described above.
+
 
 ### .content(pathname)
 
