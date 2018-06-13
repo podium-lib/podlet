@@ -198,18 +198,48 @@ app.get(podlet.fallback('/barfoo'), (req, res) => { ... });
 ```
 
 
+### .js(source)
 
-### .js(pathname)
+Method for defining the source for the user facing javascript of the Podlet.
 
+Source can be a relative or absolute URI.
+
+This method returns the value of `source` and internally keeps track of the
+value of `source` for use when the podlet instance is serialized into manifest
+content.
+
+Examples:
+
+Serve javascript file on `/assets/main.js`:
+
+```js
+const app = express();
+app.get(podlet.js('/assets/main.js'), (req, res) => {
+    res.status(200).sendFile('./app/assets/main.js', (err) => {
+
+    });
+});
+```
+
+Serve assets from static file server and set relative URI to the javascript file:
+
+```js
+const app = express();
+app.use('/assets', express.static('./app/files/assets'));
+podlet.js('/assets/main.js');
+```
+
+Set absolute URI to where the javascript file:
+
+```js
+podlet.js('http://cdn.mysite.com/assets/js/e7rfg76.js');
+```
 
 
 ### .css(pathname)
 
 
-
-
 ### .proxy(target, name)
-
 
 
 ### .manifest(pathname)
