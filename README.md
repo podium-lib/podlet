@@ -19,7 +19,7 @@ Build a simple Podlet server with Express serving content but no fallback:
 ```js
 const nunjucks = require('nunjucks');
 const express = require('express');
-const Podlet = require('../../');
+const Podlet = require('@podium/podlet');
 
 const podlet = new Podlet();
 
@@ -60,8 +60,6 @@ const podlet = new Podlet(options);
 | name           | `null`    | `string` | `true`   |
 | version        | `null`    | `string` | `true`   |
 | logger         | `console` | `string` | `false`  |
-| assetServerUrl | `null`    | `string` | `false`  |
-| assets         | `null`    | `object` | `false`  |
 
 #### name
 
@@ -103,7 +101,8 @@ const podlet = new Podlet({
 ```
 
 Under the hood [abslog](https://github.com/trygve-lie/abslog) is used to
-abstract out logging. Please see abslog for further details.
+abstract out logging. Please see [abslog](https://github.com/trygve-lie/abslog)
+for further details.
 
 
 ## API
@@ -118,7 +117,7 @@ a Podlet to fully work.
 
 It does:
 
- * Parse the context from request from the layout server into a object on the `res.locals` object.
+ * Parse the [context](https://github.schibsted.io/Podium/context) from request from the layout server into a object on the `res.locals` object.
  * Adds a podium version http header to the http response.
  * Provides information on the `res.locals` object if the request are from a layout server or not.
 
