@@ -8,7 +8,7 @@ Module for building a Podlet server.
 ## Installation
 
 ```bash
-$ npm i @podium/podlet --save
+$ npm i @podium/podlet
 ```
 
 
@@ -269,6 +269,108 @@ podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
 
 
 ### .proxy(target, name)
+
+Method for defining proxy targets to be mounted by the [proxy](https://github.schibsted.io/Podium/proxy)
+in the layout server. Its worth mentioning that this will **not** mount a
+proxy in the server the podlet instance is used.
+
+The proxying is intended to be used as a way to expose endpoints in the podlet
+to the public. Normally one would set up proxying when a podlet has endpoints
+which frontend browser code would like to read through xhr. One can also use
+proxying to pass submission of form submits in a browser back to a podlet.
+
+This method returns the value of the `target` argument and internally keeps
+track of the value of `target` for use when the podlet instance is serialized
+into manifest content.
+
+In a podlet its possible to define 4 proxy targets and each target can be a
+relative or absolute URI.
+
+For each podlet, each proxy target must have a unique name.
+
+Examples:
+
+Mount one proxy target `/api` with the name `api`:
+
+```js
+const app = express();
+app.get(podlet.proxy('/api', 'api'), (req, res) => { ... });
+```
+
+Define multiple endpoints on one proxy target `/api` with the name `api`:
+
+```js
+const app = express();
+app.get('/api', (req, res) => { ... });
+app.get('/api/foo', (req, res) => { ... });
+app.post('/api/foo', (req, res) => { ... });
+app.get('/api/bar/:id', (req, res) => { ... });
+
+podlet.proxy('/api', 'api');
+```
+
+Set a remote target by defining an absolute URI:
+
+```js
+podlet.proxy('http://remote.site.com/api/', 'remoteApi');
+```
+
+#### Knowing where proxy endpoints is mounted in a layout
+
+When proxy targets is mounted in a layout server they are namedspaced
+to avoid proxy targets from multiple podlets conflicting with each other.
+
+This can cause a proxy endpoint in a podlet to have different pathnames
+in different layout servers if the podlet is included in multiple layout
+servers.
+
+Where the proxy endpoints is mounted in a layout is available on the
+[`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
+on the [context](https://github.schibsted.io/Podium/context) of each
+request to the podlet.
+
+By combinding [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
+and [`mountOrigin`](https://github.schibsted.io/Podium/context#mount-origin)
+from the [context](https://github.schibsted.io/Podium/context) it is
+possible to build absolute URIs to the proxy endpoints in a podlet.
+
+Example:
+
+This example exposes one http POST endpoint which will be made publicly
+available through a proxy and one endpoint which will expose a form
+that has an absolute URI to the http POST endpoint.
+
+```js
+const app = express();
+const podlet = new Podlet({ ... });
+
+// this give us, among others, the context
+app.use(podlet.middleware());
+
+// route recieving the submitted form
+// made public by proxying it in
+app.post(podlet.proxy('/api', 'api'), (req, res) => {
+
+});
+
+// content route serving the content with the form
+app.get(podlet.content('/'), (req, res) => {
+    const ctx = res.locals.podium.context;
+    res.status(200).send(`
+        <form action="${ctx.mountOrigin}${ctx.publicPathname}/api" method="post">
+            [ ... ]
+        </form>
+    `)
+});
+
+// route serving the manifest
+app.get(podlet.manifest(), (req, res) => {
+    res.status(200).json(podlet);
+});
+
+app.listen(7100);
+```
+
 
 
 ### .manifest(pathname)
