@@ -59,7 +59,7 @@ const podlet = new Podlet(options);
 | -------------- | --------- | -------- | -------- |
 | name           | `null`    | `string` | `true`   |
 | version        | `null`    | `string` | `true`   |
-| logger         | `console` | `string` | `false`  |
+| logger         | `console` | `object` | `false`  |
 
 #### name
 
@@ -271,12 +271,12 @@ podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
 ### .proxy(target, name)
 
 Method for defining proxy targets to be mounted by the [proxy](https://github.schibsted.io/Podium/proxy)
-in the layout server. Its worth mentioning that this will **not** mount a
+in the layout server. It's worth mentioning that this will **not** mount a
 proxy in the server the podlet instance is used.
 
 The proxying is intended to be used as a way to expose endpoints in the podlet
 to the public. Normally one would set up proxying when a podlet has endpoints
-which frontend browser code would like to read through xhr. One can also use
+frontend browser code would like to fetch or interact with. One can also use
 proxying to pass submission of form submits in a browser back to a podlet.
 
 This method returns the value of the `target` argument and internally keeps
@@ -317,7 +317,7 @@ podlet.proxy('http://remote.site.com/api/', 'remoteApi');
 
 #### Knowing where proxy endpoints is mounted in a layout
 
-When proxy targets is mounted in a layout server they are namedspaced
+When proxy targets is mounted in a layout server they are namespaced
 to avoid proxy targets from multiple podlets conflicting with each other.
 
 This can cause a proxy endpoint in a podlet to have different pathnames
@@ -329,7 +329,7 @@ Where the proxy endpoints is mounted in a layout is available on the
 on the [context](https://github.schibsted.io/Podium/context) of each
 request to the podlet.
 
-By combinding [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
+By combining [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
 and [`mountOrigin`](https://github.schibsted.io/Podium/context#mount-origin)
 from the [context](https://github.schibsted.io/Podium/context) it is
 possible to build absolute URIs to the proxy endpoints in a podlet.
