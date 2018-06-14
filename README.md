@@ -133,67 +133,62 @@ app.use(podlet.middleware());
 Returns an Array of internal middleware performing the tasks described above.
 
 
-### .content(pathname)
+### .content(source)
 
-Method for defining the pathname for the content of the Podlet.
+Method for defining the source for the content of the Podlet.
 
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
+Source can be a relative or absolute URI.
+
+This method returns the value of `source` and internally keeps track of the
+value of `source` for use when the podlet instance is serialized into manifest
 content.
 
 Examples:
 
-Mounts the content on the default which is `/content`:
+Mounts the content on the default (which is `/`):
 
 ```js
 const app = express();
 app.get(podlet.content(), (req, res) => { ... });
 ```
 
-Mounts the content on `/`:
+Mounts the content on `/content`:
 
 ```js
 const app = express();
-app.get(podlet.content('/'), (req, res) => { ... });
+app.get(podlet.content('/content'), (req, res) => { ... });
 ```
 
-Mounts the content on `/foobar`:
+Set absolute URI to where the content is:
 
 ```js
-const app = express();
-app.get(podlet.content('/foobar'), (req, res) => { ... });
+podlet.content('http://sub.mysite.com/content/index.html');
 ```
 
 
-### .fallback(pathname)
+### .fallback(source)
 
-Method for defining the pathname for the fallback of the Podlet.
+Method for defining the source for the fallback of the Podlet.
 
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
+Source can be a relative or absolute URI.
+
+This method returns the value of `source` and internally keeps track of the
+value of `source` for use when the podlet instance is serialized into manifest
 content.
 
 Examples:
 
-Mounts the fallback on the default which is `/fallback`:
+Mounts the fallback on `/fallback`:
 
 ```js
 const app = express();
-app.get(podlet.fallback(), (req, res) => { ... });
+app.get(podlet.fallback('/fallback'), (req, res) => { ... });
 ```
 
-Mounts the fallback on `/`:
+Set absolute URI to where the content is:
 
 ```js
-const app = express();
-app.get(podlet.fallback('/'), (req, res) => { ... });
-```
-
-Mounts the fallback on `/foobar`:
-
-```js
-const app = express();
-app.get(podlet.fallback('/barfoo'), (req, res) => { ... });
+podlet.fallback('http://sub.mysite.com/fallback.html');
 ```
 
 
