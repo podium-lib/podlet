@@ -119,7 +119,7 @@ It does:
 
  * Parse the [context](https://github.schibsted.io/Podium/context) from a request from the layout server into an object on the `res.locals.podium.context` object.
  * Adds a podium version http header to the http response.
- * Provides information on the `res.locals.podium.context` object about whether the request is from a layout server or not.
+ * Provides information on `res.locals.podium.template` about whether the request is from a layout server or not.
 
 This middleware should be mounted before defining any routes.
 
@@ -135,7 +135,8 @@ Returns an Array of internal middleware performing the tasks described above.
 
 ### .content(source)
 
-Method for defining the source for the content of the Podlet.
+Method for defining the source for the content of the Podlet. This is where one
+will serve the HTML of a Podlet and do all the logic which makes your Podlet.
 
 Source can be a relative or absolute URI.
 
@@ -157,6 +158,17 @@ Mounts the content on `/content`:
 ```js
 const app = express();
 app.get(podlet.content('/content'), (req, res) => { ... });
+```
+
+Mounts the content on `/content` and use multiple sub routes to take
+different URI parameters:
+
+```js
+const app = express();
+app.get('/content', (req, res) => { ... });
+app.get('/content/info', (req, res) => { ... });
+app.get('/content/info/:id', (req, res) => { ... });
+podlet.content('/content')
 ```
 
 Set absolute URI to where the content is:
