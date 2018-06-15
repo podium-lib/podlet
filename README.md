@@ -107,19 +107,19 @@ for further details.
 
 ## API
 
-The Podlet instance have the following API:
+The Podlet instance has the following API:
 
 
 ### .middleware()
 
-A connect compatible middleware which take care of multiple operations needed for
+A connect compatible middleware which takes care of multiple operations needed for
 a Podlet to fully work.
 
 It does:
 
- * Parse the [context](https://github.schibsted.io/Podium/context) from request from the layout server into a object on the `res.locals` object.
+ * Parse the [context](https://github.schibsted.io/Podium/context) from a request from the layout server into an object on the `res.locals.podium.context` object.
  * Adds a podium version http header to the http response.
- * Provides information on the `res.locals` object if the request are from a layout server or not.
+ * Provides information on the `res.locals.podium.context` object about whether the request is from a layout server or not.
 
 This middleware should be mounted before defining any routes.
 
@@ -215,7 +215,7 @@ app.get(podlet.js('/assets/main.js'), (req, res) => {
 });
 ```
 
-Serve assets from static file server and set relative URI to the javascript file:
+Serve assets from a static file server and set relative URI to the javascript file:
 
 ```js
 const app = express();
@@ -253,7 +253,7 @@ app.get(podlet.css('/assets/main.css'), (req, res) => {
 });
 ```
 
-Serve assets from static file server and set relative URI to the CSS file:
+Serve assets a from static file server and set relative URI to the CSS file:
 
 ```js
 const app = express();
@@ -272,18 +272,18 @@ podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
 
 Method for defining proxy targets to be mounted by the [proxy](https://github.schibsted.io/Podium/proxy)
 in the layout server. It's worth mentioning that this will **not** mount a
-proxy in the server the podlet instance is used.
+proxy in the server where the podlet instance is used.
 
-The proxying is intended to be used as a way to expose endpoints in the podlet
-to the public. Normally one would set up proxying when a podlet has endpoints
-frontend browser code would like to fetch or interact with. One can also use
-proxying to pass submission of form submits in a browser back to a podlet.
+Proxying is intended to be used as a way to make podlet endpoints public.
+A common use case for this is creating endpoints for client side code to
+interact with (ajax requests from the browser). One might also make use
+of proxying to pass form submissions from the browser back to the podlet.
 
 This method returns the value of the `target` argument and internally keeps
 track of the value of `target` for use when the podlet instance is serialized
 into manifest content.
 
-In a podlet its possible to define 4 proxy targets and each target can be a
+In a podlet it's possible to define 4 proxy targets and each target can be a
 relative or absolute URI.
 
 For each podlet, each proxy target must have a unique name.
@@ -315,9 +315,9 @@ Set a remote target by defining an absolute URI:
 podlet.proxy('http://remote.site.com/api/', 'remoteApi');
 ```
 
-#### Knowing where proxy endpoints is mounted in a layout
+#### Knowing where proxy endpoints are mounted in a layout
 
-When proxy targets is mounted in a layout server they are namespaced
+When proxy targets are mounted in a layout server they are namespaced
 to avoid proxy targets from multiple podlets conflicting with each other.
 
 This can cause a proxy endpoint in a podlet to have different pathnames
@@ -326,7 +326,7 @@ servers.
 
 Where the proxy endpoints is mounted in a layout is available on the
 [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
-on the [context](https://github.schibsted.io/Podium/context) of each
+of the [context](https://github.schibsted.io/Podium/context) of each
 request to the podlet.
 
 By combining [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
@@ -404,8 +404,9 @@ const app = express();
 app.get(podlet.manifest('/manifest'), (req, res) => { ... });
 ```
 
-Within the route for the manifest one will normally serve the manifest.
-This can be achieved by simply serializing the Podlet object instance.
+Podium expects podlet manifest routes to return a JSON document describing
+the podlet. This can be achieved by simply serializing the Podlet object
+instance.
 
 Example:
 
