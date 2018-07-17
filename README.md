@@ -21,7 +21,10 @@ const nunjucks = require('nunjucks');
 const express = require('express');
 const Podlet = require('@podium/podlet');
 
-const podlet = new Podlet();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.3.1',
+});
 
 const app = express();
 
