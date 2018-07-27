@@ -10,6 +10,12 @@ const app = express();
 const podlet = new Podlet({
     version: `2.0.0-${Date.now().toString()}`,
     name: 'podletContent',
+    logger: console,
+    defaults: true,
+});
+
+podlet.defaults({
+    locale: 'nb-NO'
 });
 
 const proxy = new Proxy({
