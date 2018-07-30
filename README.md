@@ -147,8 +147,8 @@ following structure:
     deviceType: 'desktop',
     requestedBy: 'the_name_of_the_podlet',
     mountOrigin: 'http://localhost:port',
-    mountPathname: '/defined/by/content',
-    publicPathname: '/defined/by/content',
+    mountPathname: '/same/as/manifest/method',
+    publicPathname: '/same/as/manifest/method',
 }
 ```
 
