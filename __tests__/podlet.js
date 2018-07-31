@@ -68,6 +68,355 @@ class FakeServer {
 }
 
 /**
+ * Constructor
+ */
+
+test('Podlet() - instantiate new podlet object - should create an object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    expect(podlet).toBeInstanceOf(Podlet);
+});
+
+test('Podlet() - object tag - should be PodiumPodlet', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    expect(Object.prototype.toString.call(podlet)).toEqual(
+        '[object PodiumPodlet]'
+    );
+});
+
+test('Podlet() - no value given to "name" argument - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        const podlet = new Podlet({ version: 'v1.0.0' }); // eslint-disable-line no-unused-vars
+    }).toThrowError(
+        'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.'
+    );
+});
+
+test('Podlet() - invalid value given to "name" argument - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        const podlet = new Podlet({ name: 'foo bar', version: 'v1.0.0' }); // eslint-disable-line no-unused-vars
+    }).toThrowError(
+        'The value, "foo bar", for the required argument "name" on the Podlet constructor is not defined or not valid.'
+    );
+});
+
+test('Podlet() - no value given to "version" argument - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        const podlet = new Podlet({ name: 'foo' }); // eslint-disable-line no-unused-vars
+    }).toThrowError(
+        'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.'
+    );
+});
+
+test('Podlet() - invalid value given to "version" argument - should throw', () => {
+    expect.hasAssertions();
+    expect(() => {
+        const podlet = new Podlet({ name: 'foo', version: true }); // eslint-disable-line no-unused-vars
+    }).toThrowError(
+        'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.'
+    );
+});
+
+test('Podlet() - serialize default values - should set "name" to same as on constructor', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.name).toEqual('foo');
+});
+
+test('Podlet() - serialize default values - should set "version" to same as on constructor', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.version).toEqual('v1.0.0');
+});
+
+test('Podlet() - serialize default values - should set "content" to "/"', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.content).toEqual('/');
+});
+
+test('Podlet() - serialize default values - should set "fallback" to empty String', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.fallback).toEqual('');
+});
+
+test('Podlet() - serialize default values - should set "assets.js" to empty String', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.js).toEqual('');
+});
+
+test('Podlet() - serialize default values - should set "assets.css" to empty String', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.css).toEqual('');
+});
+
+test('Podlet() - serialize default values - should set "proxy" to empty Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.proxy).toEqual({});
+});
+
+/**
+ * .manifest()
+ */
+
+test('.manifest() - call method with no arguments - should return default value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.manifest();
+    expect(result).toEqual('/manifest.json');
+});
+
+test('.manifest() - set legal value on "path" argument - should return set value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.manifest('/foo/bar');
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.manifest() - call method with "path" argument, then call it a second time with no argument - should return first set value on second call', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.manifest('/foo/bar');
+    const result = podlet.manifest();
+    expect(result).toEqual('/foo/bar');
+});
+
+/**
+ * .content()
+ */
+
+test('.content() - call method with no arguments - should return default value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.content();
+    expect(result).toEqual('/');
+});
+
+test('.content() - set legal value on "path" argument - should return set value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.content('/foo/bar');
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.content() - set legal relative value on "path" argument - should set "content" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.content('/foo/bar');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.content).toEqual('/foo/bar');
+});
+
+test('.content() - set legal absolute value on "path" argument - should set "content" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.content('http://somewhere.remote.com');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.content).toEqual('http://somewhere.remote.com');
+});
+
+test('.content() - set illegal value on "path" argument - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+
+    expect(() => {
+        podlet.content('/foo / bar');
+    }).toThrowError('The value for "path", "/foo / bar", is not valid');
+});
+
+test('.content() - call method with "path" argument, then call it a second time with no argument - should return first set value on second call', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.content('/foo/bar');
+    const result = podlet.content();
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.content() - call method twice with different "path" arguments - should set "content" to last set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.content('/foo/bar');
+    podlet.content('/bar/foo');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.content).toEqual('/bar/foo');
+});
+
+/**
+ * .fallback()
+ */
+
+test('.fallback() - call method with no arguments - should return default value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.fallback();
+    expect(result).toEqual('');
+});
+
+test('.fallback() - set legal value on "path" argument - should return set value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.fallback('/foo/bar');
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.fallback() - set legal relative value on "path" argument - should set "fallback" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.fallback('/foo/bar');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.fallback).toEqual('/foo/bar');
+});
+
+test('.fallback() - set legal absolute value on "path" argument - should set "fallback" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.fallback('http://somewhere.remote.com');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.fallback).toEqual('http://somewhere.remote.com');
+});
+
+test('.fallback() - set illegal value on "path" argument - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+
+    expect(() => {
+        podlet.fallback('/foo / bar');
+    }).toThrowError('The value for "path", "/foo / bar", is not valid');
+});
+
+test('.fallback() - call method with "path" argument, then call it a second time with no argument - should return first set value on second call', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.fallback('/foo/bar');
+    const result = podlet.fallback();
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.fallback() - call method twice with different "path" arguments - should set "fallback" to last set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.fallback('/foo/bar');
+    podlet.fallback('/bar/foo');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.fallback).toEqual('/bar/foo');
+});
+
+/**
+ * .css()
+ */
+
+test('.css() - call method with no arguments - should return default value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.css();
+    expect(result).toEqual('');
+});
+
+test('.css() - set legal value on "path" argument - should return set value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.css('/foo/bar');
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.css() - set legal relative value on "path" argument - should set "css" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.css('/foo/bar');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.css).toEqual('/foo/bar');
+});
+
+test('.css() - set legal absolute value on "path" argument - should set "css" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.css('http://somewhere.remote.com');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.css).toEqual('http://somewhere.remote.com');
+});
+
+test('.css() - set illegal value on "path" argument - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+
+    expect(() => {
+        podlet.css('/foo / bar');
+    }).toThrowError('The value for "path", "/foo / bar", is not valid');
+});
+
+test('.css() - call method with "path" argument, then call it a second time with no argument - should return first set value on second call', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.css('/foo/bar');
+    const result = podlet.css();
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.css() - call method twice with different "path" arguments - should set "css" to last set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.css('/foo/bar');
+    podlet.css('/bar/foo');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.css).toEqual('/bar/foo');
+});
+
+/**
+ * .js()
+ */
+
+test('.js() - call method with no arguments - should return default value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.js();
+    expect(result).toEqual('');
+});
+
+test('.js() - set legal value on "path" argument - should return set value', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.js('/foo/bar');
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.js() - set legal relative value on "path" argument - should set "js" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.js('/foo/bar');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.js).toEqual('/foo/bar');
+});
+
+test('.js() - set legal absolute value on "path" argument - should set "js" to set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.js('http://somewhere.remote.com');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.js).toEqual('http://somewhere.remote.com');
+});
+
+test('.js() - set illegal value on "path" argument - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+
+    expect(() => {
+        podlet.js('/foo / bar');
+    }).toThrowError('The value for "path", "/foo / bar", is not valid');
+});
+
+test('.js() - call method with "path" argument, then call it a second time with no argument - should return first set value on second call', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.js('/foo/bar');
+    const result = podlet.js();
+    expect(result).toEqual('/foo/bar');
+});
+
+test('.js() - call method twice with different "path" arguments - should set "js" to last set value when serializing Object', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    podlet.js('/foo/bar');
+    podlet.js('/bar/foo');
+    const result = JSON.parse(JSON.stringify(podlet));
+    expect(result.assets.js).toEqual('/bar/foo');
+});
+
+/**
+ * .middleware()
+ */
+
+test('.middleware() - call method - should return an Array with 4 functions', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    const result = podlet.middleware();
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toEqual(4);
+    expect(typeof result[0]).toBe('function');
+    expect(typeof result[1]).toBe('function');
+    expect(typeof result[2]).toBe('function');
+    expect(typeof result[3]).toBe('function');
+});
+
+
+/**
  * .defaults()
  */
 
