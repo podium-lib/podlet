@@ -115,7 +115,7 @@ Turns on / off appending a default context `res.locals.podium` on the response.
 When a layout server requests a podlet, the default context will be overridden
 by the context on the requests from the layout server. Iow; appending the
 default context in production does not have much value. The default context
-is mainly usefull when doing local development.
+is mainly useful when doing local development.
 
 Example of turning on the default context only in development mode:
 
@@ -125,7 +125,7 @@ const podlet = new Podlet({
 });
 ```
 
-The default context can be altered by the `.defaults()` method.
+The default context can be altered by calling the `.defaults()` method.
 
 
 ## API
@@ -152,8 +152,8 @@ following structure:
 }
 ```
 
-Overriding the default context can be done by providing an object to the
-`context` argument which override the key / values one want to override.
+The default context can be overridden by passing an object with the
+desired key / values to override.
 
 Example of overriding `deviceType`:
 
@@ -168,9 +168,8 @@ podlet.defaults({
 });
 ```
 
-It also might be that the request from a layout contain context values not
-defined by podium. One can add these to the default by just adding them in
-the same way as one are overriding the built in context values.
+Additional values not defined by Podium can also be appended to the
+default context in the same way.
 
 Example of adding a context value:
 
@@ -185,8 +184,8 @@ podlet.defaults({
 });
 ```
 
-Do note that the default context will be appended to the response only when
-the argument `defaults` on the constructor is set to `true`.
+N.B. The default context will only be appended to the response when the
+constructor argument `defaults` is set to `true`.
 
 ### .middleware()
 
