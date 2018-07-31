@@ -58,11 +58,12 @@ const podlet = new Podlet(options);
 
 ### options
 
-| option         | default   | type     | required |
-| -------------- | --------- | -------- | -------- |
-| name           | `null`    | `string` | `true`   |
-| version        | `null`    | `string` | `true`   |
-| logger         | `console` | `object` | `false`  |
+| option         | default   | type      | required |
+| -------------- | --------- | --------- | -------- |
+| name           | `null`    | `string`  | `true`   |
+| version        | `null`    | `string`  | `true`   |
+| logger         | `console` | `object`  | `false`  |
+| defaults       | `false`   | `boolean` | `false`  |
 
 #### name
 
@@ -82,7 +83,7 @@ Current version of the podlet, it is important that this value be updated when a
 new version of the podlet is deployed as the page (layout) that the podlet is
 displayed in uses this value to know whether to refresh the podlet or not.
 
-Example
+Example:
 
 ```js
 const podlet = new Podlet({
@@ -95,7 +96,7 @@ const podlet = new Podlet({
 Any log4j compatible logger can be passed in and will be used for logging.
 Console is also supported for easy test / development.
 
-Example
+Example:
 
 ```js
 const podlet = new Podlet({
@@ -107,11 +108,84 @@ Under the hood [abslog](https://github.com/trygve-lie/abslog) is used to
 abstract out logging. Please see [abslog](https://github.com/trygve-lie/abslog)
 for further details.
 
+#### defaults
+
+Turns on / off appending a default context `res.locals.podium` on the response.
+
+When a layout server requests a podlet, the default context will be overridden
+by the context on the requests from the layout server. Iow; appending the
+default context in production does not have much value. The default context
+is mainly useful when doing local development.
+
+Example of turning on the default context only in development mode:
+
+```js
+const podlet = new Podlet({
+    defaults: process.env.NODE_ENV !== 'production';
+});
+```
+
+The default context can be altered by calling the `.defaults()` method.
+
 
 ## API
 
 The Podlet instance has the following API:
 
+### .defaults(context)
+
+Method for altering the default context set on `res.locals.podium` on the
+response.
+
+The default context set on `res.locals.podium` on the response has the
+following structure:
+
+```js
+{
+    debug: 'false',
+    locale: 'en-EN',
+    deviceType: 'desktop',
+    requestedBy: 'the_name_of_the_podlet',
+    mountOrigin: 'http://localhost:port',
+    mountPathname: '/same/as/manifest/method',
+    publicPathname: '/same/as/manifest/method',
+}
+```
+
+The default context can be overridden by passing an object with the
+desired key / values to override.
+
+Example of overriding `deviceType`:
+
+```js
+const podlet = new Podlet({
+    name: 'foo',
+    version: '1.0.0',
+});
+
+podlet.defaults({
+    deviceType: 'mobile',
+});
+```
+
+Additional values not defined by Podium can also be appended to the
+default context in the same way.
+
+Example of adding a context value:
+
+```js
+const podlet = new Podlet({
+    name: 'foo',
+    version: '1.0.0',
+});
+
+podlet.defaults({
+    token: '9fc498984f3ewi',
+});
+```
+
+N.B. The default context will only be appended to the response when the
+constructor argument `defaults` is set to `true`.
 
 ### .middleware()
 
