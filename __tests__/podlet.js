@@ -49,9 +49,9 @@ class FakeServer {
 
     get() {
         return new Promise((resolve, reject) => {
-            http.get(this.address, (res) => {
+            http.get(this.address, res => {
                 const chunks = [];
-                res.on('data', (chunk) => {
+                res.on('data', chunk => {
                     chunks.push(chunk);
                 });
                 res.on('end', () => {
@@ -60,13 +60,12 @@ class FakeServer {
                         locals: JSON.parse(chunks.join('')),
                     });
                 });
-            }).on('error', (e) => {
+            }).on('error', error => {
                 reject(error);
             });
         });
     }
 }
-
 
 /**
  * .defaults()
@@ -103,15 +102,19 @@ test('.defaults() - constructor argument "defaults" is not set - should not appe
 });
 
 test('.defaults() - constructor argument "defaults" is to "true" - should append a default context to "res.locals"', async () => {
-    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', defaults: true });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        defaults: true,
+    });
     const server = new FakeServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
-    expect(result.locals.podium.context.debug).toEqual("false");
-    expect(result.locals.podium.context.locale).toEqual("en-EN");
-    expect(result.locals.podium.context.deviceType).toEqual("desktop");
-    expect(result.locals.podium.context.requestedBy).toEqual("foo");
+    expect(result.locals.podium.context.debug).toEqual('false');
+    expect(result.locals.podium.context.locale).toEqual('en-EN');
+    expect(result.locals.podium.context.deviceType).toEqual('desktop');
+    expect(result.locals.podium.context.requestedBy).toEqual('foo');
     expect(result.locals.podium.context.mountOrigin).toEqual(address);
     expect(result.locals.podium.context.mountPathname).toEqual('/');
     expect(result.locals.podium.context.publicPathname).toEqual('/');
@@ -120,18 +123,22 @@ test('.defaults() - constructor argument "defaults" is to "true" - should append
 });
 
 test('.defaults() - set "context" argument where a key override one existing context value - should override default context value but keep rest untouched', async () => {
-    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', defaults: true });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        defaults: true,
+    });
     podlet.defaults({
-        locale: "no-NO",
-    })
+        locale: 'no-NO',
+    });
     const server = new FakeServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
-    expect(result.locals.podium.context.debug).toEqual("false");
-    expect(result.locals.podium.context.locale).toEqual("no-NO");
-    expect(result.locals.podium.context.deviceType).toEqual("desktop");
-    expect(result.locals.podium.context.requestedBy).toEqual("foo");
+    expect(result.locals.podium.context.debug).toEqual('false');
+    expect(result.locals.podium.context.locale).toEqual('no-NO');
+    expect(result.locals.podium.context.deviceType).toEqual('desktop');
+    expect(result.locals.podium.context.requestedBy).toEqual('foo');
     expect(result.locals.podium.context.mountOrigin).toEqual(address);
     expect(result.locals.podium.context.mountPathname).toEqual('/');
     expect(result.locals.podium.context.publicPathname).toEqual('/');
@@ -140,19 +147,23 @@ test('.defaults() - set "context" argument where a key override one existing con
 });
 
 test('.defaults() - set "context" argument where a key is not a default context value - should append key and value to default context', async () => {
-    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', defaults: true });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        defaults: true,
+    });
     podlet.defaults({
-        foo: "bar",
-    })
+        foo: 'bar',
+    });
     const server = new FakeServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
-    expect(result.locals.podium.context.foo).toEqual("bar");
-    expect(result.locals.podium.context.debug).toEqual("false");
-    expect(result.locals.podium.context.locale).toEqual("en-EN");
-    expect(result.locals.podium.context.deviceType).toEqual("desktop");
-    expect(result.locals.podium.context.requestedBy).toEqual("foo");
+    expect(result.locals.podium.context.foo).toEqual('bar');
+    expect(result.locals.podium.context.debug).toEqual('false');
+    expect(result.locals.podium.context.locale).toEqual('en-EN');
+    expect(result.locals.podium.context.deviceType).toEqual('desktop');
+    expect(result.locals.podium.context.requestedBy).toEqual('foo');
     expect(result.locals.podium.context.mountOrigin).toEqual(address);
     expect(result.locals.podium.context.mountPathname).toEqual('/');
     expect(result.locals.podium.context.publicPathname).toEqual('/');

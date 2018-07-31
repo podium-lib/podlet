@@ -15,7 +15,7 @@ const podlet = new Podlet({
 });
 
 podlet.defaults({
-    locale: 'nb-NO'
+    locale: 'nb-NO',
 });
 
 const proxy = new Proxy({
