@@ -1,8 +1,10 @@
 'use strict';
 
+const Metrics = require('@podium/metrics');
 const express = require('express');
 const Podlet = require('../');
 const http = require('http');
+const url = require('url');
 
 /**
  * Fake server utility
@@ -47,9 +49,12 @@ class FakeServer {
         });
     }
 
-    get() {
+    get(options = {}) {
         return new Promise((resolve, reject) => {
-            http.get(this.address, res => {
+            const opts = url.parse(this.address);
+            Object.assign(opts, options);
+
+            http.get(opts, res => {
                 const chunks = [];
                 res.on('data', chunk => {
                     chunks.push(chunk);
@@ -415,6 +420,51 @@ test('.middleware() - call method - should return an Array with 4 functions', ()
     expect(typeof result[3]).toBe('function');
 });
 
+test('.middleware() - "user-agent" on request is not set to "@podium/client" - should append "full" template value on "res.locals.podium.template"', async () => {
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+    });
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.locals.podium.template).toEqual('full.njk');
+
+    await server.close();
+});
+
+test('.middleware() - "user-agent" on request is set to "@podium/client" - should append "slim" template value on "res.locals.podium.template"', async () => {
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+    });
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get({
+        headers: {
+            'user-agent': '@podium/client'
+        }
+    });
+    expect(result.locals.podium.template).toEqual('slim.njk');
+
+    await server.close();
+});
+
+test('.middleware() - valid "version" value is set on constructor - should append "podlet-version" http header with the given version value', async () => {
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+    });
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.headers['podlet-version']).toEqual('v1.0.0');
+
+    await server.close();
+});
 
 /**
  * .defaults()
@@ -518,4 +568,20 @@ test('.defaults() - set "context" argument where a key is not a default context 
     expect(result.locals.podium.context.publicPathname).toEqual('/');
 
     await server.close();
+});
+
+/**
+ * .metrics
+ */
+
+test('.metrics - assigned object to property - should be instance of @podium/metrics', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    expect(podlet.metrics).toBeInstanceOf(Metrics);
+});
+
+test('.metrics - assigned object to property - should have object tag with "PodiumMetrics" as name', () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' });
+    expect(Object.prototype.toString.call(podlet.metrics)).toEqual(
+        '[object PodiumMetrics]'
+    );
 });
