@@ -444,8 +444,8 @@ test('.middleware() - "user-agent" on request is set to "@podium/client" - shoul
 
     const result = await server.get({
         headers: {
-            'user-agent': '@podium/client'
-        }
+            'user-agent': '@podium/client',
+        },
     });
     expect(result.locals.podium.template).toEqual('slim.njk');
 
