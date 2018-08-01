@@ -15,13 +15,13 @@ $ npm i @podium/podlet
 Building a simple Podlet server using [Express](https://expressjs.com/)
 
 ```js
-const express = require("express");
-const Podlet = require("@podium/podlet");
+const express = require('express');
+const Podlet = require('@podium/podlet');
 
 // create a new podlet instance
 const podlet = new Podlet({
-    name: "myPodlet",
-    version: "1.3.1"
+    name: 'myPodlet',
+    version: '1.3.1'
 });
 
 // create a new express app instance
@@ -153,12 +153,12 @@ _Example of overriding `deviceType`:_
 
 ```js
 const podlet = new Podlet({
-    name: "foo",
-    version: "1.0.0"
+    name: 'foo',
+    version: '1.0.0'
 });
 
 podlet.defaults({
-    deviceType: "mobile"
+    deviceType: 'mobile'
 });
 ```
 
@@ -169,12 +169,12 @@ _Example of adding a context value:_
 
 ```js
 const podlet = new Podlet({
-    name: "foo",
-    version: "1.0.0"
+    name: 'foo',
+    version: '1.0.0'
 });
 
 podlet.defaults({
-    token: "9fc498984f3ewi"
+    token: '9fc498984f3ewi'
 });
 ```
 
@@ -305,7 +305,7 @@ podlet.content('/content')
 Sets an absolute URI to where the content is:
 
 ```js
-podlet.content("http://sub.mysite.com/content/index.html");
+podlet.content('http://sub.mysite.com/content/index.html');
 ```
 
 ### .fallback(pathname)
@@ -330,7 +330,7 @@ app.get(podlet.fallback('/fallback'), (req, res) => { ... });
 Sets an absolute URI to where the content is:
 
 ```js
-podlet.fallback("http://sub.mysite.com/fallback.html");
+podlet.fallback('http://sub.mysite.com/fallback.html');
 ```
 
 ### .js(pathname)
@@ -347,8 +347,8 @@ Serve a javascript file at `/assets/main.js`:
 
 ```js
 const app = express();
-app.get(podlet.js("/assets/main.js"), (req, res) => {
-    res.status(200).sendFile("./app/assets/main.js", err => {});
+app.get(podlet.js('/assets/main.js'), (req, res) => {
+    res.status(200).sendFile('./app/assets/main.js', err => {});
 });
 ```
 
@@ -356,14 +356,14 @@ Serve assets from a static file server and set a relative URI to the javascript 
 
 ```js
 const app = express();
-app.use("/assets", express.static("./app/files/assets"));
-podlet.js("/assets/main.js");
+app.use('/assets', express.static('./app/files/assets'));
+podlet.js('/assets/main.js');
 ```
 
 Set an absolute URI to where the javascript file is located:
 
 ```js
-podlet.js("http://cdn.mysite.com/assets/js/e7rfg76.js");
+podlet.js('http://cdn.mysite.com/assets/js/e7rfg76.js');
 ```
 
 ### .css(pathname)
@@ -380,8 +380,8 @@ Serve a CSS file at `/assets/main.css`:
 
 ```js
 const app = express();
-app.get(podlet.css("/assets/main.css"), (req, res) => {
-    res.status(200).sendFile("./app/assets/main.css", err => {});
+app.get(podlet.css('/assets/main.css'), (req, res) => {
+    res.status(200).sendFile('./app/assets/main.css', err => {});
 });
 ```
 
@@ -389,14 +389,14 @@ Serve assets from a static file server and set a relative URI to the CSS file:
 
 ```js
 const app = express();
-app.use("/assets", express.static("./app/files/assets"));
-podlet.css("/assets/main.css");
+app.use('/assets', express.static('./app/files/assets'));
+podlet.css('/assets/main.css');
 ```
 
 Set an absolute URI to where the CSS file is located:
 
 ```js
-podlet.css("http://cdn.mysite.com/assets/js/mn3sa898.css");
+podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
 ```
 
 ### .proxy(target, name)
@@ -443,7 +443,7 @@ podlet.proxy('/api', 'api');
 Sets a remote target by defining an absolute URI:
 
 ```js
-podlet.proxy("http://remote.site.com/api/", "remoteApi");
+podlet.proxy('http://remote.site.com/api/', 'remoteApi');
 ```
 
 #### Knowing where proxy endpoints are mounted in a layout
