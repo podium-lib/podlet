@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis.schibsted.io/Podium/podlet.svg?token=qt273uGfEz64UyWuNHJ1&branch=master)](https://travis.schibsted.io/Podium/podlet)
 
-Module for building a Podlet server.
+Module for building a podlet server.
 
 ## Installation
 
@@ -12,7 +12,7 @@ $ npm i @podium/podlet
 
 ## Getting started
 
-Building a simple Podlet server using [Express](https://expressjs.com/)
+Building a simple podlet server using [Express](https://expressjs.com/)
 
 ```js
 const express = require('express');
@@ -21,7 +21,7 @@ const Podlet = require('@podium/podlet');
 // create a new podlet instance
 const podlet = new Podlet({
     name: 'myPodlet',
-    version: '1.3.1'
+    version: '1.3.1',
 });
 
 // create a new express app instance
@@ -48,7 +48,7 @@ app.listen(7100);
 
 ### Constructor
 
-Create a new Podlet instance.
+Create a new podlet instance.
 
 ```js
 const podlet = new Podlet(options);
@@ -58,10 +58,10 @@ const podlet = new Podlet(options);
 
 | option   | type      | default   | required |
 | -------- | --------- | --------- | -------- |
-| name     | `string`  | `null`    | `true`   |
-| version  | `string`  | `null`    | `true`   |
-| logger   | `object`  | `console` | `false`  |
-| defaults | `boolean` | `false`   | `false`  |
+| name     | `string`  |           | &check;  |
+| version  | `string`  |           | &check;  |
+| logger   | `object`  | `console` |          |
+| defaults | `boolean` | `false`   |          |
 
 #### name
 
@@ -108,8 +108,7 @@ for further details.
 
 #### defaults
 
-Turns on or off the setting of a default context on the http response at `res.locals.podium`. This
-can be very useful when developing locally.
+Turns on or off the setting of a default context on the HTTP response at `res.locals.podium.context`. This can be very useful when developing locally.
 
 When a layout server sends a request to a podlet, the default context will be overridden
 by the context from the layout server. Because of this, appending the
@@ -127,11 +126,11 @@ The content of the default context can be altered by calling the `.defaults()` m
 
 ## Podlet Instance
 
-The Podlet instance has the following API:
+The podlet instance has the following API:
 
 ### .defaults(context)
 
-Alters the default context set on the http response at `res.locals.podium`.
+Alters the default context set on the HTTP response at `res.locals.podium.context`.
 By default this context has the following shape:
 
 ```js
@@ -154,11 +153,11 @@ _Example of overriding `deviceType`:_
 ```js
 const podlet = new Podlet({
     name: 'foo',
-    version: '1.0.0'
+    version: '1.0.0',
 });
 
 podlet.defaults({
-    deviceType: 'mobile'
+    deviceType: 'mobile',
 });
 ```
 
@@ -170,11 +169,11 @@ _Example of adding a context value:_
 ```js
 const podlet = new Podlet({
     name: 'foo',
-    version: '1.0.0'
+    version: '1.0.0',
 });
 
 podlet.defaults({
-    token: '9fc498984f3ewi'
+    token: '9fc498984f3ewi',
 });
 ```
 
@@ -184,12 +183,12 @@ constructor argument `defaults` is set to `true`.
 ### .middleware()
 
 Returns an array of connect compatible middleware functions which take care of the multiple operations needed for
-a Podlet to fully work.
+a podlet to fully work.
 
 What it does:
 
--   Parses the [context](https://github.schibsted.io/Podium/context) from a request from the layout server into an object on the http response at `res.locals.podium.context`.
--   Adds a podium version http header to the http response.
+-   Parses the [context](https://github.schibsted.io/Podium/context) from a request from the layout server into an object on the HTTP response at `res.locals.podium.context`.
+-   Adds a podium version HTTP header to the HTTP response.
 -   Provides information on `res.locals.podium.template` about whether the request is from a layout server or not.
 
 **Important:** This middleware must be mounted before defining any routes.
@@ -205,28 +204,20 @@ Returns an Array of internal middleware performing the tasks described above.
 
 ### .manifest(pathname)
 
-Defines the pathname for the manifest of the Podlet. The pathname is the url at which the Podlet's manifest is served and can be a relative or absolute URI.
+Defines the pathname for the manifest of the podlet. The pathname is the URL at which the podlet's manifest is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 In the Express context, a route handler will be added for the pathname value. This handler will then return json containing metadata describing the podlet.
 
 This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
-manifest.
+value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
 
 _Examples:_
 
-Mounts the manifest on the default which is `/manifest.json`:
+Mounts the manifest on the default pathname which is `/manifest.json`:
 
 ```js
 const app = express();
 app.get(podlet.manifest(), (req, res) => { ... });
-```
-
-Mounts the manifest at `/`:
-
-```js
-const app = express();
-app.get(podlet.manifest('/'), (req, res) => { ... });
 ```
 
 Mounts the manifest at `/manifest`:
@@ -237,7 +228,7 @@ app.get(podlet.manifest('/manifest'), (req, res) => { ... });
 ```
 
 Podium expects podlet manifest routes to return a JSON document describing
-the podlet. This can be achieved by simply serializing the Podlet object
+the podlet. This can be achieved by simply serializing the podlet object
 instance.
 
 Example:
@@ -267,13 +258,12 @@ This route will then respond with something like:
 
 ### .content(pathname)
 
-Defines the pathname for the content of the Podlet. The pathname is the url at which the Podlet's content is served and can be a relative or absolute URI.
+Defines the pathname for the content of the podlet. The pathname is the URL at which the podlet's content is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 In the Express context, a route handler will be added for the pathname value. This handler will do all the work required to produce the podlet's content (which is typically an HTML fragment).
 
 This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
-content.
+value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
 
 _Examples:_
 
@@ -310,13 +300,12 @@ podlet.content('http://sub.mysite.com/content/index.html');
 
 ### .fallback(pathname)
 
-Defines the pathname for the fallback of the Podlet. The pathname is the url at which the Podlet's fallback is served and can be a relative or absolute URI.
+Defines the pathname for the fallback of the podlet. The pathname is the URL at which the podlet's fallback is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 In the Express context, a route handler will be added for the pathname value. This handler will do all the work required to produce the podlet's fallback (which is typically an HTML fragment).
 
 This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
-fallback.
+value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
 
 _Examples:_
 
@@ -335,11 +324,10 @@ podlet.fallback('http://sub.mysite.com/fallback.html');
 
 ### .js(pathname)
 
-Defines the javascript pathname for the Podlet. The pathname is the url at which the Podlet's user facing JavaScript is served and can be a relative or absolute URI.
+Defines the javascript pathname for the podlet. The pathname is the URL at which the podlet's user facing JavaScript is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
-content.
+value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
 
 _Examples:_
 
@@ -368,11 +356,10 @@ podlet.js('http://cdn.mysite.com/assets/js/e7rfg76.js');
 
 ### .css(pathname)
 
-Defines the CSS pathname for the Podlet. The pathname is the url at which the Podlet's user facing CSS is served and can be a relative or absolute URI.
+Defines the CSS pathname for the podlet. The pathname is the URL at which the podlet's user facing CSS is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into manifest
-content.
+value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
 
 _Examples:_
 
@@ -412,10 +399,9 @@ of proxying to pass form submissions from the browser back to the podlet.
 
 This method returns the value of the `target` argument and internally keeps
 track of the value of `target` for use when the podlet instance is serialized
-into manifest content.
+into a manifest JSON string.
 
-In a podlet it is possible to define up to 4 proxy targets and each target can be a
-relative or absolute URI.
+In a podlet it is possible to define up to 4 proxy targets and each target can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 For each podlet, each proxy target must have a unique name.
 
@@ -463,13 +449,13 @@ request made to the podlet by a layout.
 By combining [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
 and [`mountOrigin`](https://github.schibsted.io/Podium/context#mount-origin)
 from the [context](https://github.schibsted.io/Podium/context) object, it is
-possible to build absolute URIs to a Podlet's proxy endpoints.
+possible to build absolute URIs to a podlet's proxy endpoints.
 
 _Example:_
 
-This example demonstrates a Podlet server that exposes one http POST endpoint which will be made publicly
+This example demonstrates a podlet server that exposes one HTTP POST endpoint which will be made publicly
 available through a proxy in a layout and one content endpoint which supplies an HTML form
-that, when submitted, will make a POST request to the http POST endpoint we defined.
+that, when submitted, will make a POST request to the HTTP POST endpoint we defined.
 
 ```js
 const app = express();
