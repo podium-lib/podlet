@@ -292,7 +292,7 @@ app.get('/content/info/:id', (req, res) => { ... });
 podlet.content('/content')
 ```
 
-Sets an absolute URI to where the content is:
+Sets an absolute URL to where the content is:
 
 ```js
 podlet.content('http://sub.mysite.com/content/index.html');
@@ -316,7 +316,7 @@ const app = express();
 app.get(podlet.fallback('/fallback'), (req, res) => { ... });
 ```
 
-Sets an absolute URI to where the content is:
+Sets an absolute URL to where the content is:
 
 ```js
 podlet.fallback('http://sub.mysite.com/fallback.html');
@@ -348,7 +348,7 @@ app.use('/assets', express.static('./app/files/assets'));
 podlet.js('/assets/main.js');
 ```
 
-Set an absolute URI to where the javascript file is located:
+Set an absolute URL to where the javascript file is located:
 
 ```js
 podlet.js('http://cdn.mysite.com/assets/js/e7rfg76.js');
@@ -380,7 +380,7 @@ app.use('/assets', express.static('./app/files/assets'));
 podlet.css('/assets/main.css');
 ```
 
-Set an absolute URI to where the CSS file is located:
+Set an absolute URL to where the CSS file is located:
 
 ```js
 podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
@@ -426,7 +426,7 @@ app.get('/api/bar/:id', (req, res) => { ... });
 podlet.proxy('/api', 'api');
 ```
 
-Sets a remote target by defining an absolute URI:
+Sets a remote target by defining an absolute URL:
 
 ```js
 podlet.proxy('http://remote.site.com/api/', 'remoteApi');
@@ -449,7 +449,7 @@ request made to the podlet by a layout.
 By combining [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
 and [`mountOrigin`](https://github.schibsted.io/Podium/context#mount-origin)
 from the [context](https://github.schibsted.io/Podium/context) object, it is
-possible to build absolute URIs to a podlet's proxy endpoints.
+possible to build absolute URLs to a podlet's proxy endpoints.
 
 _Example:_
 
