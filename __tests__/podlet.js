@@ -209,6 +209,12 @@ test('.manifest() - call method with "path" argument, then call it a second time
     expect(result).toEqual('/foo/bar');
 });
 
+test('.manifest() - constructor has "pathname" set - should append "pathname" before "manifest.json"', () => {
+    const podlet = new Podlet({ name: 'foo', version: '1.0.0', pathname: '/foo' });
+    const result = podlet.manifest();
+    expect(result).toEqual('/foo/manifest.json');
+});
+
 /**
  * .content()
  */
@@ -217,6 +223,12 @@ test('.content() - call method with no arguments - should return default value',
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.content();
     expect(result).toEqual('/');
+});
+
+test('.content() - constructor has "pathname" set - should set "pathname" as default content pathname value', () => {
+    const podlet = new Podlet({ name: 'foo', version: '1.0.0', pathname: '/foo' });
+    const result = podlet.content();
+    expect(result).toEqual('/foo/');
 });
 
 test('.content() - set legal value on "path" argument - should return set value', () => {

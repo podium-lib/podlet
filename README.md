@@ -22,6 +22,7 @@ const Podlet = require('@podium/podlet');
 const podlet = new Podlet({
     name: 'myPodlet',
     version: '1.3.1',
+    pathname: '/',
 });
 
 // create a new express app instance
@@ -60,6 +61,7 @@ const podlet = new Podlet(options);
 | -------- | --------- | --------- | -------- |
 | name     | `string`  |           | &check;  |
 | version  | `string`  |           | &check;  |
+| pathname | `string`  |           | &check;  |
 | logger   | `object`  | `console` |          |
 | defaults | `boolean` | `false`   |          |
 
@@ -71,7 +73,7 @@ _Example:_
 
 ```js
 const podlet = new Podlet({
-    name: 'myPodletName';
+    name: 'myPodlet';
 });
 ```
 
@@ -86,6 +88,50 @@ _Example:_
 ```js
 const podlet = new Podlet({
     version: '1.1.0';
+});
+```
+
+#### pathname
+
+Pathname of where a Podlet is mounted in a http server. It is important that
+this value match with where the entry point of a route are in a http server
+since this value is used to define where the manifest are in a podlet.
+
+If the podlet is mounted on "root", set `pathname` to `/`:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+app.use(podlet.middleware());
+
+app.get('/', (req, res, next) => {
+    [ ... ]
+});
+```
+
+If the podlet is mouned on ex `/foo` one should do like this:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+app.use('/foo', podlet.middleware());
+
+app.get('/foo', (req, res, next) => {
+    [ ... ]
+});
+
+app.get('/foo/:id', (req, res, next) => {
+    [ ... ]
 });
 ```
 
