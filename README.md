@@ -62,7 +62,7 @@ const podlet = new Podlet(options);
 | name     | `string`  |           | &check;  |
 | version  | `string`  |           | &check;  |
 | pathname | `string`  |           | &check;  |
-| logger   | `object`  | `console` |          |
+| logger   | `object`  |           |          |
 | defaults | `boolean` | `false`   |          |
 
 #### name
