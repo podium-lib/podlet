@@ -102,7 +102,13 @@ test('Podlet() - no value given to "name" argument - should throw', () => {
 test('Podlet() - invalid value given to "name" argument - should throw', () => {
     expect.hasAssertions();
     expect(() => {
-        const podlet = new Podlet({ name: 'foo bar', version: 'v1.0.0', pathname: '/' }); // eslint-disable-line no-unused-vars
+        // Yeah; silly formatting, but only way to please ESLint
+        const options = {
+            name: 'foo bar',
+            version: 'v1.0.0',
+            pathname: '/',
+        };
+        const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
         'The value, "foo bar", for the required argument "name" on the Podlet constructor is not defined or not valid.'
     );
@@ -120,7 +126,13 @@ test('Podlet() - no value given to "version" argument - should throw', () => {
 test('Podlet() - invalid value given to "version" argument - should throw', () => {
     expect.hasAssertions();
     expect(() => {
-        const podlet = new Podlet({ name: 'foo', version: true, pathname: '/' }); // eslint-disable-line no-unused-vars
+        // Yeah; silly formatting, but only way to please ESLint
+        const options = {
+            name: 'foo',
+            version: true,
+            pathname: '/',
+        };
+        const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
         'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.'
     );
@@ -138,7 +150,13 @@ test('Podlet() - no value given to "pathname" argument - should throw', () => {
 test('Podlet() - invalid value given to "pathname" argument - should throw', () => {
     expect.hasAssertions();
     expect(() => {
-        const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: 'æ / ø' }); // eslint-disable-line no-unused-vars
+        // Yeah; silly formatting, but only way to please ESLint
+        const options = {
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: 'æ / ø',
+        };
+        const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
         'The value, "æ / ø", for the required argument "pathname" on the Podlet constructor is not defined or not valid.'
     );
@@ -210,7 +228,11 @@ test('.manifest() - call method with "path" argument, then call it a second time
 });
 
 test('.manifest() - constructor has "pathname" set - should append "pathname" before "manifest.json"', () => {
-    const podlet = new Podlet({ name: 'foo', version: '1.0.0', pathname: '/foo' });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: '1.0.0',
+        pathname: '/foo',
+    });
     const result = podlet.manifest();
     expect(result).toEqual('/foo/manifest.json');
 });
@@ -226,7 +248,11 @@ test('.content() - call method with no arguments - should return default value',
 });
 
 test('.content() - constructor has "pathname" set - should set "pathname" as default content pathname value', () => {
-    const podlet = new Podlet({ name: 'foo', version: '1.0.0', pathname: '/foo' });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: '1.0.0',
+        pathname: '/foo',
+    });
     const result = podlet.content();
     expect(result).toEqual('/foo/');
 });
@@ -456,7 +482,7 @@ test('.middleware() - "user-agent" on request is not set to "@podium/client" - s
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
-        pathname: '/'
+        pathname: '/',
     });
     const server = new FakeServer(podlet);
     await server.listen();
@@ -471,7 +497,7 @@ test('.middleware() - "user-agent" on request is set to "@podium/client" - shoul
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
-        pathname: '/'
+        pathname: '/',
     });
     const server = new FakeServer(podlet);
     await server.listen();
@@ -490,7 +516,7 @@ test('.middleware() - valid "version" value is set on constructor - should appen
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
-        pathname: '/'
+        pathname: '/',
     });
     const server = new FakeServer(podlet);
     await server.listen();

@@ -1,6 +1,5 @@
 'use strict';
 
-const nunjucks = require('nunjucks');
 const express = require('express');
 const Podlet = require('../../');
 
@@ -9,19 +8,19 @@ const podlet = new Podlet({
     name: 'footer',
 });
 
-const app = express.Router();
+const app = express.Router(); // eslint-disable-line new-cap
 
 app.use(podlet.middleware());
 
-app.get(podlet.content(), (req, res, next) => {
+app.get(podlet.content(), (req, res) => {
     res.status(200).render('footer.content.njk');
 });
 
-app.get(podlet.fallback('/fallback'), (req, res, next) => {
+app.get(podlet.fallback('/fallback'), (req, res) => {
     res.status(200).render('footer.fallback.njk');
 });
 
-app.get(podlet.manifest(), (req, res, next) => {
+app.get(podlet.manifest(), (req, res) => {
     res.status(200).json(podlet);
 });
 
