@@ -57,17 +57,20 @@ const podlet = new Podlet(options);
 
 ### options
 
-| option   | type      | default   | required |
-| -------- | --------- | --------- | -------- |
-| name     | `string`  |           | &check;  |
-| version  | `string`  |           | &check;  |
-| pathname | `string`  |           | &check;  |
-| logger   | `object`  |           |          |
-| defaults | `boolean` | `false`   |          |
+| option   | type      | default          | required |
+| -------- | --------- | ---------------- | -------- |
+| name     | `string`  |                  | &check;  |
+| version  | `string`  |                  | &check;  |
+| pathname | `string`  |                  | &check;  |
+| manifest | `string`  | `/manifest.json` |          |
+| content  | `string`  | `/`              |          |
+| fallback | `string`  |                  |          |
+| logger   | `object`  |                  |          |
+| defaults | `boolean` | `false`          |          |
 
 #### name
 
-The name that the podlet identifies itself by. The name value must be in camelCase.
+The name the podlet identifies itself by. The name value must be in camelCase.
 
 _Example:_
 
@@ -121,7 +124,7 @@ const app = express();
 const podlet = new Podlet({
     name: 'myPodlet',
     version: '1.0.0',
-    pathname: '/',
+    pathname: '/foo',
 });
 
 app.use('/foo', podlet.middleware());
@@ -134,6 +137,81 @@ app.get('/foo/:id', (req, res, next) => {
     [ ... ]
 });
 ```
+
+#### manifest
+
+Defines the pathname for the manifest of the Podlet. Defaults to `/manifest.json`.
+
+The value should be relative to the value set on the `pathname` argument. In other
+words; if a Podlet is mounted in a http server at `/foo` and the manifest is at
+`/foo/component.json` one should do as follow:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    manifest: '/component.json',
+});
+
+app.get('/foo/component.json', (req, res, next) => {
+    [ ... ]
+});
+```
+
+The value can be a relative URL. One can use the `.manifest()` method to retrieve
+the set value.
+
+#### content
+
+Defines the pathname for the content of the Podlet. Defaults to `/`.
+
+The value should be relative to the value set on the `pathname` argument. In other
+words; if a Podlet is mounted in a http server at `/foo` and the content is at
+`/foo/index.html` one should do as follow:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    content: '/index.html',
+});
+
+app.get('/foo/index.html', (req, res, next) => {
+    [ ... ]
+});
+```
+
+The value can be a relative or absolute URL. One can use the `.content()` method to
+retrieve the set value.
+
+#### fallback
+
+Defines the pathname for the fallback of the Podlet. Defaults to an empty string.
+
+The value should be relative to the value set on the `pathname` argument. In other
+words; if a Podlet is mounted in a http server at `/foo` and the fallback is at
+`/foo/fallback.html` one should do as follow:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    fallback: '/fallback.html',
+});
+
+app.get('/foo/fallback.html', (req, res, next) => {
+    [ ... ]
+});
+```
+
+The value can be a relative or absolute URL. One can use the `.fallback()` method to
+retrieve the set value.
 
 #### logger
 
@@ -154,7 +232,8 @@ for further details.
 
 #### defaults
 
-Turns on or off the setting of a default context on the HTTP response at `res.locals.podium.context`. This can be very useful when developing locally.
+Turns on or off the setting of a default context on the HTTP response at `res.locals.podium.context`.
+This can be very useful when developing locally.
 
 When a layout server sends a request to a podlet, the default context will be overridden
 by the context from the layout server. Because of this, appending the
@@ -168,7 +247,8 @@ const podlet = new Podlet({
 });
 ```
 
-The content of the default context can be altered by calling the `.defaults()` method of the podlet instance.
+The content of the default context can be altered by calling the `.defaults()` method of
+the podlet instance.
 
 ## Podlet Instance
 
@@ -248,29 +328,37 @@ app.use(podlet.middleware());
 
 Returns an Array of internal middleware performing the tasks described above.
 
-### .manifest(pathname)
+### .manifest(options)
 
-Defines the pathname for the manifest of the podlet. The pathname is the URL at which the podlet's manifest is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
-
-In the Express context, a route handler will be added for the pathname value. This handler will then return json containing metadata describing the podlet.
-
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
+This method returns the value of the `manifest` argument set on the constructor.
 
 _Examples:_
 
-Mounts the manifest on the default pathname which is `/manifest.json`:
+Set the manifest on the default pathname which is `/manifest.json`:
 
 ```js
 const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
 app.get(podlet.manifest(), (req, res) => { ... });
 ```
 
-Mounts the manifest at `/manifest`:
+Set the manifest at `/component.json`:
 
 ```js
 const app = express();
-app.get(podlet.manifest('/manifest'), (req, res) => { ... });
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    manifest: '/component.json',
+});
+
+app.get(podlet.manifest(), (req, res) => { ... });
 ```
 
 Podium expects podlet manifest routes to return a JSON document describing
@@ -302,78 +390,183 @@ This route will then respond with something like:
 }
 ```
 
-### .content(pathname)
+### options
 
-Defines the pathname for the content of the podlet. The pathname is the URL at which the podlet's content is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+| option   | type      | default | required |
+| -------- | --------- | --------| -------- |
+| prefix   | `boolean` | `false` |          |
 
-In the Express context, a route handler will be added for the pathname value. This handler will do all the work required to produce the podlet's content (which is typically an HTML fragment).
+#### prefix
 
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
+If the method should prefix the return value with the value for `pathname`
+set at the constructor.
 
 _Examples:_
 
-Mounts the content on the default (which is `/`):
+return the full pathname, `/foo/component.json`, to the manifest:
 
 ```js
 const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    manifest: '/component.json',
+});
+
+podlet.manifest({ prefix: true });
+```
+
+### .content(options)
+
+This method returns the value of the `content` argument set on the constructor.
+
+_Examples:_
+
+Set the content on the default pathname which is `/`:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
 app.get(podlet.content(), (req, res) => { ... });
 ```
 
-Mounts the content on `/content`:
+Set the content at `/index.html`:
 
 ```js
 const app = express();
-app.get(podlet.content('/content'), (req, res) => { ... });
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    content: '/index.html',
+});
+
+app.get(podlet.content(), (req, res) => { ... });
 ```
 
-Mounts the content on `/content` and uses multiple sub routes to take
-different URI parameters:
+set the content too `/content` and uses multiple sub routes to take different
+URI parameters:
 
 ```js
 const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+    content: '/content',
+});
+
 app.get('/content', (req, res) => { ... });
 app.get('/content/info', (req, res) => { ... });
 app.get('/content/info/:id', (req, res) => { ... });
-podlet.content('/content')
 ```
 
-Sets an absolute URL to where the content is:
+### options
 
-```js
-podlet.content('http://sub.mysite.com/content/index.html');
-```
+| option   | type      | default | required |
+| -------- | --------- | --------| -------- |
+| prefix   | `boolean` | `false` |          |
 
-### .fallback(pathname)
+#### prefix
 
-Defines the pathname for the fallback of the podlet. The pathname is the URL at which the podlet's fallback is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
-
-In the Express context, a route handler will be added for the pathname value. This handler will do all the work required to produce the podlet's fallback (which is typically an HTML fragment).
-
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
+If the method should prefix the return value with the value for `pathname`
+set at the constructor.
 
 _Examples:_
 
-Mounts the fallback on `/fallback`:
+return the full pathname, `/foo/index.html`, to the content:
 
 ```js
 const app = express();
-app.get(podlet.fallback('/fallback'), (req, res) => { ... });
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    content: '/index.html',
+});
+
+podlet.content({ prefix: true });
 ```
 
-Sets an absolute URL to where the content is:
+Prefix will be ignored if the returned value is an absolute URL.
+
+### .fallback(options)
+
+This method returns the value of the `fallback` argument set on the constructor.
+
+_Examples:_
+
+Set the fallback to `/fallback.html`:
 
 ```js
-podlet.fallback('http://sub.mysite.com/fallback.html');
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+    fallback: '/fallback.html',
+});
+
+app.get(podlet.fallback(), (req, res) => { ... });
 ```
 
-### .js(pathname)
+### options
 
-Defines the javascript pathname for the podlet. The pathname is the URL at which the podlet's user facing JavaScript is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+| option   | type      | default | required |
+| -------- | --------- | --------| -------- |
+| prefix   | `boolean` | `false` |          |
 
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
+#### prefix
+
+If the method should prefix the return value with the value for `pathname`
+set at the constructor.
+
+_Examples:_
+
+Return the full pathname, `/foo/fallback.html`, to the fallback:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+    fallback: '/fallback.html',
+});
+
+podlet.fallback({ prefix: true });
+```
+
+Prefix will be ignored if the returned value is an absolute URL.
+
+### .js(options)
+
+Sets and returns the pathname for a Podlets javascript assets. Defaults to empty String.
+
+When a value is set it will be internally keep and used when the podlet instance is serialized
+into a manifest JSON string.
+
+### options
+
+| option   | type      | default | required |
+| -------- | --------- | --------| -------- |
+| value    | `string`  |         |          |
+| prefix   | `boolean` | `false` |          |
+
+#### value
+
+Used to set the pathname for the javascript assets for the Podlet. The value can be a URL at
+which the podlet's user facing JavaScript is served. The value can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname)
+of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+
+The value can be set only once. If called multiple times with a value, the method will throw.
+The method can be called multiple times to retrieve the value though.
 
 _Examples:_
 
@@ -381,7 +574,13 @@ Serve a javascript file at `/assets/main.js`:
 
 ```js
 const app = express();
-app.get(podlet.js('/assets/main.js'), (req, res) => {
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+app.get(podlet.js({ value: '/assets/main.js' }), (req, res) => {
     res.status(200).sendFile('./app/assets/main.js', err => {});
 });
 ```
@@ -390,47 +589,137 @@ Serve assets from a static file server and set a relative URI to the javascript 
 
 ```js
 const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
 app.use('/assets', express.static('./app/files/assets'));
-podlet.js('/assets/main.js');
+podlet.js({ value: '/assets/main.js' });
 ```
 
 Set an absolute URL to where the javascript file is located:
 
 ```js
-podlet.js('http://cdn.mysite.com/assets/js/e7rfg76.js');
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+podlet.js({ value: 'http://cdn.mysite.com/assets/js/e7rfg76.js' });
 ```
 
-### .css(pathname)
+#### prefix
 
-Defines the CSS pathname for the podlet. The pathname is the URL at which the podlet's user facing CSS is served and can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
-
-This method returns the value of `pathname` and internally keeps track of the
-value of `pathname` for use when the podlet instance is serialized into a manifest JSON string.
+If the method should prefix the return value with the value for `pathname`
+set at the constructor.
 
 _Examples:_
 
-Serve a CSS file at `/assets/main.css`:
+Return the full pathname, `/foo/assets/main.js`, to the javascript assets:
 
 ```js
 const app = express();
-app.get(podlet.css('/assets/main.css'), (req, res) => {
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+});
+
+podlet.js({ value: '/assets/main.js', prefix: true });
+```
+
+Prefix will be ignored if the returned value is an absolute URL.
+
+### .css(pathname)
+
+Sets and returns the pathname for a Podlets css assets. Defaults to empty String.
+
+When a value is set it will be internally keep and used when the podlet instance is serialized
+into a manifest JSON string.
+
+### options
+
+| option   | type      | default | required |
+| -------- | --------- | --------| -------- |
+| value    | `string`  |         |          |
+| prefix   | `boolean` | `false` |          |
+
+#### value
+
+Used to set the pathname for the css assets for the Podlet. The value can be a URL at
+which the podlet's user facing css is served. The value can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname)
+of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+
+The value can be set only once. If called multiple times with a value, the method will throw.
+The method can be called multiple times to retrieve the value though.
+
+_Examples:_
+
+Serve a css file at `/assets/main.css`:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+app.get(podlet.css({ value: '/assets/main.css' }), (req, res) => {
     res.status(200).sendFile('./app/assets/main.css', err => {});
 });
 ```
 
-Serve assets from a static file server and set a relative URI to the CSS file:
+Serve assets from a static file server and set a relative URI to the css file:
 
 ```js
 const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
 app.use('/assets', express.static('./app/files/assets'));
-podlet.css('/assets/main.css');
+podlet.css({ value: '/assets/main.css' });
 ```
 
-Set an absolute URL to where the CSS file is located:
+Set an absolute URL to where the css file is located:
 
 ```js
-podlet.css('http://cdn.mysite.com/assets/js/mn3sa898.css');
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+podlet.css({ value: 'http://cdn.mysite.com/assets/css/3ru39ur.css' });
 ```
+
+#### prefix
+
+If the method should prefix the return value with the value for `pathname`
+set at the constructor.
+
+_Examples:_
+
+Return the full pathname, `/foo/assets/main.css`, to the css assets:
+
+```js
+const app = express();
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/foo',
+});
+
+podlet.css({ value: '/assets/main.css', prefix: true });
+```
+
+Prefix will be ignored if the returned value is an absolute URL.
 
 ### .proxy(target, name)
 
