@@ -33,6 +33,10 @@ class Menu {
         this.app.use('/assets', express.static('assets'));
         podlet.css({ value: '/assets/menu.css' });
     }
+
+    router() {
+        return this.app;
+    }
 }
 
 module.exports = Menu;

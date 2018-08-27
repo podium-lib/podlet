@@ -33,6 +33,10 @@ class Footer {
         this.app.use('/assets', express.static('assets'));
         podlet.css({ value: '/assets/footer.css' });
     }
+
+    router() {
+        return this.app;
+    }
 }
 
 module.exports = Footer;

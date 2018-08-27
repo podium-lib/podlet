@@ -24,9 +24,9 @@ const header = new Header('/header');
 const menu = new Menu('/menu');
 const footer = new Footer('/footer');
 
-app.use('/header', header.app);
-app.use('/menu', menu.app);
-app.use('/footer', footer.app);
+app.use('/header', header.router());
+app.use('/menu', menu.router());
+app.use('/footer', footer.router());
 
 app.listen(7200, () => {
     console.log(`http://localhost:7200`);
