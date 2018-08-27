@@ -24,7 +24,7 @@
   "dependencies": {
     "@podium/metrics": "3.0.1",
     "@podium/schemas": "2.1.1",
-    "@podium/utils": "2.0.0",
+    "@podium/utils": "2.0.2",
     "abslog": "2.0.0",
     "joi": "13.5.2",
     "original-url": "^1.2.1",
@@ -46,10 +46,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
+        "branches": 75,
+        "functions": 90,
+        "lines": 85,
+        "statements": 85
       }
     },
     "testEnvironment": "node"

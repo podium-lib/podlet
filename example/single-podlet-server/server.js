@@ -8,10 +8,12 @@ const Proxy = require('@podium/proxy');
 const app = express();
 
 const podlet = new Podlet({
-    version: `2.0.0-${Date.now().toString()}`,
-    name: 'podletContent',
-    logger: console,
     defaults: true,
+    pathname: '/',
+    fallback: '/fallback',
+    version: `2.0.0-${Date.now().toString()}`,
+    logger: console,
+    name: 'podletContent',
 });
 
 podlet.defaults({
@@ -30,7 +32,7 @@ nunjucks.configure(['./views', podlet.views('njk')], {
 app.use(podlet.middleware());
 app.use(proxy.middleware());
 
-app.get(podlet.content(), (req, res, next) => {
+app.get(podlet.content(), (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.status(200).render('content.no.njk');
         return;
@@ -38,15 +40,15 @@ app.get(podlet.content(), (req, res, next) => {
     res.status(200).render('content.en.njk');
 });
 
-app.get(podlet.fallback('/fallback'), (req, res, next) => {
+app.get(podlet.fallback(), (req, res) => {
     res.status(200).render('fallback.njk');
 });
 
-app.get(podlet.manifest(), (req, res, next) => {
+app.get(podlet.manifest(), (req, res) => {
     res.status(200).json(podlet);
 });
 
-app.get(podlet.proxy('/public', 'localApi'), (req, res, next) => {
+app.get(podlet.proxy('/public', 'localApi'), (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.status(200).json({ say: 'hei verden' });
         return;
