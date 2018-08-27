@@ -25,7 +25,7 @@ const menu = new Menu('/menu');
 const footer = new Footer('/footer');
 
 app.use('/header', header.app);
- app.use('/menu', menu.app);
+app.use('/menu', menu.app);
 app.use('/footer', footer.app);
 
 app.listen(7200, () => {

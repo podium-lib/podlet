@@ -7,7 +7,7 @@ class Header {
     constructor(pathname) {
         const podlet = new Podlet({
             defaults: true,
-            pathname: pathname,
+            pathname,
             fallback: '/fallback',
             version: `2.0.0-${Date.now().toString()}`,
             logger: console,
