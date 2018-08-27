@@ -3,34 +3,37 @@
 const express = require('express');
 const Podlet = require('../../');
 
-const podlet = new Podlet({
-    version: `2.0.0-${Date.now().toString()}`,
-    name: 'header',
-});
+class Menu {
+    constructor(pathname) {
+        const podlet = new Podlet({
+            defaults: true,
+            pathname: pathname,
+            fallback: '/fallback',
+            version: `2.0.0-${Date.now().toString()}`,
+            logger: console,
+            name: 'menu',
+        });
 
-const app = express.Router(); // eslint-disable-line new-cap
+        this.app = express.Router(); // eslint-disable-line new-cap
 
-app.use(podlet.middleware());
+        this.app.use(podlet.middleware());
 
-app.get(podlet.content(), (req, res) => {
-    res.status(200).render('menu.content.njk');
-});
+        this.app.get(podlet.content(), (req, res) => {
+            res.status(200).render('menu.content.njk');
+        });
 
-app.get(podlet.fallback('/fallback'), (req, res) => {
-    res.status(200).render('menu.content.njk');
-});
+        this.app.get(podlet.fallback(), (req, res) => {
+            res.status(200).render('menu.fallback.njk');
+        });
 
-app.get(podlet.manifest(), (req, res) => {
-    res.status(200).json(podlet);
-});
+        this.app.get(podlet.manifest(), (req, res) => {
+            res.status(200).json(podlet);
+        });
 
-app.get('/public', (req, res) => {
-    res.status(200).json({
-        status: 'OK',
-    });
-});
+        this.app.use('/assets', express.static('assets'));
+        podlet.css({ value: '/assets/menu.css' });
+    }
+}
 
-app.use('/assets', express.static('assets'));
-podlet.css('http://localhost:7200/menu/assets/menu.css');
+module.exports = Menu;
 
-module.exports = app;

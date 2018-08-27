@@ -8,10 +8,12 @@ const Proxy = require('@podium/proxy');
 const app = express();
 
 const podlet = new Podlet({
-    version: `2.0.0-${Date.now().toString()}`,
-    name: 'podletContent',
-    logger: console,
     defaults: true,
+    pathname: '/',
+    fallback: '/fallback',
+    version: `2.0.0-${Date.now().toString()}`,
+    logger: console,
+    name: 'podletContent',
 });
 
 podlet.defaults({
@@ -38,7 +40,7 @@ app.get(podlet.content(), (req, res) => {
     res.status(200).render('content.en.njk');
 });
 
-app.get(podlet.fallback('/fallback'), (req, res) => {
+app.get(podlet.fallback(), (req, res) => {
     res.status(200).render('fallback.njk');
 });
 
