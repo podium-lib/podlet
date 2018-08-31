@@ -26,7 +26,6 @@
     "@podium/schemas": "2.1.1",
     "@podium/utils": "2.0.2",
     "abslog": "2.2.0",
-    "hbs": "^4.0.1",
     "joi": "13.6.0",
     "original-url": "^1.2.2"
   },
