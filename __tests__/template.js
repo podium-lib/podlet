@@ -68,8 +68,8 @@ test('template() - "res" argument is given with a full .locals.podium object - s
                 name: 'bar',
                 css: '/styles.css',
                 js: '/script.js',
-            }
-        }
+            },
+        },
     });
     expect(sanitize(tmpl)).toEqual(sanitize(str));
 });
