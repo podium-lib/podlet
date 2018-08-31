@@ -23,6 +23,7 @@ const podlet = new Podlet({
     name: 'myPodlet',
     version: '1.3.1',
     pathname: '/',
+    dev: true,
 });
 
 // create a new express app instance
@@ -38,7 +39,7 @@ app.get(podlet.manifest(), (req, res) => {
 
 // create a route to server the podlet's content
 app.get(podlet.content(), (req, res) => {
-    res.send(`<div>hello world</div>`);
+    res.podiumSend(`<div>hello world</div>`);
 });
 
 // start the app on port 7100
@@ -66,7 +67,7 @@ const podlet = new Podlet(options);
 | content  | `string`  | `/`              |          |
 | fallback | `string`  |                  |          |
 | logger   | `object`  |                  |          |
-| defaults | `boolean` | `false`          |          |
+| dev      | `boolean` | `false`          |          |
 
 #### name
 
@@ -230,25 +231,43 @@ Under the hood [abslog](https://github.com/trygve-lie/abslog) is used to
 abstract out logging. Please see [abslog](https://github.com/trygve-lie/abslog)
 for further details.
 
-#### defaults
+#### dev
 
-Turns on or off the setting of a default context on the HTTP response at `res.locals.podium.context`.
-This can be very useful when developing locally.
+In most cases a podlets are fragments of a whole HTML document. When a Layout server is requesting
+a podlets content or fallback the podlet should serve just that fragment and not a whole HTML
+document with its `<html>`, `<head>` and `<body>`. It is also so that when a Layout server is
+requesting a podlet its provides a context.
 
-When a layout server sends a request to a podlet, the default context will be overridden
-by the context from the layout server. Because of this, appending the
-default context does not have much value in production.
+This causes a challenge for local development since accessing a podlet directly, from a web browser,
+in local development will render the podlet without both a encapsulating HTML document and a context
+the podlet might need to function properly.
 
-_Example of turning on the default context only in development mode:_
+To deal with this it is possible to set a podlet into development mode by setting `dev` to `true`.
+When in development mode a default context on the HTTP response at `res.locals.podium.context` will
+be set and a encapsulating HTML document will be provided if one use `res.podiumSend()` when
+dispatching the content or fallback.
+
+The default context in development mode can be altered by the `.defaults()` method of the podlet
+instance.
+
+The default encapsulating HTML document development mode can be replaced by the `.view()` method of
+the podlet instance.
+
+It is advised that one turn on development mode only in local development and keep it off when
+running in production.
+
+_Example of turning on development mode only in local development:_
 
 ```js
 const podlet = new Podlet({
-    defaults: process.env.NODE_ENV !== 'production';
+    dev: process.env.NODE_ENV !== 'production';
 });
 ```
 
-The content of the default context can be altered by calling the `.defaults()` method of
-the podlet instance.
+It is worth noticing that when a layout server sends a request to a podlet in development mode, the
+default context will be overridden by the context from the layout server and the encapsulating HTML
+document will not be applied.
+
 
 ## Podlet Instance
 
@@ -256,7 +275,9 @@ The podlet instance has the following API:
 
 ### .defaults(context)
 
-Alters the default context set on the HTTP response at `res.locals.podium.context`.
+Alters the default context set on the HTTP response at `res.locals.podium.context` when in development
+mode.
+
 By default this context has the following shape:
 
 ```js
@@ -271,7 +292,7 @@ By default this context has the following shape:
 }
 ```
 
-The default context can be overridden by passing an object with the
+The default development mode context can be overridden by passing an object with the
 desired key / values to override.
 
 _Example of overriding `deviceType`:_
@@ -288,7 +309,7 @@ podlet.defaults({
 ```
 
 Additional values not defined by Podium can also be appended to the
-default context in the same way.
+default development mode context in the same way.
 
 _Example of adding a context value:_
 
@@ -303,8 +324,27 @@ podlet.defaults({
 });
 ```
 
-N.B. The default context will only be appended to the response when the
-constructor argument `defaults` is set to `true`.
+N.B. The default development mode context will only be appended to the response when
+the constructor argument `dev` is set to `true`.
+
+### .view(template)
+
+Override the default encapsulating HTML document when in development mode.
+
+Takes a function in the following shape:
+
+```js
+podlet.view((fragment, response) => {
+    return `<html>
+                <head>
+                    <title>${response.locals.podium.name}</title>
+                </head>
+                <body>
+                    ${fragment} -
+                </body>
+            </html>`;
+});
+```
 
 ### .middleware()
 
@@ -810,7 +850,7 @@ app.post(podlet.proxy('/api', 'api'), (req, res) => { ... });
 // content route serving an HTML form
 app.get(podlet.content('/'), (req, res) => {
     const ctx = res.locals.podium.context;
-    res.status(200).send(`
+    res.podiumSend(`
         <form action="${ctx.mountOrigin}${ctx.publicPathname}/api" method="post">
             [ ... ]
         </form>
