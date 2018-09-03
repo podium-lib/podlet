@@ -871,13 +871,13 @@ podlet.view((fragment, response) => {
 
 ## Development mode
 
-In most cases a podlets are fragments of a whole HTML document. When a Layout server is requesting
+In most cases podlets are fragments of a whole HTML document. When a Layout server is requesting
 a podlets content or fallback the podlet should serve just that fragment and not a whole HTML
-document with its `<html>`, `<head>` and `<body>`. It is also so that when a Layout server is
+document with its `<html>`, `<head>` and `<body>`. It is also the case that when a Layout server is
 requesting a podlet it provides a context.
 
 This causes a challenge for local development since accessing a podlet directly, from a web browser,
-in local development will render the podlet without both a encapsulating HTML document and a context
+in local development will render the podlet without both an encapsulating HTML document and a context
 the podlet might need to function properly.
 
 To deal with this it is possible to set a podlet into development mode by setting the `development` argument
