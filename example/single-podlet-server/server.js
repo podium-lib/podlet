@@ -12,7 +12,7 @@ const podlet = new Podlet({
     version: `2.0.0-${Date.now().toString()}`,
     logger: console,
     name: 'podletContent',
-    dev: true,
+    development: true,
 });
 
 podlet.defaults({

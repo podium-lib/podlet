@@ -11,7 +11,7 @@ class Footer {
             version: `2.0.0-${Date.now().toString()}`,
             logger: console,
             name: 'footer',
-            dev: true,
+            development: true,
         });
 
         this.app = express.Router(); // eslint-disable-line new-cap
