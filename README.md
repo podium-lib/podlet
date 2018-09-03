@@ -861,9 +861,10 @@ podlet.view((fragment, response) => {
     return `<html>
                 <head>
                     <title>${response.locals.podium.name}</title>
+                    <script src="${response.locals.podium.js}" defer></script>
                 </head>
                 <body>
-                    ${fragment} -
+                    ${fragment}
                 </body>
             </html>`;
 });
