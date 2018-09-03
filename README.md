@@ -23,7 +23,7 @@ const podlet = new Podlet({
     name: 'myPodlet',
     version: '1.3.1',
     pathname: '/',
-    dev: true,
+    development: true,
 });
 
 // create a new express app instance
@@ -58,16 +58,16 @@ const podlet = new Podlet(options);
 
 ### options
 
-| option   | type      | default          | required |
-| -------- | --------- | ---------------- | -------- |
-| name     | `string`  |                  | &check;  |
-| version  | `string`  |                  | &check;  |
-| pathname | `string`  |                  | &check;  |
-| manifest | `string`  | `/manifest.json` |          |
-| content  | `string`  | `/`              |          |
-| fallback | `string`  |                  |          |
-| logger   | `object`  |                  |          |
-| dev      | `boolean` | `false`          |          |
+| option      | type      | default          | required |
+| ----------- | --------- | ---------------- | -------- |
+| name        | `string`  |                  | &check;  |
+| version     | `string`  |                  | &check;  |
+| pathname    | `string`  |                  | &check;  |
+| manifest    | `string`  | `/manifest.json` |          |
+| content     | `string`  | `/`              |          |
+| fallback    | `string`  |                  |          |
+| logger      | `object`  |                  |          |
+| development | `boolean` | `false`          |          |
 
 #### name
 
@@ -231,7 +231,7 @@ Under the hood [abslog](https://github.com/trygve-lie/abslog) is used to
 abstract out logging. Please see [abslog](https://github.com/trygve-lie/abslog)
 for further details.
 
-#### dev
+#### development
 
 Turns development mode on or off. See section about development mode.
 
@@ -848,7 +848,7 @@ podlet.defaults({
 ```
 
 N.B. The default development mode context will only be appended to the response when
-the constructor argument `dev` is set to `true`.
+the constructor argument `development` is set to `true`.
 
 ### .view(template)
 
@@ -880,7 +880,7 @@ This causes a challenge for local development since accessing a podlet directly,
 in local development will render the podlet without both a encapsulating HTML document and a context
 the podlet might need to function properly.
 
-To deal with this it is possible to set a podlet into development mode by setting the `dev` argument
+To deal with this it is possible to set a podlet into development mode by setting the `development` argument
 on the constructor to `true`.
 
 When in development mode a default context on the HTTP response at `res.locals.podium.context` will
@@ -903,7 +903,7 @@ _Example of turning on development mode only in local development:_
 
 ```js
 const podlet = new Podlet({
-    dev: process.env.NODE_ENV !== 'production';
+    development: process.env.NODE_ENV !== 'production';
 });
 ```
 

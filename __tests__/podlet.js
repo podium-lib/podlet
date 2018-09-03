@@ -613,7 +613,7 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
     await server.close();
 });
 
-test('.middleware() - contructor argument "dev" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
+test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeServer(podlet);
     await server.listen();
@@ -624,9 +624,9 @@ test('.middleware() - contructor argument "dev" is NOT set and "user-agent" on r
     await server.close();
 });
 
-test('.middleware() - contructor argument "dev" is set to "true" and "user-agent" on request is set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
+test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
     const options = Object.assign({}, DEFAULT_OPTIONS, {
-        dev: true,
+        development: true,
     });
     const podlet = new Podlet(options);
     const server = new FakeServer(podlet);
@@ -642,9 +642,9 @@ test('.middleware() - contructor argument "dev" is set to "true" and "user-agent
     await server.close();
 });
 
-test('.middleware() - contructor argument "dev" is set to "true" and "user-agent" on request is NOT set to "@podium/client" - should append "true" value on "res.locals.podium.decorate"', async () => {
+test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is NOT set to "@podium/client" - should append "true" value on "res.locals.podium.decorate"', async () => {
     const options = Object.assign({}, DEFAULT_OPTIONS, {
-        dev: true,
+        development: true,
     });
     const podlet = new Podlet(options);
     const server = new FakeServer(podlet);
@@ -671,7 +671,7 @@ test('.middleware() - valid "version" value is set on constructor - should appen
  * .render()
  */
 
-test('.render() - contructor argument "dev" is NOT set to "true" - should NOT append default wireframe document', async () => {
+test('.render() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeServer(podlet, (req, res) => {
         res.send(podlet.render('<h1>OK!</h1>', res));
@@ -684,9 +684,9 @@ test('.render() - contructor argument "dev" is NOT set to "true" - should NOT ap
     await server.close();
 });
 
-test('.render() - contructor argument "dev" is set to "true" - should append default wireframe document', async () => {
+test('.render() - contructor argument "development" is set to "true" - should append default wireframe document', async () => {
     const options = Object.assign({}, DEFAULT_OPTIONS, {
-        dev: true,
+        development: true,
     });
     const podlet = new Podlet(options);
     const server = new FakeServer(podlet, (req, res) => {
@@ -726,7 +726,7 @@ test('res.podiumSend() - .podiumSend() method - should be a function on http.res
     await server.close();
 });
 
-test('res.podiumSend() - contructor argument "dev" is NOT set to "true" - should NOT append default wireframe document', async () => {
+test('res.podiumSend() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
@@ -739,9 +739,9 @@ test('res.podiumSend() - contructor argument "dev" is NOT set to "true" - should
     await server.close();
 });
 
-test('res.podiumSend() - contructor argument "dev" is set to "true" - should append default wireframe document', async () => {
+test('res.podiumSend() - contructor argument "development" is set to "true" - should append default wireframe document', async () => {
     const options = Object.assign({}, DEFAULT_OPTIONS, {
-        dev: true,
+        development: true,
     });
     const podlet = new Podlet(options);
     const server = new FakeServer(podlet, (req, res) => {
@@ -797,12 +797,12 @@ test('.defaults() - constructor argument "defaults" is not set - should not appe
     await server.close();
 });
 
-test('.defaults() - constructor argument "dev" is to "true" - should append a default context to "res.locals"', async () => {
+test('.defaults() - constructor argument "development" is to "true" - should append a default context to "res.locals"', async () => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
         pathname: '/',
-        dev: true,
+        development: true,
     });
     const server = new FakeServer(podlet);
     const address = await server.listen();
@@ -824,7 +824,7 @@ test('.defaults() - set "context" argument where a key override one existing con
         name: 'foo',
         version: 'v1.0.0',
         pathname: '/',
-        dev: true,
+        development: true,
     });
     podlet.defaults({
         locale: 'no-NO',
@@ -849,7 +849,7 @@ test('.defaults() - set "context" argument where a key is not a default context 
         name: 'foo',
         version: 'v1.0.0',
         pathname: '/',
-        dev: true,
+        development: true,
     });
     podlet.defaults({
         foo: 'bar',
@@ -882,9 +882,9 @@ test('.view() - set a non valid argument value - should throw', async () => {
     }).toThrowError('Value on argument variable "template" must be a function');
 });
 
-test('.view() - append a custom wireframe document - should render dev output with custom wireframe document', async () => {
+test('.view() - append a custom wireframe document - should render development output with custom wireframe document', async () => {
     const options = Object.assign({}, DEFAULT_OPTIONS, {
-        dev: true,
+        development: true,
     });
     const podlet = new Podlet(options);
     podlet.view(str => `<div>${str}</div>`);
