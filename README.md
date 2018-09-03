@@ -757,14 +757,14 @@ app.listen(7100);
 
 ### .render(fragment, res)
 
-Method for rendering a HTML fragment.
+Method for rendering an HTML fragment.
 
 When in development mode this method will wrap the provided fragment in a default
 HTML document. When not in development mode, this method will just return the fragment.
 
-The method take a fragment / plain text String and a `http.ServerResponse` object.
+The method takes a fragment / plain text String and a `http.ServerResponse` object.
 
-_Example of rendering a HTML fragment:_
+_Example of rendering an HTML fragment:_
 
 ```js
 app.get(podlet.content(), (req, res) => {
@@ -775,17 +775,17 @@ app.get(podlet.content(), (req, res) => {
 
 ### res.podiumSend(fragment)
 
-Method on the `http.ServerResponse` object for sending a HTML fragment. Wraps `.render()`
+Method on the `http.ServerResponse` object for sending an HTML fragment. Wraps `.render()`
 and calls the send / write method on the `http.ServerResponse` object.
 
 When in development mode this method will wrap the provided fragment in a default
 HTML document before dispatching. When not in development mode, this method will just
 dispatch the fragment.
 
-This method does more or less the same as `.render()` with the advantage that one
-does not need to provide a `http.ServerResponse` object and dispatch it manually.
+This method more or less does the same as `.render()` with the advantage that one
+does not need to provide an `http.ServerResponse` object and dispatch it manually.
 
-_Example of sending a HTML fragment:_
+_Example of sending an HTML fragment:_
 
 ```js
 app.get(podlet.content(), (req, res) => {
