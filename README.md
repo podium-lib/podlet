@@ -743,7 +743,7 @@ app.use(podlet.middleware());
 app.post(podlet.proxy('/api', 'api'), (req, res) => { ... });
 
 // content route serving an HTML form
-app.get(podlet.content('/'), (req, res) => {
+app.get(podlet.content(), (req, res) => {
     const ctx = res.locals.podium.context;
     res.podiumSend(`
         <form action="${ctx.mountOrigin}${ctx.publicPathname}/api" method="post">
@@ -767,7 +767,7 @@ The method take a fragment / plain text String and a `http.ServerResponse` objec
 _Example of rendering a HTML fragment:_
 
 ```js
-app.get(podlet.content('/'), (req, res) => {
+app.get(podlet.content(), (req, res) => {
     const content = podlet.render('<h1>Hello World</h1>', res);
     res.send(content);
 });
@@ -788,8 +788,8 @@ does not need to provide a `http.ServerResponse` object and dispatch it manually
 _Example of sending a HTML fragment:_
 
 ```js
-app.get(podlet.content('/'), (req, res) => {
-    res.podiumSend('<h1>Hello World</h1>', res);
+app.get(podlet.content(), (req, res) => {
+    res.podiumSend('<h1>Hello World</h1>');
 });
 ```
 
@@ -887,17 +887,17 @@ When in development mode a default context on the HTTP response at `res.locals.p
 be set and a encapsulating HTML document will be provided if one use `res.podiumSend()` when
 dispatching the content or fallback.
 
-The default HTML document for encapsulating a fragment will refere the values set on `.css()` and `.js()`
+The default HTML document for encapsulating a fragment will reference the values set on `.css()` and `.js()`
 and use `locale` from the default context to set language on the document.
 
 The default context in development mode can be altered by the `.defaults()` method of the podlet
 instance.
 
-The default encapsulating HTML document development mode can be replaced by the `.view()` method of
+The default encapsulating HTML document used in development mode can be replaced by the `.view()` method of
 the podlet instance.
 
-It is advised that one turn on development mode only in local development and keep it off when
-running in production.
+It is advised that one only turns on development mode during local development and keeps it off in
+production.
 
 _Example of turning on development mode only in local development:_
 
