@@ -1,5 +1,6 @@
 'use strict';
 
+const template = require('../lib/template');
 const Metrics = require('@podium/metrics');
 const express = require('express');
 const Podlet = require('../');
@@ -15,12 +16,16 @@ const url = require('url');
  */
 
 class FakeServer {
-    constructor(podlet) {
+    constructor(podlet, middleware) {
         this.app = express();
         this.app.use(podlet.middleware());
-        this.app.use((req, res) => {
-            res.status(200).json(res.locals);
-        });
+        this.app.use(
+            middleware
+                ? middleware
+                : (req, res) => {
+                      res.status(200).json(res.locals);
+                  }
+        );
         this.server = undefined;
         this.address = '';
     }
@@ -62,7 +67,9 @@ class FakeServer {
                 res.on('end', () => {
                     resolve({
                         headers: res.headers,
-                        locals: JSON.parse(chunks.join('')),
+                        response: opts.raw
+                            ? chunks.join('')
+                            : JSON.parse(chunks.join('')),
                     });
                 });
             }).on('error', error => {
@@ -547,19 +554,81 @@ test('.middleware() - call method - should return an Array with 4 functions', ()
     expect(typeof result[3]).toBe('function');
 });
 
-test('.middleware() - "user-agent" on request is not set to "@podium/client" - should append "full" template value on "res.locals.podium.template"', async () => {
+test('.middleware() - call method - should append podlet name on "res.locals.podium.name"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeServer(podlet);
     await server.listen();
 
     const result = await server.get();
-    expect(result.locals.podium.template).toEqual('full.njk');
+    expect(result.response.podium.name).toEqual(DEFAULT_OPTIONS.name);
 
     await server.close();
 });
 
-test('.middleware() - "user-agent" on request is set to "@podium/client" - should append "slim" template value on "res.locals.podium.template"', async () => {
+test('.middleware() - .css() is NOT set with a value - should append empty String to "res.locals.podium.css"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.response.podium.css).toEqual('');
+
+    await server.close();
+});
+
+test('.middleware() - .css() is set with a value - should append value to "res.locals.podium.css"', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.css({ value: '/style.css' });
+
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.response.podium.css).toEqual(podlet.css());
+
+    await server.close();
+});
+
+test('.middleware() - .js() is NOT set with a value - should append empty String to "res.locals.podium.js"', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.response.podium.js).toEqual('');
+
+    await server.close();
+});
+
+test('.middleware() - .js() is set with a value - should append value to "res.locals.podium.js"', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js({ value: '/script.js' });
+
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.response.podium.js).toEqual(podlet.js());
+
+    await server.close();
+});
+
+test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.response.podium.decorate).toEqual(false);
+
+    await server.close();
+});
+
+test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
+    const options = Object.assign({}, DEFAULT_OPTIONS, {
+        development: true,
+    });
+    const podlet = new Podlet(options);
     const server = new FakeServer(podlet);
     await server.listen();
 
@@ -568,7 +637,21 @@ test('.middleware() - "user-agent" on request is set to "@podium/client" - shoul
             'user-agent': '@podium/client',
         },
     });
-    expect(result.locals.podium.template).toEqual('slim.njk');
+    expect(result.response.podium.decorate).toEqual(false);
+
+    await server.close();
+});
+
+test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is NOT set to "@podium/client" - should append "true" value on "res.locals.podium.decorate"', async () => {
+    const options = Object.assign({}, DEFAULT_OPTIONS, {
+        development: true,
+    });
+    const podlet = new Podlet(options);
+    const server = new FakeServer(podlet);
+    await server.listen();
+
+    const result = await server.get();
+    expect(result.response.podium.decorate).toEqual(true);
 
     await server.close();
 });
@@ -581,6 +664,102 @@ test('.middleware() - valid "version" value is set on constructor - should appen
     const result = await server.get();
     expect(result.headers['podlet-version']).toEqual('v1.0.0');
 
+    await server.close();
+});
+
+/**
+ * .render()
+ */
+
+test('.render() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeServer(podlet, (req, res) => {
+        res.send(podlet.render('<h1>OK!</h1>', res));
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    expect(result.response).toEqual('<h1>OK!</h1>');
+    await server.close();
+});
+
+test('.render() - contructor argument "development" is set to "true" - should append default wireframe document', async () => {
+    const options = Object.assign({}, DEFAULT_OPTIONS, {
+        development: true,
+    });
+    const podlet = new Podlet(options);
+    const server = new FakeServer(podlet, (req, res) => {
+        res.send(podlet.render('<h1>OK!</h1>', res));
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    expect(result.response).toEqual(
+        template('<h1>OK!</h1>', {
+            locals: {
+                podium: {
+                    name: DEFAULT_OPTIONS.name,
+                },
+            },
+        })
+    );
+    await server.close();
+});
+
+/**
+ * res.podiumSend()
+ */
+
+test('res.podiumSend() - .podiumSend() method - should be a function on http.response', async () => {
+    expect.hasAssertions();
+
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeServer(podlet, (req, res) => {
+        expect(typeof res.podiumSend).toBe('function');
+        res.json({});
+    });
+
+    await server.listen();
+    await server.get();
+    await server.close();
+});
+
+test('res.podiumSend() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    expect(result.response).toEqual('<h1>OK!</h1>');
+    await server.close();
+});
+
+test('res.podiumSend() - contructor argument "development" is set to "true" - should append default wireframe document', async () => {
+    const options = Object.assign({}, DEFAULT_OPTIONS, {
+        development: true,
+    });
+    const podlet = new Podlet(options);
+    const server = new FakeServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    expect(result.response).toEqual(
+        template('<h1>OK!</h1>', {
+            locals: {
+                podium: {
+                    name: DEFAULT_OPTIONS.name,
+                },
+            },
+        })
+    );
     await server.close();
 });
 
@@ -613,29 +792,29 @@ test('.defaults() - constructor argument "defaults" is not set - should not appe
     await server.listen();
 
     const result = await server.get();
-    expect(result.locals.podium.context).toEqual({});
+    expect(result.response.podium.context).toEqual({});
 
     await server.close();
 });
 
-test('.defaults() - constructor argument "defaults" is to "true" - should append a default context to "res.locals"', async () => {
+test('.defaults() - constructor argument "development" is to "true" - should append a default context to "res.locals"', async () => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
         pathname: '/',
-        defaults: true,
+        development: true,
     });
     const server = new FakeServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
-    expect(result.locals.podium.context.debug).toEqual('false');
-    expect(result.locals.podium.context.locale).toEqual('en-EN');
-    expect(result.locals.podium.context.deviceType).toEqual('desktop');
-    expect(result.locals.podium.context.requestedBy).toEqual('foo');
-    expect(result.locals.podium.context.mountOrigin).toEqual(address);
-    expect(result.locals.podium.context.mountPathname).toEqual('/');
-    expect(result.locals.podium.context.publicPathname).toEqual('/');
+    expect(result.response.podium.context.debug).toEqual('false');
+    expect(result.response.podium.context.locale).toEqual('en-US');
+    expect(result.response.podium.context.deviceType).toEqual('desktop');
+    expect(result.response.podium.context.requestedBy).toEqual('foo');
+    expect(result.response.podium.context.mountOrigin).toEqual(address);
+    expect(result.response.podium.context.mountPathname).toEqual('/');
+    expect(result.response.podium.context.publicPathname).toEqual('/');
 
     await server.close();
 });
@@ -645,7 +824,7 @@ test('.defaults() - set "context" argument where a key override one existing con
         name: 'foo',
         version: 'v1.0.0',
         pathname: '/',
-        defaults: true,
+        development: true,
     });
     podlet.defaults({
         locale: 'no-NO',
@@ -654,13 +833,13 @@ test('.defaults() - set "context" argument where a key override one existing con
     const address = await server.listen();
     const result = await server.get();
 
-    expect(result.locals.podium.context.debug).toEqual('false');
-    expect(result.locals.podium.context.locale).toEqual('no-NO');
-    expect(result.locals.podium.context.deviceType).toEqual('desktop');
-    expect(result.locals.podium.context.requestedBy).toEqual('foo');
-    expect(result.locals.podium.context.mountOrigin).toEqual(address);
-    expect(result.locals.podium.context.mountPathname).toEqual('/');
-    expect(result.locals.podium.context.publicPathname).toEqual('/');
+    expect(result.response.podium.context.debug).toEqual('false');
+    expect(result.response.podium.context.locale).toEqual('no-NO');
+    expect(result.response.podium.context.deviceType).toEqual('desktop');
+    expect(result.response.podium.context.requestedBy).toEqual('foo');
+    expect(result.response.podium.context.mountOrigin).toEqual(address);
+    expect(result.response.podium.context.mountPathname).toEqual('/');
+    expect(result.response.podium.context.publicPathname).toEqual('/');
 
     await server.close();
 });
@@ -670,7 +849,7 @@ test('.defaults() - set "context" argument where a key is not a default context 
         name: 'foo',
         version: 'v1.0.0',
         pathname: '/',
-        defaults: true,
+        development: true,
     });
     podlet.defaults({
         foo: 'bar',
@@ -679,15 +858,45 @@ test('.defaults() - set "context" argument where a key is not a default context 
     const address = await server.listen();
     const result = await server.get();
 
-    expect(result.locals.podium.context.foo).toEqual('bar');
-    expect(result.locals.podium.context.debug).toEqual('false');
-    expect(result.locals.podium.context.locale).toEqual('en-EN');
-    expect(result.locals.podium.context.deviceType).toEqual('desktop');
-    expect(result.locals.podium.context.requestedBy).toEqual('foo');
-    expect(result.locals.podium.context.mountOrigin).toEqual(address);
-    expect(result.locals.podium.context.mountPathname).toEqual('/');
-    expect(result.locals.podium.context.publicPathname).toEqual('/');
+    expect(result.response.podium.context.foo).toEqual('bar');
+    expect(result.response.podium.context.debug).toEqual('false');
+    expect(result.response.podium.context.locale).toEqual('en-US');
+    expect(result.response.podium.context.deviceType).toEqual('desktop');
+    expect(result.response.podium.context.requestedBy).toEqual('foo');
+    expect(result.response.podium.context.mountOrigin).toEqual(address);
+    expect(result.response.podium.context.mountPathname).toEqual('/');
+    expect(result.response.podium.context.publicPathname).toEqual('/');
 
+    await server.close();
+});
+
+/**
+ * .view()
+ */
+
+test('.view() - set a non valid argument value - should throw', async () => {
+    expect.hasAssertions();
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    expect(() => {
+        podlet.view('test');
+    }).toThrowError('Value on argument variable "template" must be a function');
+});
+
+test('.view() - append a custom wireframe document - should render development output with custom wireframe document', async () => {
+    const options = Object.assign({}, DEFAULT_OPTIONS, {
+        development: true,
+    });
+    const podlet = new Podlet(options);
+    podlet.view(str => `<div>${str}</div>`);
+
+    const server = new FakeServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    expect(result.response).toEqual('<div><h1>OK!</h1></div>');
     await server.close();
 });
 

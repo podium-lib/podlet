@@ -6,12 +6,12 @@ const Podlet = require('../../');
 class Footer {
     constructor(pathname) {
         const podlet = new Podlet({
-            defaults: true,
             pathname,
             fallback: '/fallback',
             version: `2.0.0-${Date.now().toString()}`,
             logger: console,
             name: 'footer',
+            development: true,
         });
 
         this.app = express.Router(); // eslint-disable-line new-cap
@@ -19,11 +19,11 @@ class Footer {
         this.app.use(podlet.middleware());
 
         this.app.get(podlet.content(), (req, res) => {
-            res.status(200).render('footer.content.njk');
+            res.podiumSend(`<footer>Footer</footer>`);
         });
 
         this.app.get(podlet.fallback(), (req, res) => {
-            res.status(200).render('footer.fallback.njk');
+            res.podiumSend(`<footer>Fallback footer</footer>`);
         });
 
         this.app.get(podlet.manifest(), (req, res) => {

@@ -23,6 +23,7 @@ const podlet = new Podlet({
     name: 'myPodlet',
     version: '1.3.1',
     pathname: '/',
+    development: true,
 });
 
 // create a new express app instance
@@ -38,7 +39,7 @@ app.get(podlet.manifest(), (req, res) => {
 
 // create a route to server the podlet's content
 app.get(podlet.content(), (req, res) => {
-    res.send(`<div>hello world</div>`);
+    res.podiumSend(`<div>hello world</div>`);
 });
 
 // start the app on port 7100
@@ -57,16 +58,16 @@ const podlet = new Podlet(options);
 
 ### options
 
-| option   | type      | default          | required |
-| -------- | --------- | ---------------- | -------- |
-| name     | `string`  |                  | &check;  |
-| version  | `string`  |                  | &check;  |
-| pathname | `string`  |                  | &check;  |
-| manifest | `string`  | `/manifest.json` |          |
-| content  | `string`  | `/`              |          |
-| fallback | `string`  |                  |          |
-| logger   | `object`  |                  |          |
-| defaults | `boolean` | `false`          |          |
+| option      | type      | default          | required |
+| ----------- | --------- | ---------------- | -------- |
+| name        | `string`  |                  | &check;  |
+| version     | `string`  |                  | &check;  |
+| pathname    | `string`  |                  | &check;  |
+| manifest    | `string`  | `/manifest.json` |          |
+| content     | `string`  | `/`              |          |
+| fallback    | `string`  |                  |          |
+| logger      | `object`  |                  |          |
+| development | `boolean` | `false`          |          |
 
 #### name
 
@@ -230,81 +231,13 @@ Under the hood [abslog](https://github.com/trygve-lie/abslog) is used to
 abstract out logging. Please see [abslog](https://github.com/trygve-lie/abslog)
 for further details.
 
-#### defaults
+#### development
 
-Turns on or off the setting of a default context on the HTTP response at `res.locals.podium.context`.
-This can be very useful when developing locally.
-
-When a layout server sends a request to a podlet, the default context will be overridden
-by the context from the layout server. Because of this, appending the
-default context does not have much value in production.
-
-_Example of turning on the default context only in development mode:_
-
-```js
-const podlet = new Podlet({
-    defaults: process.env.NODE_ENV !== 'production';
-});
-```
-
-The content of the default context can be altered by calling the `.defaults()` method of
-the podlet instance.
+Turns development mode on or off. See section about development mode.
 
 ## Podlet Instance
 
 The podlet instance has the following API:
-
-### .defaults(context)
-
-Alters the default context set on the HTTP response at `res.locals.podium.context`.
-By default this context has the following shape:
-
-```js
-{
-    debug: 'false',
-    locale: 'en-EN',
-    deviceType: 'desktop',
-    requestedBy: 'the_name_of_the_podlet',
-    mountOrigin: 'http://localhost:port',
-    mountPathname: '/same/as/manifest/method',
-    publicPathname: '/same/as/manifest/method',
-}
-```
-
-The default context can be overridden by passing an object with the
-desired key / values to override.
-
-_Example of overriding `deviceType`:_
-
-```js
-const podlet = new Podlet({
-    name: 'foo',
-    version: '1.0.0',
-});
-
-podlet.defaults({
-    deviceType: 'mobile',
-});
-```
-
-Additional values not defined by Podium can also be appended to the
-default context in the same way.
-
-_Example of adding a context value:_
-
-```js
-const podlet = new Podlet({
-    name: 'foo',
-    version: '1.0.0',
-});
-
-podlet.defaults({
-    token: '9fc498984f3ewi',
-});
-```
-
-N.B. The default context will only be appended to the response when the
-constructor argument `defaults` is set to `true`.
 
 ### .middleware()
 
@@ -723,9 +656,9 @@ Prefix will be ignored if the returned value is an absolute URL.
 
 ### .proxy(target, name)
 
-Method for defining proxy targets to be mounted by the [proxy](https://github.schibsted.io/Podium/proxy) module
-in a layout server. It's worth mentioning that this will **not** mount a
-proxy in the server where the podlet instance is used.
+Method for defining proxy targets to be mounted by the [proxy](https://github.schibsted.io/Podium/proxy)
+module in a layout server. It's worth mentioning that this will **not** mount
+a proxy in the server where the podlet instance is used.
 
 Proxying is intended to be used as a way to make podlet endpoints public.
 A common use case for this is creating endpoints for client side code to
@@ -736,7 +669,9 @@ This method returns the value of the `target` argument and internally keeps
 track of the value of `target` for use when the podlet instance is serialized
 into a manifest JSON string.
 
-In a podlet it is possible to define up to 4 proxy targets and each target can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+In a podlet it is possible to define up to 4 proxy targets and each target can be the
+[pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname)
+part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
 
 For each podlet, each proxy target must have a unique name.
 
@@ -808,9 +743,9 @@ app.use(podlet.middleware());
 app.post(podlet.proxy('/api', 'api'), (req, res) => { ... });
 
 // content route serving an HTML form
-app.get(podlet.content('/'), (req, res) => {
+app.get(podlet.content(), (req, res) => {
     const ctx = res.locals.podium.context;
-    res.status(200).send(`
+    res.podiumSend(`
         <form action="${ctx.mountOrigin}${ctx.publicPathname}/api" method="post">
             [ ... ]
         </form>
@@ -819,3 +754,160 @@ app.get(podlet.content('/'), (req, res) => {
 
 app.listen(7100);
 ```
+
+### .render(fragment, res)
+
+Method for rendering an HTML fragment.
+
+When in development mode this method will wrap the provided fragment in a default
+HTML document. When not in development mode, this method will just return the fragment.
+
+The method takes a fragment / plain text String and a `http.ServerResponse` object.
+
+_Example of rendering an HTML fragment:_
+
+```js
+app.get(podlet.content(), (req, res) => {
+    const content = podlet.render('<h1>Hello World</h1>', res);
+    res.send(content);
+});
+```
+
+### res.podiumSend(fragment)
+
+Method on the `http.ServerResponse` object for sending an HTML fragment. Wraps `.render()`
+and calls the send / write method on the `http.ServerResponse` object.
+
+When in development mode this method will wrap the provided fragment in a default
+HTML document before dispatching. When not in development mode, this method will just
+dispatch the fragment.
+
+This method more or less does the same as `.render()` with the advantage that one
+does not need to provide an `http.ServerResponse` object and dispatch it manually.
+
+_Example of sending an HTML fragment:_
+
+```js
+app.get(podlet.content(), (req, res) => {
+    res.podiumSend('<h1>Hello World</h1>');
+});
+```
+
+The `.podiumSend()` method is appended to `http.ServerResponse` object when the
+`.middleware()` method is run.
+
+### .defaults(context)
+
+Alters the default context set on the HTTP response at `res.locals.podium.context` when in development
+mode.
+
+By default this context has the following shape:
+
+```js
+{
+    debug: 'false',
+    locale: 'en-EN',
+    deviceType: 'desktop',
+    requestedBy: 'the_name_of_the_podlet',
+    mountOrigin: 'http://localhost:port',
+    mountPathname: '/same/as/manifest/method',
+    publicPathname: '/same/as/manifest/method',
+}
+```
+
+The default development mode context can be overridden by passing an object with the
+desired key / values to override.
+
+_Example of overriding `deviceType`:_
+
+```js
+const podlet = new Podlet({
+    name: 'foo',
+    version: '1.0.0',
+});
+
+podlet.defaults({
+    deviceType: 'mobile',
+});
+```
+
+Additional values not defined by Podium can also be appended to the
+default development mode context in the same way.
+
+_Example of adding a context value:_
+
+```js
+const podlet = new Podlet({
+    name: 'foo',
+    version: '1.0.0',
+});
+
+podlet.defaults({
+    token: '9fc498984f3ewi',
+});
+```
+
+N.B. The default development mode context will only be appended to the response when
+the constructor argument `development` is set to `true`.
+
+### .view(template)
+
+Override the default encapsulating HTML document when in development mode.
+
+Takes a function in the following shape:
+
+```js
+podlet.view((fragment, response) => {
+    return `<html>
+                <head>
+                    <title>${response.locals.podium.name}</title>
+                    <script src="${response.locals.podium.js}" defer></script>
+                </head>
+                <body>
+                    ${fragment}
+                </body>
+            </html>`;
+});
+```
+
+## Development mode
+
+In most cases podlets are fragments of a whole HTML document. When a Layout server is requesting
+a podlets content or fallback the podlet should serve just that fragment and not a whole HTML
+document with its `<html>`, `<head>` and `<body>`. It is also the case that when a Layout server is
+requesting a podlet it provides a context.
+
+This causes a challenge for local development since accessing a podlet directly, from a web browser,
+in local development will render the podlet without both an encapsulating HTML document and a context
+the podlet might need to function properly.
+
+To deal with this it is possible to set a podlet into development mode by setting the `development` argument
+on the constructor to `true`.
+
+When in development mode a default context on the HTTP response at `res.locals.podium.context` will
+be set and a encapsulating HTML document will be provided if one use `res.podiumSend()` when
+dispatching the content or fallback.
+
+The default HTML document for encapsulating a fragment will reference the values set on `.css()` and `.js()`
+and use `locale` from the default context to set language on the document.
+
+The default context in development mode can be altered by the `.defaults()` method of the podlet
+instance.
+
+The default encapsulating HTML document used in development mode can be replaced by the `.view()` method of
+the podlet instance.
+
+It is advised that one only turns on development mode during local development and keeps it off in
+production.
+
+_Example of turning on development mode only in local development:_
+
+```js
+const podlet = new Podlet({
+    development: process.env.NODE_ENV !== 'production';
+});
+```
+
+It is worth noticing that when a layout server sends a request to a podlet in development mode, the
+default context will be overridden by the context from the layout server and the encapsulating HTML
+document will not be applied.
