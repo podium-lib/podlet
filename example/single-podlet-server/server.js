@@ -42,7 +42,7 @@ app.get(podlet.manifest(), (req, res) => {
     res.json(podlet);
 });
 
-app.get(podlet.proxy('/public', 'localApi'), (req, res) => {
+app.get(podlet.proxy({ target: '/public', name: 'localApi' }), (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.json({ say: 'Hei verden' });
         return;
@@ -54,7 +54,7 @@ app.use('/assets', express.static('assets'));
 podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
 
-podlet.proxy('https://api.ipify.org', 'remoteApi');
+podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
 
 proxy.register(podlet);
 
