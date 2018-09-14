@@ -2,8 +2,6 @@
 
 const express = require('express');
 const Podlet = require('../../');
-const Proxy = require('@podium/proxy');
-
 const app = express();
 
 const podlet = new Podlet({
@@ -19,12 +17,7 @@ podlet.defaults({
     locale: 'nb-NO',
 });
 
-const proxy = new Proxy({
-    logger: console,
-});
-
 app.use(podlet.middleware());
-app.use(proxy.middleware());
 
 app.get(podlet.content(), (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
@@ -42,7 +35,7 @@ app.get(podlet.manifest(), (req, res) => {
     res.json(podlet);
 });
 
-app.get(podlet.proxy({ target: '/public', name: 'localApi' }), (req, res) => {
+app.get('/public', (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.json({ say: 'Hei verden' });
         return;
@@ -50,13 +43,12 @@ app.get(podlet.proxy({ target: '/public', name: 'localApi' }), (req, res) => {
     res.json({ say: 'Hello world' });
 });
 
+podlet.proxy({ target: '/public', name: 'localApi' })
+podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
+
 app.use('/assets', express.static('assets'));
 podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
-
-podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
-
-proxy.register(podlet);
 
 app.listen(7100, () => {
     console.log(`http://localhost:7100`);

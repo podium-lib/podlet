@@ -919,7 +919,7 @@ test('.proxy() - set more than 4 proxy entries - should throw', () => {
     );
 });
 
-test('.proxy() - set valid "name" and "target" - should return target', async () => {
+test('.proxy() - set valid "name" and "target" - should return target', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.proxy({ target: '/foo', name: 'foo' });
     expect(result).toEqual('/foo');
@@ -929,7 +929,7 @@ test('.proxy() - set valid "name" and "target" - should return target', async ()
  * .view()
  */
 
-test('.view() - set a non valid argument value - should throw', async () => {
+test('.view() - set a non valid argument value - should throw', () => {
     expect.hasAssertions();
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(() => {
