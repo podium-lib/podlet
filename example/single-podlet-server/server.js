@@ -43,7 +43,7 @@ app.get('/public', (req, res) => {
     res.json({ say: 'Hello world' });
 });
 
-podlet.proxy({ target: '/public', name: 'localApi' })
+podlet.proxy({ target: '/public', name: 'localApi' });
 podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
 
 app.use('/assets', express.static('assets'));
