@@ -23,7 +23,7 @@
   "dependencies": {
     "@podium/metrics": "3.0.1",
     "@podium/schemas": "2.1.1",
-    "@podium/proxy": "2.2.1",
+    "@podium/proxy": "2.2.3",
     "@podium/utils": "2.0.3",
     "lodash.merge": "^4.6.1",
     "abslog": "2.2.0",
@@ -44,10 +44,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 75,
-        "functions": 90,
-        "lines": 85,
-        "statements": 85
+        "branches": 94,
+        "functions": 94,
+        "lines": 94,
+        "statements": 94
       }
     },
     "testEnvironment": "node"
