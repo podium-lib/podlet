@@ -552,7 +552,7 @@ test('.middleware() - call method in non development mode - should return an Arr
     expect(typeof result[1]).toBe('function');
     expect(typeof result[2]).toBe('function');
     expect(typeof result[3]).toBe('function');
-//    expect(typeof result[4]).toBe('function');
+    //    expect(typeof result[4]).toBe('function');
 });
 
 test('.middleware() - call method in development mode - should return an Array with 5 functions', () => {
