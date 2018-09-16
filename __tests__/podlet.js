@@ -543,8 +543,21 @@ test('.js() - call method twice with a value for "value" argument - should throw
  * .middleware()
  */
 
-test('.middleware() - call method - should return an Array with 4 functions', () => {
+test('.middleware() - call method in non development mode - should return an Array with 4 functions', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
+    const result = podlet.middleware();
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toEqual(4);
+    expect(typeof result[0]).toBe('function');
+    expect(typeof result[1]).toBe('function');
+    expect(typeof result[2]).toBe('function');
+    expect(typeof result[3]).toBe('function');
+//    expect(typeof result[4]).toBe('function');
+});
+
+test('.middleware() - call method in development mode - should return an Array with 5 functions', () => {
+    const options = Object.assign({ development: true }, DEFAULT_OPTIONS);
+    const podlet = new Podlet(options);
     const result = podlet.middleware();
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toEqual(5);
