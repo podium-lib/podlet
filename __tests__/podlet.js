@@ -543,7 +543,7 @@ test('.js() - call method twice with a value for "value" argument - should throw
  * .middleware()
  */
 
-test('.middleware() - call method - should return an Array with 4 functions', () => {
+test('.middleware() - call method in non development mode - should return an Array with 4 functions', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.middleware();
     expect(Array.isArray(result)).toBe(true);
@@ -552,6 +552,20 @@ test('.middleware() - call method - should return an Array with 4 functions', ()
     expect(typeof result[1]).toBe('function');
     expect(typeof result[2]).toBe('function');
     expect(typeof result[3]).toBe('function');
+    //    expect(typeof result[4]).toBe('function');
+});
+
+test('.middleware() - call method in development mode - should return an Array with 5 functions', () => {
+    const options = Object.assign({ development: true }, DEFAULT_OPTIONS);
+    const podlet = new Podlet(options);
+    const result = podlet.middleware();
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toEqual(5);
+    expect(typeof result[0]).toBe('function');
+    expect(typeof result[1]).toBe('function');
+    expect(typeof result[2]).toBe('function');
+    expect(typeof result[3]).toBe('function');
+    expect(typeof result[4]).toBe('function');
 });
 
 test('.middleware() - call method - should append podlet name on "res.locals.podium.name"', async () => {
@@ -871,10 +885,64 @@ test('.defaults() - set "context" argument where a key is not a default context 
 });
 
 /**
+ * .proxy()
+ */
+
+test('.proxy() - no arguments - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    expect(() => {
+        podlet.proxy();
+    }).toThrowError(
+        'Value on argument variable "target", "null", is not valid'
+    );
+});
+
+test('.proxy() - set a non valid "target" argument value - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    expect(() => {
+        podlet.proxy({ target: 'æøå æåø', name: 'foo' });
+    }).toThrowError(
+        'Value on argument variable "target", "æøå æåø", is not valid'
+    );
+});
+
+test('.proxy() - set a non valid "name" argument value - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    expect(() => {
+        podlet.proxy({ target: '/foo', name: 'æøå æåø' });
+    }).toThrowError(
+        'Value on argument variable "name", "æøå æåø", is not valid'
+    );
+});
+
+test('.proxy() - set more than 4 proxy entries - should throw', () => {
+    expect.hasAssertions();
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    expect(() => {
+        podlet.proxy({ target: '/foo1', name: 'foo1' });
+        podlet.proxy({ target: '/foo2', name: 'foo2' });
+        podlet.proxy({ target: '/foo3', name: 'foo3' });
+        podlet.proxy({ target: '/foo4', name: 'foo4' });
+        podlet.proxy({ target: '/foo5', name: 'foo5' });
+    }).toThrowError(
+        'One can not define more than 4 proxy targets for each podlet'
+    );
+});
+
+test('.proxy() - set valid "name" and "target" - should return target', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const result = podlet.proxy({ target: '/foo', name: 'foo' });
+    expect(result).toEqual('/foo');
+});
+
+/**
  * .view()
  */
 
-test('.view() - set a non valid argument value - should throw', async () => {
+test('.view() - set a non valid argument value - should throw', () => {
     expect.hasAssertions();
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(() => {
