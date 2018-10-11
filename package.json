@@ -24,19 +24,19 @@
     "@podium/metrics": "3.0.1",
     "@podium/schemas": "2.1.1",
     "@podium/proxy": "2.3.0",
-    "@podium/utils": "2.0.3",
+    "@podium/utils": "2.1.0",
     "lodash.merge": "^4.6.1",
-    "abslog": "2.2.0",
-    "joi": "13.6.0",
+    "abslog": "2.2.2",
+    "joi": "13.7.0",
     "original-url": "^1.2.2"
   },
   "devDependencies": {
-    "eslint": "5.5.0",
+    "eslint": "5.6.1",
     "eslint-config-finn": "3.0.1",
     "eslint-config-finn-prettier": "3.0.2",
     "express": "^4.16.3",
     "jest": "^23.6.0",
-    "prettier": "1.14.2"
+    "prettier": "1.14.3"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
