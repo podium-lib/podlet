@@ -784,23 +784,49 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
 test('.defaults() - call method with no arguments - should return default value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.defaults();
-    expect(result).toEqual({});
+    expect(result).toEqual({
+        debug: 'false',
+        deviceType: 'desktop',
+        locale: 'en-US',
+        mountOrigin: '',
+        mountPathname: '/',
+        publicPathname: '/',
+        requestedBy: 'foo',
+    });
 });
 
 test('.defaults() - set value on "context" argument - should return set value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.defaults({ foo: 'bar' });
-    expect(result).toEqual({ foo: 'bar' });
+    expect(result).toEqual({
+        debug: 'false',
+        deviceType: 'desktop',
+        foo: 'bar',
+        locale: 'en-US',
+        mountOrigin: '',
+        mountPathname: '/',
+        publicPathname: '/',
+        requestedBy: 'foo',
+    });
 });
 
 test('.defaults() - call method with "context" argument, then call it a second time with no argument - should return first set value on second call', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.defaults({ foo: 'bar' });
     const result = podlet.defaults();
-    expect(result).toEqual({ foo: 'bar' });
+    expect(result).toEqual({
+        debug: 'false',
+        deviceType: 'desktop',
+        foo: 'bar',
+        locale: 'en-US',
+        mountOrigin: '',
+        mountPathname: '/',
+        publicPathname: '/',
+        requestedBy: 'foo',
+    });
 });
 
-test('.defaults() - constructor argument "defaults" is not set - should not append a default context to "res.locals"', async () => {
+test('.defaults() - constructor argument "development" is not set - should not append a default context to "res.locals"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeServer(podlet);
     await server.listen();
@@ -833,7 +859,7 @@ test('.defaults() - constructor argument "development" is to "true" - should app
     await server.close();
 });
 
-test('.defaults() - set "context" argument where a key override one existing context value - should override default context value but keep rest untouched', async () => {
+test('.defaults() - set "context" argument where a key overrides one existing context value - should override default context value but keep rest untouched', async () => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
