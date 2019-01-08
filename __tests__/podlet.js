@@ -1,11 +1,13 @@
 'use strict';
 
-const template = require('../lib/template');
+/* eslint-disable import/no-extraneous-dependencies */
+
 const Metrics = require('@podium/metrics');
 const express = require('express');
-const Podlet = require('../');
 const http = require('http');
 const url = require('url');
+const Podlet = require('../');
+const template = require('../lib/template');
 
 /**
  * Fake server utility
@@ -16,16 +18,15 @@ const url = require('url');
  */
 
 class FakeServer {
-    constructor(podlet, middleware) {
+    constructor(
+        podlet,
+        middleware = (req, res) => {
+            res.status(200).json(res.locals);
+        },
+    ) {
         this.app = express();
         this.app.use(podlet.middleware());
-        this.app.use(
-            middleware
-                ? middleware
-                : (req, res) => {
-                      res.status(200).json(res.locals);
-                  }
-        );
+        this.app.use(middleware);
         this.server = undefined;
         this.address = '';
     }
@@ -93,7 +94,7 @@ test('Podlet() - instantiate new podlet object - should create an object', () =>
 test('Podlet() - object tag - should be PodiumPodlet', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet)).toEqual(
-        '[object PodiumPodlet]'
+        '[object PodiumPodlet]',
     );
 });
 
@@ -102,7 +103,7 @@ test('Podlet() - no value given to "name" argument - should throw', () => {
     expect(() => {
         const podlet = new Podlet({ version: 'v1.0.0', pathname: '/' }); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.'
+        'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -117,7 +118,7 @@ test('Podlet() - invalid value given to "name" argument - should throw', () => {
         };
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "foo bar", for the required argument "name" on the Podlet constructor is not defined or not valid.'
+        'The value, "foo bar", for the required argument "name" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -126,7 +127,7 @@ test('Podlet() - no value given to "version" argument - should throw', () => {
     expect(() => {
         const podlet = new Podlet({ name: 'foo', pathname: '/' }); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.'
+        'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -141,7 +142,7 @@ test('Podlet() - invalid value given to "version" argument - should throw', () =
         };
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.'
+        'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -150,7 +151,7 @@ test('Podlet() - no value given to "pathname" argument - should throw', () => {
     expect(() => {
         const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' }); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "", for the required argument "pathname" on the Podlet constructor is not defined or not valid.'
+        'The value, "", for the required argument "pathname" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -165,7 +166,7 @@ test('Podlet() - invalid value given to "pathname" argument - should throw', () 
         };
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the required argument "pathname" on the Podlet constructor is not defined or not valid.'
+        'The value, "æ / ø", for the required argument "pathname" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -176,7 +177,7 @@ test('Podlet() - invalid value given to "manifest" argument - should throw', () 
         const options = Object.assign({ manifest: 'æ / ø' }, DEFAULT_OPTIONS);
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the optional argument "manifest" on the Podlet constructor is not valid.'
+        'The value, "æ / ø", for the optional argument "manifest" on the Podlet constructor is not valid.',
     );
 });
 
@@ -187,7 +188,7 @@ test('Podlet() - invalid value given to "content" argument - should throw', () =
         const options = Object.assign({ content: 'æ / ø' }, DEFAULT_OPTIONS);
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the optional argument "content" on the Podlet constructor is not valid.'
+        'The value, "æ / ø", for the optional argument "content" on the Podlet constructor is not valid.',
     );
 });
 
@@ -198,7 +199,7 @@ test('Podlet() - invalid value given to "fallback" argument - should throw', () 
         const options = Object.assign({ fallback: 'æ / ø' }, DEFAULT_OPTIONS);
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the optional argument "fallback" on the Podlet constructor is not valid.'
+        'The value, "æ / ø", for the optional argument "fallback" on the Podlet constructor is not valid.',
     );
 });
 
@@ -450,7 +451,7 @@ test('.css() - set illegal value on "value" argument - should throw', () => {
     expect(() => {
         podlet.css({ value: '/foo / bar' });
     }).toThrowError(
-        'Value on argument variable "value", "/foo / bar", is not valid'
+        'Value on argument variable "value", "/foo / bar", is not valid',
     );
 });
 
@@ -518,7 +519,7 @@ test('.js() - set illegal value on "value" argument - should throw', () => {
     expect(() => {
         podlet.js({ value: '/foo / bar' });
     }).toThrowError(
-        'Value on argument variable "value", "/foo / bar", is not valid'
+        'Value on argument variable "value", "/foo / bar", is not valid',
     );
 });
 
@@ -717,7 +718,7 @@ test('.render() - contructor argument "development" is set to "true" - should ap
                     name: DEFAULT_OPTIONS.name,
                 },
             },
-        })
+        }),
     );
     await server.close();
 });
@@ -772,7 +773,7 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
                     name: DEFAULT_OPTIONS.name,
                 },
             },
-        })
+        }),
     );
     await server.close();
 });
@@ -920,7 +921,7 @@ test('.proxy() - no arguments - should throw', () => {
     expect(() => {
         podlet.proxy();
     }).toThrowError(
-        'Value on argument variable "target", "null", is not valid'
+        'Value on argument variable "target", "null", is not valid',
     );
 });
 
@@ -930,7 +931,7 @@ test('.proxy() - set a non valid "target" argument value - should throw', () => 
     expect(() => {
         podlet.proxy({ target: 'æøå æåø', name: 'foo' });
     }).toThrowError(
-        'Value on argument variable "target", "æøå æåø", is not valid'
+        'Value on argument variable "target", "æøå æåø", is not valid',
     );
 });
 
@@ -940,7 +941,7 @@ test('.proxy() - set a non valid "name" argument value - should throw', () => {
     expect(() => {
         podlet.proxy({ target: '/foo', name: 'æøå æåø' });
     }).toThrowError(
-        'Value on argument variable "name", "æøå æåø", is not valid'
+        'Value on argument variable "name", "æøå æåø", is not valid',
     );
 });
 
@@ -954,7 +955,7 @@ test('.proxy() - set more than 4 proxy entries - should throw', () => {
         podlet.proxy({ target: '/foo4', name: 'foo4' });
         podlet.proxy({ target: '/foo5', name: 'foo5' });
     }).toThrowError(
-        'One can not define more than 4 proxy targets for each podlet'
+        'One can not define more than 4 proxy targets for each podlet',
     );
 });
 
@@ -1006,6 +1007,6 @@ test('.metrics - assigned object to property - should be instance of @podium/met
 test('.metrics - assigned object to property - should have object tag with "PodiumMetrics" as name', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet.metrics)).toEqual(
-        '[object PodiumMetrics]'
+        '[object PodiumMetrics]',
     );
 });

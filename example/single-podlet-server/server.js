@@ -1,7 +1,9 @@
 'use strict';
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 const express = require('express');
 const Podlet = require('../../');
+
 const app = express();
 
 const podlet = new Podlet({
@@ -51,5 +53,6 @@ podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
 
 app.listen(7100, () => {
+    // eslint-disable-next-line no-console
     console.log(`http://localhost:7100`);
 });

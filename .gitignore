@@ -5,3 +5,10 @@ coverage/
 node_modules/
 *.log
 .vscode
+node_modules
+node_modules/**/*
+.DS_Store
+tmp/**/*
+.idea
+.idea/**/*
+coverage

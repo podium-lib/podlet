@@ -1,4 +1,5 @@
 /* eslint-env browser */
+
 'use strict';
 
 const element = document.getElementById('content');

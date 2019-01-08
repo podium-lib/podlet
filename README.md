@@ -1,6 +1,6 @@
 # @podium/podlet
 
-[![Build Status](https://travis.schibsted.io/Podium/podlet.svg?token=qt273uGfEz64UyWuNHJ1&branch=master)](https://travis.schibsted.io/Podium/podlet)
+[![Build Status](https://travis-ci.org/podium-lib/podlet.svg?branch=master)](https://travis-ci.org/podium-lib/podlet)
 
 Module for building a podlet server.
 
@@ -244,7 +244,7 @@ a podlet to fully work.
 
 What it does:
 
--   Parses the [context](https://github.schibsted.io/Podium/context) from a request from the layout server into an object on the HTTP response at `res.locals.podium.context`.
+-   Parses the [context](https://github.com/podium-lib/context) from a request from the layout server into an object on the HTTP response at `res.locals.podium.context`.
 -   Adds a podium version HTTP header to the HTTP response.
 -   Provides information on `res.locals.podium.template` about whether the request is from a layout server or not.
 
@@ -651,7 +651,7 @@ Prefix will be ignored if the returned value is an absolute URL.
 
 ### .proxy({ target, name })
 
-Method for defining proxy targets to be mounted by the [proxy](https://github.schibsted.io/Podium/proxy)
+Method for defining proxy targets to be mounted by the [proxy](https://github.com/podium-lib/proxy)
 module in a layout server. It's worth mentioning that this will **not** mount
 a proxy in the server where the podlet instance is used.
 
@@ -707,13 +707,13 @@ in different layout servers if the podlet is included in multiple layout
 servers.
 
 Information regarding where proxy endpoints are mounted in any given layout can be found by inspecting the
-[`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname) key
-of the Podium [context](https://github.schibsted.io/Podium/context) for each
+[`publicPathname`](https://github.com/podium-lib/context#public-pathname) key
+of the Podium [context](https://github.com/podium-lib/context) for each
 request made to the podlet by a layout.
 
-By combining [`publicPathname`](https://github.schibsted.io/Podium/context#public-pathname)
-and [`mountOrigin`](https://github.schibsted.io/Podium/context#mount-origin)
-from the [context](https://github.schibsted.io/Podium/context) object, it is
+By combining [`publicPathname`](https://github.com/podium-lib/context#public-pathname)
+and [`mountOrigin`](https://github.com/podium-lib/context#mount-origin)
+from the [context](https://github.com/podium-lib/context) object, it is
 possible to build absolute URLs to a podlet's proxy endpoints.
 
 _Example:_
