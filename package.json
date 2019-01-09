@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-beta.1",
   "main": "lib/podlet.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
