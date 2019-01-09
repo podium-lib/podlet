@@ -22,8 +22,8 @@
   "dependencies": {
     "@metrics/client": "^2.2.0",
     "@podium/proxy": "2.3.0",
-    "@podium/schemas": "2.1.1",
-    "@podium/utils": "2.1.0",
+    "@podium/schemas": "3.0.0-beta.1",
+    "@podium/utils": "3.0.0-beta.1",
     "abslog": "2.2.2",
     "joi": "13.7.0",
     "lodash.merge": "^4.6.1",
