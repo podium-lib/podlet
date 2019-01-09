@@ -2,7 +2,7 @@
 
 /* eslint-disable import/no-extraneous-dependencies */
 
-const Metrics = require('@podium/metrics');
+const Metrics = require('@metrics/client');
 const express = require('express');
 const http = require('http');
 const url = require('url');
@@ -999,14 +999,14 @@ test('.view() - append a custom wireframe document - should render development o
  * .metrics
  */
 
-test('.metrics - assigned object to property - should be instance of @podium/metrics', () => {
+test('.metrics - assigned object to property - should be instance of @metrics/client', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(podlet.metrics).toBeInstanceOf(Metrics);
 });
 
-test('.metrics - assigned object to property - should have object tag with "PodiumMetrics" as name', () => {
+test('.metrics - assigned object to property - should have object tag with "Metrics" as name', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet.metrics)).toEqual(
-        '[object PodiumMetrics]',
+        '[object Metrics]',
     );
 });
