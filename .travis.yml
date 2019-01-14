@@ -41,5 +41,6 @@ cache:
 branches:
    only:
    - master
+   - /^greenkeeper/.*$/
 
 dist: trusty
