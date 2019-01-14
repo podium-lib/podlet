@@ -1,6 +1,6 @@
 # @podium/podlet
 
-[![Build Status](https://travis-ci.org/podium-lib/podlet.svg?branch=master)](https://travis-ci.org/podium-lib/podlet)
+[![Build Status](https://travis-ci.org/podium-lib/podlet.svg?branch=master)](https://travis-ci.org/podium-lib/podlet) [![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/podlet.svg)](https://greenkeeper.io/)
 
 Module for building a podlet server.
 
