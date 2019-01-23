@@ -1,10 +1,22 @@
 language: node_js
 
 node_js:
-  - "10"
-  - "8"
+  - '11'
+  - '10'
+  - '8'
 
-script: npm run test:coverage && npm run lint
+os:
+  - linux
+  - osx
+  - windows
+
+install:
+  - npm install --ignore-scripts
+
+script:
+  - npm test
+
+sudo: enabled
 
 jobs:
   fast_finish: true
@@ -13,6 +25,10 @@ jobs:
 
     # Nightlies
     - stage: Node.js pre-releases
+      node_js: '12'
+      if: type = cron
+      env: NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
+    -
       node_js: '11'
       if: type = cron
       env: NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/nightly/
@@ -27,6 +43,10 @@ jobs:
 
     # Release Candidates
     -
+      node_js: '11'
+      if: type = cron
+      env: NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/rc/
+    -
       node_js: '10'
       if: type = cron
       env: NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/rc/
@@ -35,12 +55,7 @@ jobs:
       if: type = cron
       env: NVM_NODEJS_ORG_MIRROR=https://nodejs.org/download/rc/
 
-cache:
-  node: true
 
-branches:
-   only:
-   - master
-   - /^greenkeeper/.*$/
-
-dist: trusty
+notifications:
+  email:
+    - post@trygve-lie.com
