@@ -19,10 +19,9 @@ class FakeServer {
     constructor(podlet, middleware) {
         this.app = express();
         this.app.use(podlet.middleware());
-        this.app.use(
-            middleware || (req, res) => {
+        this.app.use(middleware || ((req, res) => {
                       res.status(200).json(res.locals);
-                  }
+                  })
         );
         this.server = undefined;
         this.address = '';
@@ -977,6 +976,6 @@ test('.metrics - assigned object to property - should be instance of @metrics/cl
 test('.metrics - assigned object to property - should have object tag with "Metrics" as name', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet.metrics)).toEqual(
-        '[object Metrics]'
+        '[object MetricsClient]'
     );
 });
