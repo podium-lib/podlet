@@ -21,15 +21,17 @@ podlet.defaults({
 app.use(podlet.middleware());
 
 app.get(podlet.content(), (req, res) => {
-    if (res.locals.podium.context.locale === 'nb-NO') {
-        res.podiumSend('<h2>Hei verden</h2>');
+    const p = res.locals.podium;
+    if (p.context.locale === 'nb-NO') {
+        res.send(p.render('<h2>Hei verden</h2>'));
         return;
     }
-    res.podiumSend('<h2>Hello world</h2>');
+    res.send(p.render('<h2>Hello world</h2>'));
 });
 
 app.get(podlet.fallback(), (req, res) => {
-    res.podiumSend('<h2>We are sorry but we can not display this!</h2>');
+    const p = res.locals.podium;
+    res.send(p.render('<h2>We are sorry but we can not display this!</h2>'));
 });
 
 app.get(podlet.manifest(), (req, res) => {
@@ -37,17 +39,12 @@ app.get(podlet.manifest(), (req, res) => {
 });
 
 app.get('/public', (req, res) => {
-    if (res.locals.podium.context.locale === 'nb-NO') {
-        res.json({ say: 'Hei verden' });
-        return;
-    }
     res.json({ say: 'Hello world' });
 });
 
 podlet.proxy({ target: '/public', name: 'localApi' });
 podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
 
-app.use('/assets', express.static('assets'));
 podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
 

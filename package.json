@@ -16,8 +16,7 @@
     "test": "jest .",
     "test:verbose": "jest --verbose",
     "test:coverage": "jest --coverage",
-    "lint:format": "eslint --fix .",
-    "precommit": "lint-staged"
+    "lint:format": "eslint --fix ."
   },
   "dependencies": {
     "@metrics/client": "2.3.0",

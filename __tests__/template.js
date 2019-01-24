@@ -63,13 +63,9 @@ test('template() - "res" argument is given with a full .locals.podium object - s
         </html>`;
 
     const tmpl = template('foo', {
-        locals: {
-            podium: {
-                name: 'bar',
-                css: '/styles.css',
-                js: '/script.js',
-            },
-        },
+        name: 'bar',
+        css: '/styles.css',
+        js: '/script.js',
     });
     expect(sanitize(tmpl)).toEqual(sanitize(str));
 });
