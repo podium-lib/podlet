@@ -1007,6 +1007,6 @@ test('.metrics - assigned object to property - should be instance of @metrics/cl
 test('.metrics - assigned object to property - should have object tag with "Metrics" as name', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet.metrics)).toEqual(
-        '[object Metrics]',
+        '[object MetricsClient]',
     );
 });
