@@ -2,9 +2,9 @@
 
 const Metrics = require('@metrics/client');
 const express = require('express');
-const Podlet = require('../');
 const http = require('http');
 const url = require('url');
+const Podlet = require('../');
 const template = require('../lib/template');
 
 /**
