@@ -654,49 +654,6 @@ test('.middleware() - valid "version" value is set on constructor - should appen
 });
 
 // #############################################
-// .render()
-// #############################################
-
-/*
-test('.render() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet, (req, res) => {
-        res.send(podlet.render('<h1>OK!</h1>', res));
-    });
-
-    await server.listen();
-    const result = await server.get({ raw: true });
-
-    expect(result.response).toEqual('<h1>OK!</h1>');
-    await server.close();
-});
-
-test('.render() - contructor argument "development" is set to "true" - should append default wireframe document', async () => {
-    const options = Object.assign({}, DEFAULT_OPTIONS, {
-        development: true,
-    });
-    const podlet = new Podlet(options);
-    const server = new FakeServer(podlet, (req, res) => {
-        res.send(podlet.render('<h1>OK!</h1>', res));
-    });
-
-    await server.listen();
-    const result = await server.get({ raw: true });
-
-    expect(result.response).toEqual(
-        template('<h1>OK!</h1>', {
-            locals: {
-                podium: {
-                    name: DEFAULT_OPTIONS.name,
-                },
-            },
-        })
-    );
-    await server.close();
-});
-*/
-
-// #############################################
 // .res.podiumSend()
 // #############################################
 
