@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet",
-  "version": "3.0.0-beta.3",
+  "version": "3.0.0-beta.4",
   "main": "lib/podlet.js",
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
@@ -33,13 +33,13 @@
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^4.0.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-prettier": "^3.0.1",
     "express": "^4.16.3",
     "husky": "^1.3.1",
     "jest": "^24.0.0",
-    "lint-staged": "^8.1.0",
-    "prettier": "^1.14.3"
+    "lint-staged": "^8.1.1",
+    "prettier": "^1.16.3"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
