@@ -24,7 +24,7 @@
     "@podium/proxy": "^2.4.4",
     "@podium/schemas": "3.0.0-beta.1",
     "@podium/utils": "3.1.0",
-    "abslog": "2.2.3",
+    "abslog": "2.3.0",
     "joi": "14.3.1",
     "lodash.merge": "^4.6.1",
     "original-url": "^1.2.2"
