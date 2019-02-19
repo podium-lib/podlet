@@ -20,10 +20,10 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
-    "@metrics/client": "2.3.0",
+    "@metrics/client": "2.3.1",
     "@podium/proxy": "^2.4.4",
     "@podium/schemas": "3.0.0-beta.1",
-    "@podium/utils": "3.1.0",
+    "@podium/utils": "3.1.1",
     "abslog": "2.3.0",
     "joi": "14.3.1",
     "lodash.merge": "^4.6.1",
