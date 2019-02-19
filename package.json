@@ -1,12 +1,17 @@
 {
   "name": "@podium/podlet",
   "version": "3.0.0-beta.5",
+  "description": "Module for building page fragment servers in a micro frontend architecture. ",
   "main": "lib/podlet.js",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/podium-lib/podlet"
   },
+  "bugs": {
+    "url": "https://github.com/podium-lib/issues"
+  },
+  "homepage": "https://podium-lib.io/",
   "files": [
     "lib"
   ],

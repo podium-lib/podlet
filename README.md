@@ -1,10 +1,22 @@
 # @podium/podlet
 
+Module for building page fragment servers in a micro frontend architecture.
+
 [![Build Status](https://travis-ci.org/podium-lib/podlet.svg?branch=master)](https://travis-ci.org/podium-lib/podlet)
 [![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/podlet.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/podlet/badge.svg)](https://snyk.io/test/github/podium-lib/podlet)
 
-Module for building a podlet server.
+Module for building a podlet server. A Podlet server is responsible for generating HTML
+fragments which a [layout](https://github.com/podium-lib/layout) server will use to compose
+a full HTML page.
+
+This module can be used together with a plain node.js http server or any http framework and any templating
+language of your choosing (or none if you prefer). Though; Connect compatible middleware based frameworks
+(such as express.js) is first class in Podium so this module comes with a `.middleware()` method for convenience.
+
+For writing podlet servers with other http frameworks the following modules exist:
+
+-   [Hapi Podlet Plugin](https://github.com/podium-lib/hapi-podlet)
 
 ## Installation
 
@@ -239,16 +251,53 @@ Turns development mode on or off. See section about development mode.
 
 The podlet instance has the following API:
 
-### .middleware()
+### .process(HttpIncoming)
 
-Returns an array of connect compatible middleware functions which take care of the multiple operations needed for
-a podlet to fully work.
+Metod for processing a incomming http request. This method is intended to be used
+to implement support for multiple http frameworks and should not really be used
+directly in a podlet server.
 
 What it does:
 
--   Parses the [context](https://github.com/podium-lib/context) from a request from the layout server into an object on the HTTP response at `res.locals.podium.context`.
--   Adds a podium version HTTP header to the HTTP response.
--   Provides information on `res.locals.podium.template` about whether the request is from a layout server or not.
+-   Handles detection of development mode and sets appropiate defaults
+-   Runs context deserializing on the incomming request and sets an object with the context at `HttpIncoming.context`.
+
+Returns a `HttpIncoming` object.
+
+The method take the following arguments:
+
+#### HttpIncoming (required)
+
+An instance of a [HttpIncoming object](https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js).
+
+```js
+const { HttpIncoming } = require('@podium/utils');
+const Podlet = require('@podium/podlet');
+
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+app.use(async (req, res, next) => {
+    const incoming = new HttpIncoming(req, res, res.locals);
+    try {
+        const result = await podlet.process(incoming);
+        if (result) {
+            res.locals.podium = result;
+            next();
+        }
+    } catch (error) {
+        next(error);
+    }
+});
+```
+
+### .middleware()
+
+A Connect compatible middleware functions which takes care of the multiple operations needed for
+a podlet to fully work. It is more or less a wrapper for the `.process()` method.
 
 **Important:** This middleware must be mounted before defining any routes.
 
@@ -752,35 +801,14 @@ app.get(podlet.content(), (req, res) => {
 app.listen(7100);
 ```
 
-### .render(fragment, res)
-
-Method for rendering an HTML fragment.
-
-When in development mode this method will wrap the provided fragment in a default
-HTML document. When not in development mode, this method will just return the fragment.
-
-The method takes a fragment / plain text String and a `http.ServerResponse` object.
-
-_Example of rendering an HTML fragment:_
-
-```js
-app.get(podlet.content(), (req, res) => {
-    const content = podlet.render('<h1>Hello World</h1>', res);
-    res.send(content);
-});
-```
-
 ### res.podiumSend(fragment)
 
-Method on the `http.ServerResponse` object for sending an HTML fragment. Wraps `.render()`
-and calls the send / write method on the `http.ServerResponse` object.
+Method on the `http.ServerResponse` object for sending an HTML fragment. Calls the
+send / write method on the `http.ServerResponse` object.
 
 When in development mode this method will wrap the provided fragment in a default
 HTML document before dispatching. When not in development mode, this method will just
 dispatch the fragment.
-
-This method more or less does the same as `.render()` with the advantage that one
-does not need to provide an `http.ServerResponse` object and dispatch it manually.
 
 _Example of sending an HTML fragment:_
 
@@ -790,13 +818,9 @@ app.get(podlet.content(), (req, res) => {
 });
 ```
 
-The `.podiumSend()` method is appended to `http.ServerResponse` object when the
-`.middleware()` method is run.
-
 ### .defaults(context)
 
-Alters the default context set on the HTTP response at `res.locals.podium.context` when in development
-mode.
+Alters the default context set when in development mode.
 
 By default this context has the following shape:
 
@@ -854,11 +878,11 @@ Override the default encapsulating HTML document when in development mode.
 Takes a function in the following shape:
 
 ```js
-podlet.view((fragment, response) => {
+podlet.view((fragment, incoming) => {
     return `<html>
                 <head>
-                    <title>${response.locals.podium.name}</title>
-                    <script src="${response.locals.podium.js}" defer></script>
+                    <title>${incoming.name}</title>
+                    <script src="${incoming.js}" defer></script>
                 </head>
                 <body>
                     ${fragment}
@@ -867,11 +891,13 @@ podlet.view((fragment, response) => {
 });
 ```
 
+
+
 ## Development mode
 
-In most cases podlets are fragments of a whole HTML document. When a Layout server is requesting
+In most cases podlets are fragments of a whole HTML document. When a layout server is requesting
 a podlet's content or fallback, the podlet should serve just that fragment and not a whole HTML
-document with its `<html>`, `<head>` and `<body>`. It is also the case that when a Layout server is
+document with its `<html>`, `<head>` and `<body>`. It is also the case that when a layout server is
 requesting a podlet it provides a context.
 
 These things can causes a challenge for local development since accessing a podlet directly, from a web browser,
@@ -881,9 +907,8 @@ that the podlet might need to function properly.
 To solve this it is possible to switch a podlet to development mode by setting the `development` argument
 in the constructor to `true`.
 
-When in development mode a default context on the HTTP response at `res.locals.podium.context` will
-be set and an encapsulating HTML document will be provided (so long as `res.podiumSend()` is used) when
-dispatching the content or fallback.
+When in development mode a default context on the HTTP response will be set and an encapsulating HTML document
+will be provided (so long as `res.podiumSend()` is used) when dispatching the content or fallback.
 
 The default HTML document for encapsulating a fragment will reference the values set on `.css()` and `.js()`
 and use `locale` from the default context to set language on the document.
@@ -894,7 +919,7 @@ instance.
 The default encapsulating HTML document used in development mode can be replaced by the `.view()` method of
 the podlet instance.
 
-Only turn on development mode during local development and keep it off in production.
+Do note: Do only turn on development mode during local development and keep it off in production.
 
 _Example of turning on development mode only in local development:_
 
@@ -904,5 +929,5 @@ const podlet = new Podlet({
 });
 ```
 
-When a layout server sends a request to a podlet in development mode, the default context will be overridden by the context from the layout server and the encapsulating HTML
-document will not be applied.
+When a layout server sends a request to a podlet in development mode, the default context will be overridden by
+the context from the layout server and the encapsulating HTML document will not be applied.
