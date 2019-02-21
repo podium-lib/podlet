@@ -1,9 +1,9 @@
 'use strict';
 
-const express = require('express');
+const polka = require('polka');
 const Podlet = require('../../');
 
-const app = express();
+const app = polka();
 
 const podlet = new Podlet({
     pathname: '/',
@@ -21,21 +21,26 @@ podlet.defaults({
 app.use(podlet.middleware());
 
 app.get(podlet.content(), (req, res) => {
-    if (res.locals.podium.context.locale === 'nb-NO') {
-        res.podiumSend('<h2>Hei verden</h2>');
+    const p = res.locals.podium;
+    if (p.context.locale === 'nb-NO') {
+        res.end(p.render('<h2>Hei verden</h2>', res));
         return;
     }
-    res.podiumSend('<h2>Hello world</h2>');
+    res.end(p.render('<h2>Hello world</h2>'));
 });
 
 app.get(podlet.fallback(), (req, res) => {
-    res.podiumSend('<h2>We are sorry but we can not display this!</h2>');
+    const p = res.locals.podium;
+    res.end(
+        p.render('<h2>We are sorry but we can not display this!</h2>', res)
+    );
 });
 
 app.get(podlet.manifest(), (req, res) => {
-    res.json(podlet);
+    res.end(JSON.stringify(podlet));
 });
 
+/*
 app.get('/public', (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.json({ say: 'Hei verden' });
@@ -48,6 +53,8 @@ podlet.proxy({ target: '/public', name: 'localApi' });
 podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
 
 app.use('/assets', express.static('assets'));
+*/
+
 podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
 

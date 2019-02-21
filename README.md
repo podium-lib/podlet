@@ -1,10 +1,25 @@
 # @podium/podlet
 
+Module for building page fragment servers in a micro frontend architecture.
+
 [![Build Status](https://travis-ci.org/podium-lib/podlet.svg?branch=master)](https://travis-ci.org/podium-lib/podlet)
 [![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/podlet.svg)](https://greenkeeper.io/)
 [![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/podlet/badge.svg)](https://snyk.io/test/github/podium-lib/podlet)
 
-Module for building a podlet server.
+Module for building a podlet server. A Podlet server is responsible for
+generating HTML fragments which a [@podium/layout] server will use to compose a
+full HTML page.
+
+This module can be used together with a plain node.js http server or any http
+framework and any templating language of your choosing (or none if you prefer).
+Though; Connect compatible middleware based frameworks (such as [Express]) is
+first class in Podium so this module comes with a `.middleware()` method for
+convenience.
+
+For writing podlet servers with other http frameworks the following modules
+exist:
+
+-   [Hapi Podlet Plugin]
 
 ## Installation
 
@@ -14,7 +29,7 @@ $ npm install @podium/podlet
 
 ## Getting started
 
-Building a simple podlet server using [Express](https://expressjs.com/)
+Building a simple podlet server using [Express].
 
 ```js
 const express = require('express');
@@ -85,9 +100,10 @@ const podlet = new Podlet({
 
 #### version
 
-The current version of the podlet. It is important that this value be updated when a
-new version of the podlet is deployed as the page (layout) that the podlet is
-displayed in uses this value to know whether to refresh the podlet or not.
+The current version of the podlet. It is important that this value be updated
+when a new version of the podlet is deployed as the page (layout) that the
+podlet is displayed in uses this value to know whether to refresh the podlet or
+not.
 
 _Example:_
 
@@ -100,8 +116,8 @@ const podlet = new Podlet({
 #### pathname
 
 Pathname of where a Podlet is mounted in an HTTP server. It is important that
-this value matches where the entry point of a route is in an HTTP server
-since this value is used to define where the manifest is for the podlet.
+this value matches where the entry point of a route is in an HTTP server since
+this value is used to define where the manifest is for the podlet.
 
 If the podlet is mounted at the "root", set `pathname` to `/`:
 
@@ -120,7 +136,8 @@ app.get('/', (req, res, next) => {
 });
 ```
 
-If the podlet is to be mounted at `/foo`, set pathname to `/foo` and mount middleware and routes at or under `/foo`
+If the podlet is to be mounted at `/foo`, set pathname to `/foo` and mount
+middleware and routes at or under `/foo`
 
 ```js
 const app = express();
@@ -143,11 +160,12 @@ app.get('/foo/:id', (req, res, next) => {
 
 #### manifest
 
-Defines the pathname for the manifest of the Podlet. Defaults to `/manifest.json`.
+Defines the pathname for the manifest of the Podlet. Defaults to
+`manifest.json`.
 
-The value should be relative to the value set on the `pathname` argument. In other
-words; if a Podlet is mounted into an HTTP server at `/foo` and the manifest is at
-`/foo/component.json`, set pathname and manifest as follow:
+The value should be relative to the value set on the `pathname` argument. In
+other words; if a Podlet is mounted into an HTTP server at `/foo` and the
+manifest is at `/foo/component.json`, set pathname and manifest as follow:
 
 ```js
 const app = express();
@@ -163,16 +181,16 @@ app.get('/foo/component.json', (req, res, next) => {
 });
 ```
 
-The value can be a relative URL and the `.manifest()` method can be used to retrieve
-the value after it has been set.
+The value can be a relative URL and the `.manifest()` method can be used to
+retrieve the value after it has been set.
 
 #### content
 
 Defines the pathname for the content of the Podlet. Defaults to `/`.
 
-The value should be relative to the value set on the `pathname` argument. In other
-words; if a Podlet is mounted into an HTTP server at `/foo` and the content is at
-`/foo/index.html`, set pathname and content as follows.
+The value should be relative to the value set on the `pathname` argument. In
+other words; if a Podlet is mounted into an HTTP server at `/foo` and the
+content is at `/foo/index.html`, set pathname and content as follows.
 
 ```js
 const app = express();
@@ -192,11 +210,12 @@ The value can be a relative or absolute URL and the `.content()` method can be u
 
 #### fallback
 
-Defines the pathname for the fallback of the Podlet. Defaults to an empty string.
+Defines the pathname for the fallback of the Podlet. Defaults to an empty
+string.
 
-The value should be relative to the value set on the `pathname` argument. In other
-words; if a Podlet is mounted into an HTTP server at `/foo` and the fallback is at
-`/foo/fallback.html`, set pathname and fallback as follows.
+The value should be relative to the value set on the `pathname` argument. In
+other words; if a Podlet is mounted into an HTTP server at `/foo` and the
+fallback is at `/foo/fallback.html`, set pathname and fallback as follows.
 
 ```js
 const app = express();
@@ -212,7 +231,8 @@ app.get('/foo/fallback.html', (req, res, next) => {
 });
 ```
 
-The value can be a relative or absolute URL and the `.fallback()` method can be used to retrieve the value after it has been set.
+The value can be a relative or absolute URL and the `.fallback()` method can be
+used to retrieve the value after it has been set.
 
 #### logger
 
@@ -227,9 +247,8 @@ const podlet = new Podlet({
 });
 ```
 
-Under the hood [abslog](https://github.com/trygve-lie/abslog) is used to
-abstract out logging. Please see [abslog](https://github.com/trygve-lie/abslog)
-for further details.
+Under the hood [abslog] is used to abstract out logging. Please see [abslog] for
+further details.
 
 #### development
 
@@ -239,16 +258,54 @@ Turns development mode on or off. See section about development mode.
 
 The podlet instance has the following API:
 
-### .middleware()
+### .process(HttpIncoming)
 
-Returns an array of connect compatible middleware functions which take care of the multiple operations needed for
-a podlet to fully work.
+Metod for processing a incomming http request. This method is intended to be
+used to implement support for multiple http frameworks and should not really be
+used directly in a podlet server.
 
 What it does:
 
--   Parses the [context](https://github.com/podium-lib/context) from a request from the layout server into an object on the HTTP response at `res.locals.podium.context`.
--   Adds a podium version HTTP header to the HTTP response.
--   Provides information on `res.locals.podium.template` about whether the request is from a layout server or not.
+-   Handles detection of development mode and sets appropiate defaults
+-   Runs context deserializing on the incomming request and sets an object with the context at `HttpIncoming.context`.
+
+Returns a [HttpIncoming] object.
+
+The method take the following arguments:
+
+#### HttpIncoming (required)
+
+An instance of an [HttpIncoming] class.
+
+```js
+const { HttpIncoming } = require('@podium/utils');
+const Podlet = require('@podium/podlet');
+
+const podlet = new Podlet({
+    name: 'myPodlet',
+    version: '1.0.0',
+    pathname: '/',
+});
+
+app.use(async (req, res, next) => {
+    const incoming = new HttpIncoming(req, res, res.locals);
+    try {
+        const result = await podlet.process(incoming);
+        if (result) {
+            res.locals.podium = result;
+            next();
+        }
+    } catch (error) {
+        next(error);
+    }
+});
+```
+
+### .middleware()
+
+A Connect compatible middleware functions which takes care of the multiple
+operations needed for a podlet to fully work. It is more or less a wrapper for
+the `.process()` method.
 
 **Important:** This middleware must be mounted before defining any routes.
 
@@ -331,8 +388,8 @@ The route will then respond with something like:
 
 #### prefix
 
-Sets whether the method should prefix the return value with the value for `pathname`
-set in the constructor.
+Sets whether the method should prefix the return value with the value for
+`pathname` set in the constructor.
 
 _Examples:_
 
@@ -408,7 +465,8 @@ app.get('/content/info/:id', (req, res) => { ... });
 
 #### prefix
 
-Specifies whether the method should prefix the return value with the value for `pathname` that was set in the constructor.
+Specifies whether the method should prefix the return value with the value for
+`pathname` that was set in the constructor.
 
 _Examples:_
 
@@ -456,8 +514,8 @@ app.get(podlet.fallback(), (req, res) => { ... });
 
 #### prefix
 
-If the method should prefix the return value with the value for `pathname`
-set at the constructor.
+If the method should prefix the return value with the value for `pathname` set
+at the constructor.
 
 _Examples:_
 
@@ -479,10 +537,11 @@ Prefix will be ignored if the returned value is an absolute URL.
 
 ### .js(options)
 
-Sets and returns the pathname for a Podlets javascript assets. Defaults to an empty String.
+Sets and returns the pathname for a Podlets javascript assets. Defaults to an
+empty String.
 
-When a value is set it will be internally keep and used when the podlet instance is serialized
-into a manifest JSON string.
+When a value is set it will be internally keep and used when the podlet
+instance is serialized into a manifest JSON string.
 
 ### options
 
@@ -493,10 +552,13 @@ into a manifest JSON string.
 
 #### value
 
-Used to set the pathname for the javascript assets for the Podlet. The value can be a URL at which the podlet's user facing JavaScript is served. The value can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname) of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+Used to set the pathname for the javascript assets for the Podlet. The value
+can be a URL at which the podlet's user facing JavaScript is served. The value
+can be the [pathname] of a [URL] or an absolute URL.
 
-The value can only be set once. If called multiple times with a value, the method will throw.
-The method can, however, be called multiple times to retrieve the value.
+The value can only be set once. If called multiple times with a value, the
+method will throw. The method can, however, be called multiple times to
+retrieve the value.
 
 _Examples:_
 
@@ -515,7 +577,8 @@ app.get(podlet.js({ value: '/assets/main.js' }), (req, res) => {
 });
 ```
 
-Serve assets statically along side the app and set a relative URI to the JavaScript file:
+Serve assets statically along side the app and set a relative URI to the
+JavaScript file:
 
 ```js
 const app = express();
@@ -543,8 +606,8 @@ podlet.js({ value: 'http://cdn.mysite.com/assets/js/e7rfg76.js' });
 
 #### prefix
 
-Specify whether the method should prefix the return value with the value for `pathname`
-set in the constructor.
+Specify whether the method should prefix the return value with the value for
+`pathname` set in the constructor.
 
 _Examples:_
 
@@ -565,10 +628,11 @@ Prefix will be ignored if the returned value is an absolute URL.
 
 ### .css(pathname)
 
-Sets and returns the pathname for a Podlets CSS assets. Defaults to an empty String.
+Sets and returns the pathname for a Podlets CSS assets. Defaults to an empty
+String.
 
-When a value is set it will be internally kept and used when the podlet instance is serialized
-into a manifest JSON string.
+When a value is set it will be internally kept and used when the podlet
+instance is serialized into a manifest JSON string.
 
 ### options
 
@@ -579,12 +643,13 @@ into a manifest JSON string.
 
 #### value
 
-Used to set the pathname for the CSS assets for the Podlet. The value can be a URL at
-which the podlet's user facing CSS is served. The value can be the [pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname)
-of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+Used to set the pathname for the CSS assets for the Podlet. The value can be a
+URL at which the podlet's user facing CSS is served. The value can be the
+[pathname] of a [URL] or an absolute URL.
 
-The value can be set only once. If called multiple times with a value, the method will throw.
-The method can be called multiple times to retrieve the value though.
+The value can be set only once. If called multiple times with a value, the
+method will throw. The method can be called multiple times to retrieve the
+value though.
 
 _Examples:_
 
@@ -631,8 +696,8 @@ podlet.css({ value: 'http://cdn.mysite.com/assets/css/3ru39ur.css' });
 
 #### prefix
 
-Sets whether the method should prefix the return value with the value for `pathname`
-set in the constructor.
+Sets whether the method should prefix the return value with the value for
+`pathname` set in the constructor.
 
 _Examples:_
 
@@ -653,22 +718,21 @@ Prefix will be ignored if the returned value is an absolute URL.
 
 ### .proxy({ target, name })
 
-Method for defining proxy targets to be mounted by the [proxy](https://github.com/podium-lib/proxy)
-module in a layout server. It's worth mentioning that this will **not** mount
-a proxy in the server where the podlet instance is used.
+Method for defining proxy targets to be mounted by the [@podium/proxy] module
+in a layout server. It's worth mentioning that this will **not** mount a proxy
+in the server where the podlet instance is used.
 
-Proxying is intended to be used as a way to make podlet endpoints public.
-A common use case for this is creating endpoints for client side code to
-interact with (ajax requests from the browser). One might also make use
-of proxying to pass form submissions from the browser back to the podlet.
+Proxying is intended to be used as a way to make podlet endpoints public. A
+common use case for this is creating endpoints for client side code to interact
+with (ajax requests from the browser). One might also make use of proxying to
+pass form submissions from the browser back to the podlet.
 
 This method returns the value of the `target` argument and internally keeps
 track of the value of `target` for use when the podlet instance is serialized
 into a manifest JSON string.
 
-In a podlet it is possible to define up to 4 proxy targets and each target can be the
-[pathname](https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname)
-part of a [URL](https://developer.mozilla.org/en-US/docs/Web/API/URL) or an absolute URL.
+In a podlet it is possible to define up to 4 proxy targets and each target can
+be the [pathname] part of a [URL] or an absolute URL.
 
 For each podlet, each proxy target must have a unique name.
 
@@ -701,28 +765,25 @@ podlet.proxy({ target: 'http://remote.site.com/api/', name: 'remoteApi' });
 
 #### Knowing where proxy endpoints are mounted in a layout
 
-When proxy targets are mounted in a layout server they are namespaced
-to avoid proxy targets from multiple podlets conflicting with each other.
+When proxy targets are mounted in a layout server they are namespaced to avoid
+proxy targets from multiple podlets conflicting with each other.
 
-This can cause a proxy endpoint in a podlet to have different pathnames
-in different layout servers if the podlet is included in multiple layout
-servers.
+This can cause a proxy endpoint in a podlet to have different pathnames in
+different layout servers if the podlet is included in multiple layout servers.
 
-Information regarding where proxy endpoints are mounted in any given layout can be found by inspecting the
-[`publicPathname`](https://github.com/podium-lib/context#public-pathname) key
-of the Podium [context](https://github.com/podium-lib/context) for each
-request made to the podlet by a layout.
+Information regarding where proxy endpoints are mounted in any given layout can
+be found by inspecting the [publicPathname] key of the [@podium/context] for
+each request made to the podlet by a layout.
 
-By combining [`publicPathname`](https://github.com/podium-lib/context#public-pathname)
-and [`mountOrigin`](https://github.com/podium-lib/context#mount-origin)
-from the [context](https://github.com/podium-lib/context) object, it is
-possible to build absolute URLs to a podlet's proxy endpoints.
+By combining [publicPathname] and [mountOrigin] from the [@podium/context]
+object, it is possible to build absolute URLs to a podlet's proxy endpoints.
 
 _Example:_
 
-This example demonstrates a podlet server that exposes one HTTP POST endpoint which will be made publicly
-available through a proxy in a layout and one content endpoint which supplies an HTML form
-that, when submitted, will make a POST request to the HTTP POST endpoint we defined.
+This example demonstrates a podlet server that exposes one HTTP POST endpoint
+which will be made publicly available through a proxy in a layout and one
+content endpoint which supplies an HTML form that, when submitted, will make a
+POST request to the HTTP POST endpoint we defined.
 
 ```js
 const app = express();
@@ -752,35 +813,14 @@ app.get(podlet.content(), (req, res) => {
 app.listen(7100);
 ```
 
-### .render(fragment, res)
-
-Method for rendering an HTML fragment.
-
-When in development mode this method will wrap the provided fragment in a default
-HTML document. When not in development mode, this method will just return the fragment.
-
-The method takes a fragment / plain text String and a `http.ServerResponse` object.
-
-_Example of rendering an HTML fragment:_
-
-```js
-app.get(podlet.content(), (req, res) => {
-    const content = podlet.render('<h1>Hello World</h1>', res);
-    res.send(content);
-});
-```
-
 ### res.podiumSend(fragment)
 
-Method on the `http.ServerResponse` object for sending an HTML fragment. Wraps `.render()`
-and calls the send / write method on the `http.ServerResponse` object.
+Method on the `http.ServerResponse` object for sending an HTML fragment. Calls
+the send / write method on the `http.ServerResponse` object.
 
-When in development mode this method will wrap the provided fragment in a default
-HTML document before dispatching. When not in development mode, this method will just
-dispatch the fragment.
-
-This method more or less does the same as `.render()` with the advantage that one
-does not need to provide an `http.ServerResponse` object and dispatch it manually.
+When in development mode this method will wrap the provided fragment in a
+default HTML document before dispatching. When not in development mode, this
+method will just dispatch the fragment.
 
 _Example of sending an HTML fragment:_
 
@@ -790,13 +830,9 @@ app.get(podlet.content(), (req, res) => {
 });
 ```
 
-The `.podiumSend()` method is appended to `http.ServerResponse` object when the
-`.middleware()` method is run.
-
 ### .defaults(context)
 
-Alters the default context set on the HTTP response at `res.locals.podium.context` when in development
-mode.
+Alters the default context set when in development mode.
 
 By default this context has the following shape:
 
@@ -812,8 +848,8 @@ By default this context has the following shape:
 }
 ```
 
-The default development mode context can be overridden by passing an object with the
-desired key / values to override.
+The default development mode context can be overridden by passing an object with
+the desired key / values to override.
 
 _Example of overriding `deviceType`:_
 
@@ -828,8 +864,8 @@ podlet.defaults({
 });
 ```
 
-Additional values not defined by Podium can also be appended to the
-default development mode context in the same way.
+Additional values not defined by Podium can also be appended to the default
+development mode context in the same way.
 
 _Example of adding a context value:_
 
@@ -844,8 +880,8 @@ podlet.defaults({
 });
 ```
 
-N.B. The default development mode context will only be appended to the response when
-the constructor argument `development` is set to `true`.
+N.B. The default development mode context will only be appended to the response
+when the constructor argument `development` is set to `true`.
 
 ### .view(template)
 
@@ -854,11 +890,11 @@ Override the default encapsulating HTML document when in development mode.
 Takes a function in the following shape:
 
 ```js
-podlet.view((fragment, response) => {
+podlet.view((fragment, incoming) => {
     return `<html>
                 <head>
-                    <title>${response.locals.podium.name}</title>
-                    <script src="${response.locals.podium.js}" defer></script>
+                    <title>${incoming.name}</title>
+                    <script src="${incoming.js}" defer></script>
                 </head>
                 <body>
                     ${fragment}
@@ -867,34 +903,40 @@ podlet.view((fragment, response) => {
 });
 ```
 
+
+
 ## Development mode
 
-In most cases podlets are fragments of a whole HTML document. When a Layout server is requesting
-a podlet's content or fallback, the podlet should serve just that fragment and not a whole HTML
-document with its `<html>`, `<head>` and `<body>`. It is also the case that when a Layout server is
-requesting a podlet it provides a context.
+In most cases podlets are fragments of a whole HTML document. When a layout
+server is requesting a podlet's content or fallback, the podlet should serve
+just that fragment and not a whole HTML document with its `<html>`, `<head>`
+and `<body>`. It is also the case that when a layout server is requesting a
+podlet it provides a context.
 
-These things can causes a challenge for local development since accessing a podlet directly, from a web browser,
-in local development will render the podlet without either an encapsulating HTML document or a Podium context
-that the podlet might need to function properly.
+These things can causes a challenge for local development since accessing a
+podlet directly, from a web browser, in local development will render the
+podlet without either an encapsulating HTML document or a Podium context that
+the podlet might need to function properly.
 
-To solve this it is possible to switch a podlet to development mode by setting the `development` argument
-in the constructor to `true`.
+To solve this it is possible to switch a podlet to development mode by setting
+the `development` argument in the constructor to `true`.
 
-When in development mode a default context on the HTTP response at `res.locals.podium.context` will
-be set and an encapsulating HTML document will be provided (so long as `res.podiumSend()` is used) when
-dispatching the content or fallback.
+When in development mode a default context on the HTTP response will be set and
+an encapsulating HTML document will be provided (so long as `res.podiumSend()`
+is used) when dispatching the content or fallback.
 
-The default HTML document for encapsulating a fragment will reference the values set on `.css()` and `.js()`
-and use `locale` from the default context to set language on the document.
+The default HTML document for encapsulating a fragment will reference the
+values set on `.css()` and `.js()` and use `locale` from the default context to
+set language on the document.
 
-The default context in development mode can be altered by the `.defaults()` method of the podlet
-instance.
+The default context in development mode can be altered by the `.defaults()`
+method of the podlet instance.
 
-The default encapsulating HTML document used in development mode can be replaced by the `.view()` method of
-the podlet instance.
+The default encapsulating HTML document used in development mode can be replaced
+by the `.view()` method of the podlet instance.
 
-Only turn on development mode during local development and keep it off in production.
+Do note: Do only turn on development mode during local development and keep it
+off in production.
 
 _Example of turning on development mode only in local development:_
 
@@ -904,5 +946,42 @@ const podlet = new Podlet({
 });
 ```
 
-When a layout server sends a request to a podlet in development mode, the default context will be overridden by the context from the layout server and the encapsulating HTML
-document will not be applied.
+When a layout server sends a request to a podlet in development mode, the
+default context will be overridden by the context from the layout server and
+the encapsulating HTML document will not be applied.
+
+## License
+
+Copyright (c) 2019 FINN.no
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
+[@podium/context]: https://github.com/podium-lib/context "@podium/context"
+[@podium/layout]: https://github.com/podium-lib/layout "@podium/layout"
+[@podium/proxy]: https://github.com/podium-lib/proxy "@podium/proxy"
+[Express]: https://expressjs.com/ "Express"
+[Hapi Podlet Plugin]: https://github.com/podium-lib/hapi-podlet "Hapi Podlet Plugin"
+[HttpIncoming]: https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js "HttpIncoming"
+[publicPathname]: https://github.com/podium-lib/context#public-pathname "`publicPathname`"
+[mountOrigin]: https://github.com/podium-lib/context#mount-origin "`mountOrigin`"
+[abslog]: https://github.com/trygve-lie/abslog "abslog"
+[pathname]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname "pathname"
+[URL]: https://developer.mozilla.org/en-US/docs/Web/API/URL "URL"

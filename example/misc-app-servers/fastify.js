@@ -1,9 +1,11 @@
 'use strict';
 
-const express = require('express');
+const fastify = require('fastify');
 const Podlet = require('../../');
 
-const app = express();
+const app = fastify();
+
+// https://github.com/fastify/fastify/issues/303#issuecomment-332190934
 
 const podlet = new Podlet({
     pathname: '/',
@@ -18,24 +20,30 @@ podlet.defaults({
     locale: 'nb-NO',
 });
 
-app.use(podlet.middleware());
+app.decorateReply('locals', {
+    podium: {},
+});
 
-app.get(podlet.content(), (req, res) => {
-    if (res.locals.podium.context.locale === 'nb-NO') {
-        res.podiumSend('<h2>Hei verden</h2>');
-        return;
+app.addHook('preHandler', podlet.middleware());
+
+// app.use(podlet.middleware());
+
+app.get(podlet.content(), async (req, res) => {
+    const p = res.locals.podium;
+    if (p.context.locale === 'nb-NO') {
+        return p.render('<h2>Hei verden</h2>');
     }
-    res.podiumSend('<h2>Hello world</h2>');
+    return p.render('<h2>Hello world</h2>');
 });
 
-app.get(podlet.fallback(), (req, res) => {
-    res.podiumSend('<h2>We are sorry but we can not display this!</h2>');
+app.get(podlet.fallback(), async (req, res) => {
+    const p = res.locals.podium;
+    return p.render('<h2>We are sorry but we can not display this!</h2>');
 });
 
-app.get(podlet.manifest(), (req, res) => {
-    res.json(podlet);
-});
+app.get(podlet.manifest(), async () => JSON.stringify(podlet));
 
+/*
 app.get('/public', (req, res) => {
     if (res.locals.podium.context.locale === 'nb-NO') {
         res.json({ say: 'Hei verden' });
@@ -48,6 +56,8 @@ podlet.proxy({ target: '/public', name: 'localApi' });
 podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
 
 app.use('/assets', express.static('assets'));
+*/
+
 podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
 
