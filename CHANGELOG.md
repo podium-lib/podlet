@@ -6,7 +6,7 @@ The latest version of this document is always available in [releases][releases-u
 
 ## [Unreleased]
 
-## [3.0.0] - 2019-02-20
+## [3.0.0] - 2019-02-21
 
 -   Initial open source release. Module is made http framework free and open source.
 
