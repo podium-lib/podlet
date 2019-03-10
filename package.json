@@ -24,7 +24,7 @@
     "lint:format": "eslint --fix ."
   },
   "dependencies": {
-    "@metrics/client": "2.3.1",
+    "@metrics/client": "2.4.1",
     "@podium/proxy": "3.0.1",
     "@podium/schemas": "3.0.0",
     "@podium/utils": "3.1.1",
