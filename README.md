@@ -2,9 +2,10 @@
 
 Module for building page fragment servers in a micro frontend architecture.
 
-[![Build Status](https://travis-ci.org/podium-lib/podlet.svg?branch=master)](https://travis-ci.org/podium-lib/podlet)
-[![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/podlet.svg)](https://greenkeeper.io/)
-[![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/podlet/badge.svg)](https://snyk.io/test/github/podium-lib/podlet)
+[![Dependencies](https://img.shields.io/david/podium-lib/podlet.svg?style=flat-square)](https://david-dm.org/podium-lib/podlet)
+[![Build Status](http://img.shields.io/travis/podium-lib/podlet/master.svg?style=flat-square)](https://travis-ci.org/podium-lib/podlet)
+[![Greenkeeper badge](https://badges.greenkeeper.io/podium-lib/podlet.svg?style=flat-square)](https://greenkeeper.io/)
+[![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/podlet/badge.svg?targetFile=package.json&style=flat-square)](https://snyk.io/test/github/podium-lib/podlet?targetFile=package.json)
 
 Module for building a podlet server. A Podlet server is responsible for
 generating HTML fragments which a [@podium/layout] server will use to compose a
