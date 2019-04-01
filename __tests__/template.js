@@ -40,7 +40,7 @@ test('template() - "str" argument is given - should include "str" in the render'
             </body>
         </html>`;
 
-    const tmpl = template('foo');
+    const tmpl = template({ body: 'foo' });
     expect(sanitize(tmpl)).toEqual(sanitize(str));
 });
 
@@ -62,8 +62,9 @@ test('template() - "res" argument is given with a full .locals.podium object - s
             </body>
         </html>`;
 
-    const tmpl = template('foo', {
-        name: 'bar',
+    const tmpl = template({
+        title: 'bar',
+        body: 'foo',
         css: '/styles.css',
         js: '/script.js',
     });
