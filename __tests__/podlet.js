@@ -4,8 +4,8 @@ const Metrics = require('@metrics/client');
 const express = require('express');
 const http = require('http');
 const url = require('url');
+const { template } = require('@podium/utils');
 const Podlet = require('../');
-const template = require('../lib/template');
 
 /**
  * Fake server utility
