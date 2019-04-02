@@ -907,6 +907,7 @@ test('.view() - append a custom wireframe document - should render development o
     const options = Object.assign({}, DEFAULT_OPTIONS, {
         development: true,
     });
+
     const podlet = new Podlet(options);
     podlet.view(str => `<div>${str.body}</div>`);
 
