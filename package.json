@@ -27,7 +27,7 @@
     "@metrics/client": "2.4.1",
     "@podium/proxy": "3.0.4",
     "@podium/schemas": "3.0.0",
-    "@podium/utils": "3.1.2",
+    "@podium/utils": "^4.0.0-next",
     "abslog": "2.4.0",
     "joi": "14.3.1",
     "objobj": "^1.0.0"
