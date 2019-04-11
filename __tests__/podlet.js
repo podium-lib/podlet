@@ -411,7 +411,7 @@ test('.fallback() - constructor has "fallback" set with absolute URI - should re
 test('.css() - call method with no arguments - should return default value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.css();
-    expect(result).toEqual([]);
+    expect(result).toEqual('');
 });
 
 test('.css() - set legal value on "value" argument - should return set value', () => {
@@ -420,7 +420,7 @@ test('.css() - set legal value on "value" argument - should return set value', (
     const result = podlet.css({ value: '/foo/bar' });
     const parsed = podlet.toJSON();
 
-    expect(result).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(result).toEqual('/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
     expect(parsed.css).toEqual([{ type: "module", value: "/foo/bar" }]);
 });
@@ -434,7 +434,7 @@ test('.css() - set "prefix" argument to "true" - should prefix value returned by
     const result = podlet.css({ value: '/foo/bar', prefix: true });
     const parsed = podlet.toJSON();
 
-    expect(result).toEqual([{ type: "module", value: "/xyz/foo/bar" }]);
+    expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
     expect(parsed.css).toEqual([{ type: "module", value: "/foo/bar" }]);
 });
@@ -462,7 +462,7 @@ test('.css() - call method with "value" argument, then call it a second time wit
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/foo/bar' });
     const result = podlet.css();
-    expect(result).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(result).toEqual('/foo/bar');
 });
 
 test('.css() - call method twice with a value for "value" argument - should throw', () => {
@@ -482,7 +482,7 @@ test('.css() - call method twice with a value for "value" argument - should thro
 test('.js() - call method with no arguments - should return default value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.js();
-    expect(result).toEqual([]);
+    expect(result).toEqual('');
 });
 
 test('.js() - set legal value on "value" argument - should return set value', () => {
@@ -491,7 +491,7 @@ test('.js() - set legal value on "value" argument - should return set value', ()
     const result = podlet.js({ value: '/foo/bar' });
     const parsed = podlet.toJSON();
 
-    expect(result).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(result).toEqual('/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
     expect(parsed.js).toEqual([{ type: "module", value: "/foo/bar" }]);
 });
@@ -505,7 +505,7 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
     const result = podlet.js({ value: '/foo/bar', prefix: true });
     const parsed = podlet.toJSON();
 
-    expect(result).toEqual([{ type: "module", value: "/xyz/foo/bar" }]);
+    expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
     expect(parsed.js).toEqual([{ type: "module", value: "/foo/bar" }]);
 });
@@ -533,7 +533,7 @@ test('.js() - call method with "value" argument, then call it a second time with
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/foo/bar' });
     const result = podlet.js();
-    expect(result).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(result).toEqual('/foo/bar');
 });
 
 test('.js() - call method twice with a value for "value" argument - should throw', () => {
@@ -580,7 +580,7 @@ test('.middleware() - .css() is set with a value - should append value to "res.l
     await server.listen();
 
     const result = await server.get();
-    expect(result.response.podium.css).toEqual(podlet.css());
+    expect(result.response.podium.css).toEqual(podlet.toJSON().css);
 
     await server.close();
 });
@@ -604,7 +604,7 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
     await server.listen();
 
     const result = await server.get();
-    expect(result.response.podium.js).toEqual(podlet.js());
+    expect(result.response.podium.js).toEqual(podlet.toJSON().js);
 
     await server.close();
 });
