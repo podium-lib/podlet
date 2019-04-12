@@ -1,11 +1,20 @@
 'use strict';
 
+const { template, HttpIncoming } = require('@podium/utils');
 const Metrics = require('@metrics/client');
 const express = require('express');
 const http = require('http');
 const url = require('url');
-const { template } = require('@podium/utils');
+
 const Podlet = require('../');
+
+const SIMPLE_REQ = {
+    headers: {},
+};
+
+const SIMPLE_RES = {
+    locals: {},
+};
 
 /**
  * Fake server utility
@@ -536,6 +545,17 @@ test('.js() - call method twice with a value for "value" argument - should throw
     expect(() => {
         podlet.js({ value: '/foo/bar' });
     }).toThrowError('Value for "js" has already been set');
+});
+
+// #############################################
+// .process()
+// #############################################
+
+test('.process() - call method with HttpIncoming - should return HttpIncoming', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
+    const result = podlet.process(incoming);
+    expect(result).toEqual(incoming);
 });
 
 // #############################################
