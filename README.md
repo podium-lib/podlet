@@ -372,10 +372,8 @@ The route will then respond with something like:
     "version": "1.0.0",
     "content": "/",
     "fallback": "/fallback",
-    "assets": {
-        "js": "",
-        "css": ""
-    },
+    "css": [],
+    "js": [],
     "proxy": {}
 }
 ```
