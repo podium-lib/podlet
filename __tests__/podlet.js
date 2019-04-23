@@ -274,41 +274,41 @@ test('Podlet() - serialize default values - should set "proxy" to empty Object',
 });
 
 test('Podlet() - should collect metric with version info', done => {
-    jest.useFakeTimers();
     expect.hasAssertions();
 
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
-    podlet.metrics.pipe(
-        destObjectStream(arr => {
-            expect(arr[0]).toMatchObject({
-                name: 'podium_podlet_version_info',
-                labels: [
-                    {
-                        name: 'version',
-                        // eslint-disable-next-line global-require
-                        value: require('../package.json').version,
-                    },
-                    {
-                        name: 'major',
-                        value: expect.any(Number),
-                    },
-                    {
-                        name: 'minor',
-                        value: expect.any(Number),
-                    },
-                    {
-                        name: 'patch',
-                        value: expect.any(Number),
-                    },
-                ],
-            });
-            done();
-        }),
-    );
+    const dest = destObjectStream(arr => {
+        expect(arr[0]).toMatchObject({
+            name: 'podium_podlet_version_info',
+            labels: [
+                {
+                    name: 'version',
+                    // eslint-disable-next-line global-require
+                    value: require('../package.json').version,
+                },
+                {
+                    name: 'major',
+                    value: expect.any(Number),
+                },
+                {
+                    name: 'minor',
+                    value: expect.any(Number),
+                },
+                {
+                    name: 'patch',
+                    value: expect.any(Number),
+                },
+            ],
+        });
+        done();
+    });
 
-    jest.runAllTimers();
-    podlet.metrics.push(null);
+    podlet.metrics.pipe(dest);
+
+    setImmediate(() => {
+        dest.end();
+    });
 });
 
 // #############################################
