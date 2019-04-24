@@ -3,6 +3,7 @@
 const { template, HttpIncoming } = require('@podium/utils');
 const Metrics = require('@metrics/client');
 const express = require('express');
+const stream = require('readable-stream');
 const http = require('http');
 const url = require('url');
 
@@ -14,6 +15,24 @@ const SIMPLE_REQ = {
 
 const SIMPLE_RES = {
     locals: {},
+};
+
+const destObjectStream = done => {
+    const arr = [];
+
+    const dStream = new stream.Writable({
+        objectMode: true,
+        write(chunk, encoding, callback) {
+            arr.push(chunk);
+            callback();
+        },
+    });
+
+    dStream.on('finish', () => {
+        done(arr);
+    });
+
+    return dStream;
 };
 
 /**
@@ -252,6 +271,44 @@ test('Podlet() - serialize default values - should set "proxy" to empty Object',
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.toJSON();
     expect(result.proxy).toEqual({});
+});
+
+test('Podlet() - should collect metric with version info', done => {
+    expect.hasAssertions();
+
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+
+    const dest = destObjectStream(arr => {
+        expect(arr[0]).toMatchObject({
+            name: 'podium_podlet_version_info',
+            labels: [
+                {
+                    name: 'version',
+                    // eslint-disable-next-line global-require
+                    value: require('../package.json').version,
+                },
+                {
+                    name: 'major',
+                    value: expect.any(Number),
+                },
+                {
+                    name: 'minor',
+                    value: expect.any(Number),
+                },
+                {
+                    name: 'patch',
+                    value: expect.any(Number),
+                },
+            ],
+        });
+        done();
+    });
+
+    podlet.metrics.pipe(dest);
+
+    setImmediate(() => {
+        dest.end();
+    });
 });
 
 // #############################################
