@@ -274,6 +274,7 @@ test('Podlet() - serialize default values - should set "proxy" to empty Object',
 });
 
 test('Podlet() - should collect metric with version info', done => {
+    jest.useFakeTimers();
     expect.hasAssertions();
 
     const podlet = new Podlet(DEFAULT_OPTIONS);
@@ -306,9 +307,8 @@ test('Podlet() - should collect metric with version info', done => {
 
     podlet.metrics.pipe(dest);
 
-    setImmediate(() => {
-        dest.end();
-    });
+    jest.runAllTimers();
+    dest.end();
 });
 
 // #############################################
