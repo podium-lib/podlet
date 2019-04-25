@@ -21,6 +21,7 @@ For writing podlet servers with other http frameworks the following modules
 exist:
 
 -   [Hapi Podlet Plugin]
+-   [Fastify Podlet Plugin]
 
 ## Installation
 
@@ -980,6 +981,7 @@ SOFTWARE.
 [@podium/proxy]: https://github.com/podium-lib/proxy "@podium/proxy"
 [Express]: https://expressjs.com/ "Express"
 [Hapi Podlet Plugin]: https://github.com/podium-lib/hapi-podlet "Hapi Podlet Plugin"
+[Fastify Podlet Plugin]: https://github.com/podium-lib/fastify-podlet "Fastify Podlet Plugin"
 [HttpIncoming]: https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js "HttpIncoming"
 [publicPathname]: https://github.com/podium-lib/context#public-pathname "`publicPathname`"
 [mountOrigin]: https://github.com/podium-lib/context#mount-origin "`mountOrigin`"
