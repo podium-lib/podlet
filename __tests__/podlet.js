@@ -531,14 +531,14 @@ test('.css() - call method with "value" argument, then call it a second time wit
     expect(result).toEqual('/foo/bar');
 });
 
-test('.css() - call method twice with a value for "value" argument - should throw', () => {
-    expect.hasAssertions();
+test('.css() - call method twice - should set value twice', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/foo/bar' });
+    podlet.css({ value: '/bar/foo' });
 
-    expect(() => {
-        podlet.css({ value: '/foo/bar' });
-    }).toThrowError('Value for "css" has already been set');
+    const result = podlet.toJSON();
+    expect(result.assets.css).toEqual('/foo/bar');
+    expect(result.css).toEqual([{ type: "module", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
 });
 
 // #############################################
@@ -602,14 +602,14 @@ test('.js() - call method with "value" argument, then call it a second time with
     expect(result).toEqual('/foo/bar');
 });
 
-test('.js() - call method twice with a value for "value" argument - should throw', () => {
-    expect.hasAssertions();
+test('.js() - call method twice - should set value twice', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/foo/bar' });
+    podlet.js({ value: '/bar/foo' });
 
-    expect(() => {
-        podlet.js({ value: '/foo/bar' });
-    }).toThrowError('Value for "js" has already been set');
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([{ type: "module", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
 });
 
 // #############################################
