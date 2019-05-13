@@ -380,9 +380,10 @@ The route will then respond with something like:
 
 ### options
 
-| option | type      | default | required |
-| ------ | --------- | ------- | -------- |
-| prefix | `boolean` | `false` |          |
+| option | type      | default   | required |
+| ------ | --------- | --------- | -------- |
+| prefix | `boolean` | `false`   |          |
+| type   | `string`  | `default` |          |
 
 #### prefix
 
@@ -404,6 +405,11 @@ const podlet = new Podlet({
 
 podlet.manifest({ prefix: true });
 ```
+
+#### type
+
+Set the type of script which is set. `default` indicates an unknown type.
+`module` inidcates as ES6 module.
 
 ### .content(options)
 

@@ -488,7 +488,7 @@ test('.css() - set legal value on "value" argument - should return set value', (
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(parsed.css).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -502,7 +502,7 @@ test('.css() - set "prefix" argument to "true" - should prefix value returned by
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(parsed.css).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.css() - set legal absolute value on "value" argument - should set "css" to set value when serializing Object', () => {
@@ -510,7 +510,7 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     podlet.css({ value: 'http://somewhere.remote.com' });
     const result = podlet.toJSON();
     expect(result.assets.css).toEqual('http://somewhere.remote.com');
-    expect(result.css).toEqual([{ type: "module", value: "http://somewhere.remote.com" }]);
+    expect(result.css).toEqual([{ type: "default", value: "http://somewhere.remote.com" }]);
 });
 
 test('.css() - set illegal value on "value" argument - should throw', () => {
@@ -538,7 +538,7 @@ test('.css() - call method twice - should set value twice', () => {
 
     const result = podlet.toJSON();
     expect(result.assets.css).toEqual('/foo/bar');
-    expect(result.css).toEqual([{ type: "module", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
+    expect(result.css).toEqual([{ type: "default", value: "/foo/bar" }, { type: "default", value: "/bar/foo" }]);
 });
 
 // #############################################
@@ -559,7 +559,7 @@ test('.js() - set legal value on "value" argument - should return set value', ()
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(parsed.js).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -573,7 +573,7 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: "module", value: "/foo/bar" }]);
+    expect(parsed.js).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.js() - set legal absolute value on "value" argument - should set "js" to set value when serializing Object', () => {
@@ -581,7 +581,7 @@ test('.js() - set legal absolute value on "value" argument - should set "js" to 
     podlet.js({ value: 'http://somewhere.remote.com' });
     const result = podlet.toJSON();
     expect(result.assets.js).toEqual('http://somewhere.remote.com');
-    expect(result.js).toEqual([{ type: "module", value: "http://somewhere.remote.com" }]);
+    expect(result.js).toEqual([{ type: "default", value: "http://somewhere.remote.com" }]);
 });
 
 test('.js() - set illegal value on "value" argument - should throw', () => {
@@ -609,8 +609,19 @@ test('.js() - call method twice - should set value twice', () => {
 
     const result = podlet.toJSON();
     expect(result.assets.js).toEqual('/foo/bar');
-    expect(result.js).toEqual([{ type: "module", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
+    expect(result.js).toEqual([{ type: "default", value: "/foo/bar" }, { type: "default", value: "/bar/foo" }]);
 });
+
+test('.js() - "type" argument is set to "module" - should set "type" to "module"', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js({ value: '/foo/bar' });
+    podlet.js({ value: '/bar/foo', type: 'module' });
+
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([{ type: "default", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
+});
+
 
 // #############################################
 // .process()
