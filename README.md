@@ -383,7 +383,6 @@ The route will then respond with something like:
 | option | type      | default   | required |
 | ------ | --------- | --------- | -------- |
 | prefix | `boolean` | `false`   |          |
-| type   | `string`  | `default` |          |
 
 #### prefix
 
@@ -405,11 +404,6 @@ const podlet = new Podlet({
 
 podlet.manifest({ prefix: true });
 ```
-
-#### type
-
-Set the type of script which is set. `default` indicates an unknown type.
-`module` inidcates as ES6 module.
 
 ### .content(options)
 
@@ -549,20 +543,18 @@ instance is serialized into a manifest JSON string.
 
 ### options
 
-| option | type      | default | required |
-| ------ | --------- | ------- | -------- |
-| value  | `string`  |         |          |
-| prefix | `boolean` | `false` |          |
+| option | type      | default   | required |
+| ------ | --------- | --------- | -------- |
+| value  | `string`  |           |          |
+| prefix | `boolean` | `false`   |          |
+| type   | `string`  | `default` |          |
+
 
 #### value
 
 Used to set the `pathname` for the podlets JavaScript assets. This value
 can be a URL at which the podlet's user facing JavaScript is served. The value
 can be either the [pathname] of a [URL] or an absolute URL.
-
-The value can only be set once. If called multiple times with a value, the
-method will throw. The method can, however, be called multiple times to
-retrieve the value.
 
 _Examples:_
 
@@ -629,6 +621,11 @@ podlet.js({ value: '/assets/main.js', prefix: true });
 ```
 
 Prefix will be ignored if the returned value is an absolute URL.
+
+#### type
+
+Set the type of script which is set. `default` indicates an unknown type.
+`module` inidcates as ES6 module.
 
 ### .css(pathname)
 
