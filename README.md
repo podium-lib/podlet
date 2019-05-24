@@ -258,7 +258,7 @@ Turns development mode on or off. See the section about development mode.
 
 The podlet instance has the following API:
 
-### .process(HttpIncoming)
+### .process(HttpIncoming, options)
 
 Method for processing a incoming HTTP request. This method is intended to be
 used to implement support for multiple HTTP frameworks and in most cases will not need to be
@@ -300,6 +300,13 @@ app.use(async (req, res, next) => {
     }
 });
 ```
+
+#### options
+
+| option   | default | type      | required | details                                                                   |
+| -------- | ------- | --------- | -------- | ------------------------------------------------------------------------- |
+| context  | `true`  | `boolean` | `false`  | If `@podium/context` should be applied as part of the `.process()` method |
+| proxy    | `true`  | `boolean` | `false`  | If `@podium/proxy` should be applied as part of the `.process()` method   |
 
 ### .middleware()
 
