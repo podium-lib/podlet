@@ -305,7 +305,6 @@ app.use(async (req, res, next) => {
 
 | option   | default | type      | required | details                                                                   |
 | -------- | ------- | --------- | -------- | ------------------------------------------------------------------------- |
-| context  | `true`  | `boolean` | `false`  | If `@podium/context` should be applied as part of the `.process()` method |
 | proxy    | `true`  | `boolean` | `false`  | If `@podium/proxy` should be applied as part of the `.process()` method   |
 
 ### .middleware()
