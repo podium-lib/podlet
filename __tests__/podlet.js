@@ -43,12 +43,77 @@ const destObjectStream = done => {
  * object set by the Podlet instanse .middleware()
  */
 
-class FakeServer {
-    constructor(podlet, middleware) {
+class FakeHttpServer {
+    constructor({ podlet, process } = {}, onRequest) {
+        this.app = http.createServer(async (req, res) => {
+            const incoming = new HttpIncoming(req, res);
+            const result = await podlet.process(incoming, process);
+            onRequest ? onRequest(result) : (result) => {
+                result.response.status(200).json(result);
+            };
+        });
+        this.server = undefined;
+        this.address = '';
+    }
+
+    listen() {
+        return new Promise(resolve => {
+            this.server = this.app.listen(0, 'localhost', () => {
+                this.address = `http://${this.server.address().address}:${
+                    this.server.address().port
+                }`;
+                resolve(this.address);
+            });
+        });
+    }
+
+    close() {
+        return new Promise((resolve, reject) => {
+            this.server.close(err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    get(options = {}) {
+        return new Promise((resolve, reject) => {
+            let opts = {};
+            if (options.pathname) {
+                opts = url.parse(`${this.address}${options.pathname}`);
+            } else {
+                opts = url.parse(this.address)
+            }
+
+            http.get(opts, res => {
+                const chunks = [];
+                res.on('data', chunk => {
+                    chunks.push(chunk);
+                });
+                res.on('end', () => {
+                    resolve({
+                        headers: res.headers,
+                        response: options.raw
+                            ? chunks.join('')
+                            : JSON.parse(chunks.join('')),
+                    });
+                });
+            }).on('error', error => {
+                reject(error);
+            });
+        });
+    }
+}
+
+class FakeExpressServer {
+    constructor(podlet, onRequest) {
         this.app = express();
         this.app.use(podlet.middleware());
         this.app.use(
-            middleware ||
+            onRequest ||
                 ((req, res) => {
                     res.status(200).json(res.locals);
                 }),
@@ -63,7 +128,6 @@ class FakeServer {
                 this.address = `http://${this.server.address().address}:${
                     this.server.address().port
                 }`;
-
                 resolve(this.address);
             });
         });
@@ -107,6 +171,7 @@ class FakeServer {
 }
 
 const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
+
 
 // #############################################
 // Constructor
@@ -627,12 +692,55 @@ test('.js() - "type" argument is set to "module" - should set "type" to "module"
 // .process()
 // #############################################
 
-test('.process() - call method with HttpIncoming - should return HttpIncoming', () => {
+test('.process() - call method with HttpIncoming - should return HttpIncoming', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
-    const result = podlet.process(incoming);
+    const result = await podlet.process(incoming);
     expect(result).toEqual(incoming);
 });
+
+test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy path - should do proxying', async () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: '/', development: true });
+    const process = { proxy: true };
+
+    // Proxy path is now: /podium-resource/foo/bar
+    podlet.proxy({ target: '/bar', name: 'bar' });
+
+    const server = new FakeHttpServer({ podlet, process }, incoming => {
+        if (incoming.url.pathname === '/podium-resource/foo/bar') {
+            expect(incoming.proxy).toBeTruthy();
+        }
+
+        incoming.response.statusCode = 200;
+        incoming.response.end('OK');
+    });
+
+    await server.listen();
+    await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+    await server.close();
+});
+
+test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy path - should not do proxying', async () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: '/', development: true });
+    const process = { proxy: false };
+
+    // Proxy path is now: /podium-resource/foo/bar
+    podlet.proxy({ target: '/bar', name: 'bar' });
+
+    const server = new FakeHttpServer({ podlet, process }, incoming => {
+        if (incoming.url.pathname === '/podium-resource/foo/bar') {
+            expect(incoming.proxy).toBeFalsy();
+        }
+
+        incoming.response.statusCode = 200;
+        incoming.response.end('OK');
+    });
+
+    await server.listen();
+    await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+    await server.close();
+});
+
 
 // #############################################
 // .middleware()
@@ -640,7 +748,7 @@ test('.process() - call method with HttpIncoming - should return HttpIncoming', 
 
 test('.middleware() - call method - should append podlet name on "res.locals.podium.name"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -651,7 +759,7 @@ test('.middleware() - call method - should append podlet name on "res.locals.pod
 
 test('.middleware() - .css() is NOT set with a value - should append empty Array to "res.locals.podium.css"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -664,7 +772,7 @@ test('.middleware() - .css() is set with a value - should append value to "res.l
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/style.css' });
 
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -675,7 +783,7 @@ test('.middleware() - .css() is set with a value - should append value to "res.l
 
 test('.middleware() - .js() is NOT set with a value - should append empty Array to "res.locals.podium.js"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -688,7 +796,7 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/script.js' });
 
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -699,7 +807,7 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
 
 test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -713,7 +821,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
         development: true,
     });
     const podlet = new Podlet(options);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get({
@@ -731,7 +839,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
         development: true,
     });
     const podlet = new Podlet(options);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -742,7 +850,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
 
 test('.middleware() - valid "version" value is set on constructor - should append "podlet-version" http header with the given version value', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -759,7 +867,7 @@ test('res.podiumSend() - .podiumSend() method - should be a function on http.res
     expect.hasAssertions();
 
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         expect(typeof res.podiumSend).toBe('function');
         res.json({});
     });
@@ -771,7 +879,7 @@ test('res.podiumSend() - .podiumSend() method - should be a function on http.res
 
 test('res.podiumSend() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
     });
 
@@ -787,7 +895,7 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
         development: true,
     });
     const podlet = new Podlet(options);
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
     });
 
@@ -851,7 +959,7 @@ test('.defaults() - call method with "context" argument, then call it a second t
 
 test('.defaults() - constructor argument "development" is not set - should not append a default context to "res.locals"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -867,7 +975,7 @@ test('.defaults() - constructor argument "development" is to "true" - should app
         pathname: '/',
         development: true,
     });
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
@@ -892,7 +1000,7 @@ test('.defaults() - set "context" argument where a key overrides one existing co
     podlet.defaults({
         locale: 'no-NO',
     });
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
@@ -917,7 +1025,7 @@ test('.defaults() - set "context" argument where a key is not a default context 
     podlet.defaults({
         foo: 'bar',
     });
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
@@ -1007,7 +1115,7 @@ test('.view() - append a custom wireframe document - should render development o
     const podlet = new Podlet(options);
     podlet.view(str => `<div>${str.body}</div>`);
 
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
     });
 
