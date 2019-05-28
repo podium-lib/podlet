@@ -1,9 +1,9 @@
 'use strict';
 
+const { destinationObjectStream } = require('@podium/test-utils');
 const { template, HttpIncoming } = require('@podium/utils');
 const Metrics = require('@metrics/client');
 const express = require('express');
-const stream = require('readable-stream');
 const http = require('http');
 const url = require('url');
 
@@ -15,24 +15,6 @@ const SIMPLE_REQ = {
 
 const SIMPLE_RES = {
     locals: {},
-};
-
-const destObjectStream = done => {
-    const arr = [];
-
-    const dStream = new stream.Writable({
-        objectMode: true,
-        write(chunk, encoding, callback) {
-            arr.push(chunk);
-            callback();
-        },
-    });
-
-    dStream.on('finish', () => {
-        done(arr);
-    });
-
-    return dStream;
 };
 
 /**
@@ -343,7 +325,7 @@ test('Podlet() - should collect metric with version info', done => {
 
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
-    const dest = destObjectStream(arr => {
+    const dest = destinationObjectStream(arr => {
         expect(arr[0]).toMatchObject({
             name: 'podium_podlet_version_info',
             labels: [
