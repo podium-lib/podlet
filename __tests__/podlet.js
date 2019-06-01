@@ -884,9 +884,11 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
     await server.listen();
     const result = await server.get({ raw: true });
 
+    const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
     expect(result.response).toEqual(
-        template({ body: '<h1>OK!</h1>', title: DEFAULT_OPTIONS.name }),
+        template(incoming, '<h1>OK!</h1>')
     );
+
     await server.close();
 });
 
@@ -1095,7 +1097,7 @@ test('.view() - append a custom wireframe document - should render development o
     });
 
     const podlet = new Podlet(options);
-    podlet.view(str => `<div>${str.body}</div>`);
+    podlet.view((incoming, data) => `<div>${data}</div>`);
 
     const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
