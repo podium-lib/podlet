@@ -1,11 +1,21 @@
 'use strict';
 
+const { destinationObjectStream } = require('@podium/test-utils');
+const { template, HttpIncoming } = require('@podium/utils');
 const Metrics = require('@metrics/client');
 const express = require('express');
 const http = require('http');
 const url = require('url');
+
 const Podlet = require('../');
-const template = require('../lib/template');
+
+const SIMPLE_REQ = {
+    headers: {},
+};
+
+const SIMPLE_RES = {
+    locals: {},
+};
 
 /**
  * Fake server utility
@@ -15,13 +25,80 @@ const template = require('../lib/template');
  * object set by the Podlet instanse .middleware()
  */
 
-class FakeServer {
-    constructor(podlet, middleware) {
+class FakeHttpServer {
+    constructor({ podlet, process } = {}, onRequest) {
+        this.app = http.createServer(async (req, res) => {
+            const incoming = new HttpIncoming(req, res);
+            const result = await podlet.process(incoming, process);
+            onRequest ? onRequest(result) : (result) => {
+                result.response.status(200).json(result);
+            };
+        });
+        this.server = undefined;
+        this.address = '';
+    }
+
+    listen() {
+        return new Promise(resolve => {
+            this.server = this.app.listen(0, 'localhost', () => {
+                this.address = `http://${this.server.address().address}:${
+                    this.server.address().port
+                }`;
+                resolve(this.address);
+            });
+        });
+    }
+
+    close() {
+        return new Promise((resolve, reject) => {
+            this.server.close(err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    get(options = {}) {
+        return new Promise((resolve, reject) => {
+            let opts = {};
+            if (options.pathname) {
+                opts = url.parse(`${this.address}${options.pathname}`);
+            } else {
+                opts = url.parse(this.address)
+            }
+
+            http.get(opts, res => {
+                const chunks = [];
+                res.on('data', chunk => {
+                    chunks.push(chunk);
+                });
+                res.on('end', () => {
+                    resolve({
+                        headers: res.headers,
+                        response: options.raw
+                            ? chunks.join('')
+                            : JSON.parse(chunks.join('')),
+                    });
+                });
+            }).on('error', error => {
+                reject(error);
+            });
+        });
+    }
+}
+
+class FakeExpressServer {
+    constructor(podlet, onRequest) {
         this.app = express();
         this.app.use(podlet.middleware());
-        this.app.use(middleware || ((req, res) => {
-                      res.status(200).json(res.locals);
-                  })
+        this.app.use(
+            onRequest ||
+                ((req, res) => {
+                    res.status(200).json(res.locals);
+                }),
         );
         this.server = undefined;
         this.address = '';
@@ -33,7 +110,6 @@ class FakeServer {
                 this.address = `http://${this.server.address().address}:${
                     this.server.address().port
                 }`;
-
                 resolve(this.address);
             });
         });
@@ -78,6 +154,7 @@ class FakeServer {
 
 const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
 
+
 // #############################################
 // Constructor
 // #############################################
@@ -90,7 +167,7 @@ test('Podlet() - instantiate new podlet object - should create an object', () =>
 test('Podlet() - object tag - should be PodiumPodlet', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet)).toEqual(
-        '[object PodiumPodlet]'
+        '[object PodiumPodlet]',
     );
 });
 
@@ -99,7 +176,7 @@ test('Podlet() - no value given to "name" argument - should throw', () => {
     expect(() => {
         const podlet = new Podlet({ version: 'v1.0.0', pathname: '/' }); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.'
+        'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -114,7 +191,7 @@ test('Podlet() - invalid value given to "name" argument - should throw', () => {
         };
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "foo bar", for the required argument "name" on the Podlet constructor is not defined or not valid.'
+        'The value, "foo bar", for the required argument "name" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -123,7 +200,7 @@ test('Podlet() - no value given to "version" argument - should throw', () => {
     expect(() => {
         const podlet = new Podlet({ name: 'foo', pathname: '/' }); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.'
+        'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -138,7 +215,7 @@ test('Podlet() - invalid value given to "version" argument - should throw', () =
         };
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.'
+        'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -147,7 +224,7 @@ test('Podlet() - no value given to "pathname" argument - should throw', () => {
     expect(() => {
         const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' }); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "", for the required argument "pathname" on the Podlet constructor is not defined or not valid.'
+        'The value, "", for the required argument "pathname" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -162,7 +239,7 @@ test('Podlet() - invalid value given to "pathname" argument - should throw', () 
         };
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the required argument "pathname" on the Podlet constructor is not defined or not valid.'
+        'The value, "æ / ø", for the required argument "pathname" on the Podlet constructor is not defined or not valid.',
     );
 });
 
@@ -173,7 +250,7 @@ test('Podlet() - invalid value given to "manifest" argument - should throw', () 
         const options = Object.assign({ manifest: 'æ / ø' }, DEFAULT_OPTIONS);
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the optional argument "manifest" on the Podlet constructor is not valid.'
+        'The value, "æ / ø", for the optional argument "manifest" on the Podlet constructor is not valid.',
     );
 });
 
@@ -184,7 +261,7 @@ test('Podlet() - invalid value given to "content" argument - should throw', () =
         const options = Object.assign({ content: 'æ / ø' }, DEFAULT_OPTIONS);
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the optional argument "content" on the Podlet constructor is not valid.'
+        'The value, "æ / ø", for the optional argument "content" on the Podlet constructor is not valid.',
     );
 });
 
@@ -195,50 +272,90 @@ test('Podlet() - invalid value given to "fallback" argument - should throw', () 
         const options = Object.assign({ fallback: 'æ / ø' }, DEFAULT_OPTIONS);
         const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
     }).toThrowError(
-        'The value, "æ / ø", for the optional argument "fallback" on the Podlet constructor is not valid.'
+        'The value, "æ / ø", for the optional argument "fallback" on the Podlet constructor is not valid.',
     );
 });
 
 test('Podlet() - serialize default values - should set "name" to same as on constructor', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.name).toEqual('foo');
 });
 
 test('Podlet() - serialize default values - should set "version" to same as on constructor', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.version).toEqual('v1.0.0');
 });
 
 test('Podlet() - serialize default values - should set "content" to "/"', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.content).toEqual('/');
 });
 
 test('Podlet() - serialize default values - should set "fallback" to empty String', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.fallback).toEqual('');
 });
 
 test('Podlet() - serialize default values - should set "assets.js" to empty String', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.assets.js).toEqual('');
+    expect(result.js).toEqual([]);
 });
 
 test('Podlet() - serialize default values - should set "assets.css" to empty String', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.assets.css).toEqual('');
+    expect(result.css).toEqual([]);
 });
 
 test('Podlet() - serialize default values - should set "proxy" to empty Object', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.proxy).toEqual({});
+});
+
+test('Podlet() - should collect metric with version info', done => {
+    expect.hasAssertions();
+
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+
+    const dest = destinationObjectStream(arr => {
+        expect(arr[0]).toMatchObject({
+            name: 'podium_podlet_version_info',
+            labels: [
+                {
+                    name: 'version',
+                    // eslint-disable-next-line global-require
+                    value: require('../package.json').version,
+                },
+                {
+                    name: 'major',
+                    value: expect.any(Number),
+                },
+                {
+                    name: 'minor',
+                    value: expect.any(Number),
+                },
+                {
+                    name: 'patch',
+                    value: expect.any(Number),
+                },
+            ],
+        });
+        done();
+    });
+
+    podlet.metrics.pipe(dest);
+
+    setImmediate(() => {
+        dest.end();
+    });
 });
 
 // #############################################
@@ -298,7 +415,7 @@ test('.content() - call method - should return default value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.content();
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/');
     expect(parsed.content).toEqual('/');
@@ -312,7 +429,7 @@ test('.content() - constructor has "pathname" and "content" set - "prefix" argum
     const podlet = new Podlet(options);
 
     const result = podlet.content();
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/bar/foo.html');
     expect(parsed.content).toEqual('/bar/foo.html');
@@ -326,7 +443,7 @@ test('.content() - constructor has "pathname" and "content" set - "prefix" argum
     const podlet = new Podlet(options);
 
     const result = podlet.content({ prefix: true });
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/foo/bar/foo.html');
     expect(parsed.content).toEqual('/bar/foo.html');
@@ -339,7 +456,7 @@ test('.content() - constructor has "content" set with absolute URI - should retu
     const podlet = new Podlet(options);
 
     const result = podlet.content();
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('http://somewhere.remote.com');
     expect(parsed.content).toEqual('http://somewhere.remote.com');
@@ -353,7 +470,7 @@ test('.fallback() - call method - should return default value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.fallback();
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('');
     expect(parsed.fallback).toEqual('');
@@ -367,7 +484,7 @@ test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" arg
     const podlet = new Podlet(options);
 
     const result = podlet.fallback();
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/bar/foo.html');
     expect(parsed.fallback).toEqual('/bar/foo.html');
@@ -381,7 +498,7 @@ test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" arg
     const podlet = new Podlet(options);
 
     const result = podlet.fallback({ prefix: true });
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/foo/bar/foo.html');
     expect(parsed.fallback).toEqual('/bar/foo.html');
@@ -394,7 +511,7 @@ test('.fallback() - constructor has "fallback" set with absolute URI - should re
     const podlet = new Podlet(options);
 
     const result = podlet.fallback();
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('http://somewhere.remote.com');
     expect(parsed.fallback).toEqual('http://somewhere.remote.com');
@@ -414,10 +531,11 @@ test('.css() - set legal value on "value" argument - should return set value', (
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.css({ value: '/foo/bar' });
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
+    expect(parsed.css).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -427,17 +545,19 @@ test('.css() - set "prefix" argument to "true" - should prefix value returned by
     const podlet = new Podlet(options);
 
     const result = podlet.css({ value: '/foo/bar', prefix: true });
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
+    expect(parsed.css).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.css() - set legal absolute value on "value" argument - should set "css" to set value when serializing Object', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: 'http://somewhere.remote.com' });
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.assets.css).toEqual('http://somewhere.remote.com');
+    expect(result.css).toEqual([{ type: "default", value: "http://somewhere.remote.com" }]);
 });
 
 test('.css() - set illegal value on "value" argument - should throw', () => {
@@ -447,7 +567,7 @@ test('.css() - set illegal value on "value" argument - should throw', () => {
     expect(() => {
         podlet.css({ value: '/foo / bar' });
     }).toThrowError(
-        'Value on argument variable "value", "/foo / bar", is not valid'
+        'Value for argument variable "value", "/foo / bar", is not valid',
     );
 });
 
@@ -458,14 +578,14 @@ test('.css() - call method with "value" argument, then call it a second time wit
     expect(result).toEqual('/foo/bar');
 });
 
-test('.css() - call method twice with a value for "value" argument - should throw', () => {
-    expect.hasAssertions();
+test('.css() - call method twice - should set value twice', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/foo/bar' });
+    podlet.css({ value: '/bar/foo' });
 
-    expect(() => {
-        podlet.css({ value: '/foo/bar' });
-    }).toThrowError('Value for "css" has already been set');
+    const result = podlet.toJSON();
+    expect(result.assets.css).toEqual('/foo/bar');
+    expect(result.css).toEqual([{ type: "default", value: "/foo/bar" }, { type: "default", value: "/bar/foo" }]);
 });
 
 // #############################################
@@ -482,10 +602,11 @@ test('.js() - set legal value on "value" argument - should return set value', ()
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.js({ value: '/foo/bar' });
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
+    expect(parsed.js).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -495,17 +616,19 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
     const podlet = new Podlet(options);
 
     const result = podlet.js({ value: '/foo/bar', prefix: true });
-    const parsed = JSON.parse(JSON.stringify(podlet));
+    const parsed = podlet.toJSON();
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
+    expect(parsed.js).toEqual([{ type: "default", value: "/foo/bar" }]);
 });
 
 test('.js() - set legal absolute value on "value" argument - should set "js" to set value when serializing Object', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: 'http://somewhere.remote.com' });
-    const result = JSON.parse(JSON.stringify(podlet));
+    const result = podlet.toJSON();
     expect(result.assets.js).toEqual('http://somewhere.remote.com');
+    expect(result.js).toEqual([{ type: "default", value: "http://somewhere.remote.com" }]);
 });
 
 test('.js() - set illegal value on "value" argument - should throw', () => {
@@ -515,7 +638,7 @@ test('.js() - set illegal value on "value" argument - should throw', () => {
     expect(() => {
         podlet.js({ value: '/foo / bar' });
     }).toThrowError(
-        'Value on argument variable "value", "/foo / bar", is not valid'
+        'Value for argument variable "value", "/foo / bar", is not valid',
     );
 });
 
@@ -526,15 +649,80 @@ test('.js() - call method with "value" argument, then call it a second time with
     expect(result).toEqual('/foo/bar');
 });
 
-test('.js() - call method twice with a value for "value" argument - should throw', () => {
-    expect.hasAssertions();
+test('.js() - call method twice - should set value twice', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/foo/bar' });
+    podlet.js({ value: '/bar/foo' });
 
-    expect(() => {
-        podlet.js({ value: '/foo/bar' });
-    }).toThrowError('Value for "js" has already been set');
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([{ type: "default", value: "/foo/bar" }, { type: "default", value: "/bar/foo" }]);
 });
+
+test('.js() - "type" argument is set to "module" - should set "type" to "module"', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js({ value: '/foo/bar' });
+    podlet.js({ value: '/bar/foo', type: 'module' });
+
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([{ type: "default", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
+});
+
+
+// #############################################
+// .process()
+// #############################################
+
+test('.process() - call method with HttpIncoming - should return HttpIncoming', async () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
+    const result = await podlet.process(incoming);
+    expect(result).toEqual(incoming);
+});
+
+test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy path - should do proxying', async () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: '/', development: true });
+    const process = { proxy: true };
+
+    // Proxy path is now: /podium-resource/foo/bar
+    podlet.proxy({ target: '/bar', name: 'bar' });
+
+    const server = new FakeHttpServer({ podlet, process }, incoming => {
+        if (incoming.url.pathname === '/podium-resource/foo/bar') {
+            expect(incoming.proxy).toBeTruthy();
+        }
+
+        incoming.response.statusCode = 200;
+        incoming.response.end('OK');
+    });
+
+    await server.listen();
+    await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+    await server.close();
+});
+
+test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy path - should not do proxying', async () => {
+    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: '/', development: true });
+    const process = { proxy: false };
+
+    // Proxy path is now: /podium-resource/foo/bar
+    podlet.proxy({ target: '/bar', name: 'bar' });
+
+    const server = new FakeHttpServer({ podlet, process }, incoming => {
+        if (incoming.url.pathname === '/podium-resource/foo/bar') {
+            expect(incoming.proxy).toBeFalsy();
+        }
+
+        incoming.response.statusCode = 200;
+        incoming.response.end('OK');
+    });
+
+    await server.listen();
+    await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+    await server.close();
+});
+
 
 // #############################################
 // .middleware()
@@ -542,7 +730,7 @@ test('.js() - call method twice with a value for "value" argument - should throw
 
 test('.middleware() - call method - should append podlet name on "res.locals.podium.name"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -551,13 +739,13 @@ test('.middleware() - call method - should append podlet name on "res.locals.pod
     await server.close();
 });
 
-test('.middleware() - .css() is NOT set with a value - should append empty String to "res.locals.podium.css"', async () => {
+test('.middleware() - .css() is NOT set with a value - should append empty Array to "res.locals.podium.css"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
-    expect(result.response.podium.css).toEqual('');
+    expect(result.response.podium.css).toEqual([]);
 
     await server.close();
 });
@@ -566,22 +754,22 @@ test('.middleware() - .css() is set with a value - should append value to "res.l
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/style.css' });
 
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
-    expect(result.response.podium.css).toEqual(podlet.css());
+    expect(result.response.podium.css).toEqual(podlet.toJSON().css);
 
     await server.close();
 });
 
-test('.middleware() - .js() is NOT set with a value - should append empty String to "res.locals.podium.js"', async () => {
+test('.middleware() - .js() is NOT set with a value - should append empty Array to "res.locals.podium.js"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
-    expect(result.response.podium.js).toEqual('');
+    expect(result.response.podium.js).toEqual([]);
 
     await server.close();
 });
@@ -590,18 +778,18 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/script.js' });
 
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
-    expect(result.response.podium.js).toEqual(podlet.js());
+    expect(result.response.podium.js).toEqual(podlet.toJSON().js);
 
     await server.close();
 });
 
 test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -615,7 +803,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
         development: true,
     });
     const podlet = new Podlet(options);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get({
@@ -633,7 +821,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
         development: true,
     });
     const podlet = new Podlet(options);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -644,7 +832,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
 
 test('.middleware() - valid "version" value is set on constructor - should append "podlet-version" http header with the given version value', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -661,7 +849,7 @@ test('res.podiumSend() - .podiumSend() method - should be a function on http.res
     expect.hasAssertions();
 
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         expect(typeof res.podiumSend).toBe('function');
         res.json({});
     });
@@ -673,7 +861,7 @@ test('res.podiumSend() - .podiumSend() method - should be a function on http.res
 
 test('res.podiumSend() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
     });
 
@@ -689,18 +877,18 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
         development: true,
     });
     const podlet = new Podlet(options);
-    const server = new FakeServer(podlet, (req, res) => {
+    const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
     });
 
     await server.listen();
     const result = await server.get({ raw: true });
 
+    const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
     expect(result.response).toEqual(
-        template('<h1>OK!</h1>', {
-            name: DEFAULT_OPTIONS.name,
-        })
+        template(incoming, '<h1>OK!</h1>')
     );
+
     await server.close();
 });
 
@@ -755,7 +943,7 @@ test('.defaults() - call method with "context" argument, then call it a second t
 
 test('.defaults() - constructor argument "development" is not set - should not append a default context to "res.locals"', async () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     await server.listen();
 
     const result = await server.get();
@@ -771,7 +959,7 @@ test('.defaults() - constructor argument "development" is to "true" - should app
         pathname: '/',
         development: true,
     });
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
@@ -796,7 +984,7 @@ test('.defaults() - set "context" argument where a key overrides one existing co
     podlet.defaults({
         locale: 'no-NO',
     });
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
@@ -821,7 +1009,7 @@ test('.defaults() - set "context" argument where a key is not a default context 
     podlet.defaults({
         foo: 'bar',
     });
-    const server = new FakeServer(podlet);
+    const server = new FakeExpressServer(podlet);
     const address = await server.listen();
     const result = await server.get();
 
@@ -847,7 +1035,7 @@ test('.proxy() - no arguments - should throw', () => {
     expect(() => {
         podlet.proxy();
     }).toThrowError(
-        'Value on argument variable "target", "null", is not valid'
+        'Value on argument variable "target", "null", is not valid',
     );
 });
 
@@ -857,7 +1045,7 @@ test('.proxy() - set a non valid "target" argument value - should throw', () => 
     expect(() => {
         podlet.proxy({ target: 'æøå æåø', name: 'foo' });
     }).toThrowError(
-        'Value on argument variable "target", "æøå æåø", is not valid'
+        'Value on argument variable "target", "æøå æåø", is not valid',
     );
 });
 
@@ -867,7 +1055,7 @@ test('.proxy() - set a non valid "name" argument value - should throw', () => {
     expect(() => {
         podlet.proxy({ target: '/foo', name: 'æøå æåø' });
     }).toThrowError(
-        'Value on argument variable "name", "æøå æåø", is not valid'
+        'Value on argument variable "name", "æøå æåø", is not valid',
     );
 });
 
@@ -881,7 +1069,7 @@ test('.proxy() - set more than 4 proxy entries - should throw', () => {
         podlet.proxy({ target: '/foo4', name: 'foo4' });
         podlet.proxy({ target: '/foo5', name: 'foo5' });
     }).toThrowError(
-        'One can not define more than 4 proxy targets for each podlet'
+        'One can not define more than 4 proxy targets for each podlet',
     );
 });
 
@@ -907,10 +1095,11 @@ test('.view() - append a custom wireframe document - should render development o
     const options = Object.assign({}, DEFAULT_OPTIONS, {
         development: true,
     });
-    const podlet = new Podlet(options);
-    podlet.view(str => `<div>${str}</div>`);
 
-    const server = new FakeServer(podlet, (req, res) => {
+    const podlet = new Podlet(options);
+    podlet.view((incoming, data) => `<div>${data}</div>`);
+
+    const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
     });
 
@@ -933,6 +1122,6 @@ test('.metrics - assigned object to property - should be instance of @metrics/cl
 test('.metrics - assigned object to property - should have object tag with "Metrics" as name', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     expect(Object.prototype.toString.call(podlet.metrics)).toEqual(
-        '[object MetricsClient]'
+        '[object MetricsClient]',
     );
 });
