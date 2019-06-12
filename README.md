@@ -20,7 +20,9 @@ convenience.
 
 For writing podlet servers with other HTTP frameworks, the following modules also exist:
 
+-   [Fastify Podlet Plugin]
 -   [Hapi Podlet Plugin]
+-   [Koa Podlet Plugin]
 
 ## Installation
 
