@@ -1,6 +1,8 @@
 # @podium/podlet
 
-Module for building page fragment servers in a micro frontend architecture.
+A Module for building page fragment servers in a micro frontend architecture.
+
+See the [official Podium documentation](https://podium-lib.io/) site.
 
 [![Dependencies](https://img.shields.io/david/podium-lib/podlet.svg?style=flat-square)](https://david-dm.org/podium-lib/podlet)
 [![Build Status](http://img.shields.io/travis/podium-lib/podlet/master.svg?style=flat-square)](https://travis-ci.org/podium-lib/podlet)
