@@ -905,7 +905,7 @@ test('.defaults() - call method with no arguments - should return default value'
         locale: 'en-US',
         mountOrigin: '',
         mountPathname: '/',
-        publicPathname: '/',
+        publicPathname: '/podium-resource/foo',
         requestedBy: 'foo',
     });
 });
@@ -920,7 +920,7 @@ test('.defaults() - set value on "context" argument - should return set value', 
         locale: 'en-US',
         mountOrigin: '',
         mountPathname: '/',
-        publicPathname: '/',
+        publicPathname: '/podium-resource/foo',
         requestedBy: 'foo',
     });
 });
@@ -936,7 +936,7 @@ test('.defaults() - call method with "context" argument, then call it a second t
         locale: 'en-US',
         mountOrigin: '',
         mountPathname: '/',
-        publicPathname: '/',
+        publicPathname: '/podium-resource/foo',
         requestedBy: 'foo',
     });
 });
@@ -969,7 +969,9 @@ test('.defaults() - constructor argument "development" is to "true" - should app
     expect(result.response.podium.context.requestedBy).toEqual('foo');
     expect(result.response.podium.context.mountOrigin).toEqual(address);
     expect(result.response.podium.context.mountPathname).toEqual('/');
-    expect(result.response.podium.context.publicPathname).toEqual('/');
+    expect(result.response.podium.context.publicPathname).toEqual(
+        '/podium-resource/foo',
+    );
 
     await server.close();
 });
@@ -994,7 +996,9 @@ test('.defaults() - set "context" argument where a key overrides one existing co
     expect(result.response.podium.context.requestedBy).toEqual('foo');
     expect(result.response.podium.context.mountOrigin).toEqual(address);
     expect(result.response.podium.context.mountPathname).toEqual('/');
-    expect(result.response.podium.context.publicPathname).toEqual('/');
+    expect(result.response.podium.context.publicPathname).toEqual(
+        '/podium-resource/foo',
+    );
 
     await server.close();
 });
@@ -1020,7 +1024,9 @@ test('.defaults() - set "context" argument where a key is not a default context 
     expect(result.response.podium.context.requestedBy).toEqual('foo');
     expect(result.response.podium.context.mountOrigin).toEqual(address);
     expect(result.response.podium.context.mountPathname).toEqual('/');
-    expect(result.response.podium.context.publicPathname).toEqual('/');
+    expect(result.response.podium.context.publicPathname).toEqual(
+        '/podium-resource/foo',
+    );
 
     await server.close();
 });
