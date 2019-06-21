@@ -32,7 +32,7 @@
     "objobj": "^1.0.0"
   },
   "devDependencies": {
-    "@podium/test-utils": "1.6.2",
+    "@podium/test-utils": "1.6.3",
     "eslint": "^5.15.3",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-config-prettier": "^5.0.0",
