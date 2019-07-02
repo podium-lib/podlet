@@ -307,9 +307,9 @@ app.use(async (req, res, next) => {
 
 #### options
 
-| option   | default | type      | required | details                                                                   |
-| -------- | ------- | --------- | -------- | ------------------------------------------------------------------------- |
-| proxy    | `true`  | `boolean` | `false`  | If `@podium/proxy` should be applied as part of the `.process()` method   |
+| option | default | type      | required | details                                                                 |
+| ------ | ------- | --------- | -------- | ----------------------------------------------------------------------- |
+| proxy  | `true`  | `boolean` | `false`  | If `@podium/proxy` should be applied as part of the `.process()` method |
 
 ### .middleware()
 
@@ -390,9 +390,9 @@ The route will then respond with something like:
 
 ### options
 
-| option | type      | default   | required |
-| ------ | --------- | --------- | -------- |
-| prefix | `boolean` | `false`   |          |
+| option | type      | default | required |
+| ------ | --------- | ------- | -------- |
+| prefix | `boolean` | `false` |          |
 
 #### prefix
 
@@ -545,8 +545,9 @@ The prefix will be ignored if the returned value is an absolute URL.
 
 ### .js(options)
 
-Sets and returns the pathname for a podlets javascript assets. Defaults to an
-empty String.
+Sets the pathname for a podlet's javascript assets.
+
+`options` can be either an object or an array of options objects as described below.
 
 When a value is set it will be internally kept and used when the podlet
 instance is serialized into a manifest JSON string.
@@ -558,7 +559,6 @@ instance is serialized into a manifest JSON string.
 | value  | `string`  |           |          |
 | prefix | `boolean` | `false`   |          |
 | type   | `string`  | `default` |          |
-
 
 #### value
 
@@ -578,9 +578,11 @@ const podlet = new Podlet({
     pathname: '/',
 });
 
-app.get(podlet.js({ value: '/assets/main.js' }), (req, res) => {
-    res.status(200).sendFile('./app/assets/main.js', err => {});
-});
+podlet.js({ value: '/assets/main.js' });
+
+// or
+
+podlet.js([{ value: '/assets/main.js' }, { value: '/assets/secondary.js' }]);
 ```
 
 Serve assets statically along side the app and set a relative URI to the
@@ -637,10 +639,11 @@ Prefix will be ignored if the returned value is an absolute URL.
 Set the type of script which is set. `default` indicates an unknown type.
 `module` inidcates as ES6 module.
 
-### .css(pathname)
+### .css(options)
 
-Sets and returns the pathname for a podlets CSS assets. Defaults to an empty
-string.
+Sets the options for a podlet's CSS assets.
+
+`options` can be either an object or an array of options objects as described below.
 
 When a value is set it will be internally kept and used when the podlet
 instance is serialized into a manifest JSON string.
@@ -674,9 +677,11 @@ const podlet = new Podlet({
     pathname: '/',
 });
 
-app.get(podlet.css({ value: '/assets/main.css' }), (req, res) => {
-    res.status(200).sendFile('./app/assets/main.css', err => {});
-});
+podlet.css({ value: '/assets/main.css' });
+
+// or
+
+podlet.css([{ value: '/assets/main.css' }, { value: '/assets/secondary.css' }]);
 ```
 
 Serve assets from a static file server and set a relative URI to the CSS file:
