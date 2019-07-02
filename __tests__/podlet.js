@@ -30,9 +30,11 @@ class FakeHttpServer {
         this.app = http.createServer(async (req, res) => {
             const incoming = new HttpIncoming(req, res);
             const result = await podlet.process(incoming, process);
-            onRequest ? onRequest(result) : (result) => {
-                result.response.status(200).json(result);
-            };
+            onRequest
+                ? onRequest(result)
+                : result => {
+                      result.response.status(200).json(result);
+                  };
         });
         this.server = undefined;
         this.address = '';
@@ -67,7 +69,7 @@ class FakeHttpServer {
             if (options.pathname) {
                 opts = url.parse(`${this.address}${options.pathname}`);
             } else {
-                opts = url.parse(this.address)
+                opts = url.parse(this.address);
             }
 
             http.get(opts, res => {
@@ -153,7 +155,6 @@ class FakeExpressServer {
 }
 
 const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
-
 
 // #############################################
 // Constructor
@@ -535,7 +536,7 @@ test('.css() - set legal value on "value" argument - should return set value', (
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: "default", value: "/foo/bar" }]);
+    expect(parsed.css).toEqual([{ type: 'default', value: '/foo/bar' }]);
 });
 
 test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -549,7 +550,7 @@ test('.css() - set "prefix" argument to "true" - should prefix value returned by
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: "default", value: "/foo/bar" }]);
+    expect(parsed.css).toEqual([{ type: 'default', value: '/foo/bar' }]);
 });
 
 test('.css() - set legal absolute value on "value" argument - should set "css" to set value when serializing Object', () => {
@@ -557,7 +558,9 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     podlet.css({ value: 'http://somewhere.remote.com' });
     const result = podlet.toJSON();
     expect(result.assets.css).toEqual('http://somewhere.remote.com');
-    expect(result.css).toEqual([{ type: "default", value: "http://somewhere.remote.com" }]);
+    expect(result.css).toEqual([
+        { type: 'default', value: 'http://somewhere.remote.com' },
+    ]);
 });
 
 test('.css() - set illegal value on "value" argument - should throw', () => {
@@ -585,7 +588,63 @@ test('.css() - call method twice - should set value twice', () => {
 
     const result = podlet.toJSON();
     expect(result.assets.css).toEqual('/foo/bar');
-    expect(result.css).toEqual([{ type: "default", value: "/foo/bar" }, { type: "default", value: "/bar/foo" }]);
+    expect(result.css).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'default', value: '/bar/foo' },
+    ]);
+});
+
+test('.css() - should accept additional keys', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.css({ value: '/foo/bar', fake: 'prop' });
+
+    const result = podlet.toJSON();
+    expect(result.assets.css).toEqual('/foo/bar');
+    expect(result.css).toEqual([
+        { type: 'default', value: '/foo/bar', fake: 'prop' },
+    ]);
+});
+
+test('.css() - "options" argument as an array - should accept an array of values', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.css([{ value: '/foo/bar' }, { value: '/bar/foo' }]);
+
+    const result = podlet.toJSON();
+    expect(result.assets.css).toEqual('/foo/bar');
+    expect(result.css).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'default', value: '/bar/foo' },
+    ]);
+});
+
+test('.css() - "options" argument as an array - call method twice - should set all values', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.css([{ value: '/foo/bar' }, { value: '/bar/foo' }]);
+    podlet.css([{ value: '/foo/bar/baz' }, { value: '/bar/foo/baz' }]);
+
+    const result = podlet.toJSON();
+    expect(result.assets.css).toEqual('/foo/bar');
+    expect(result.css).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'default', value: '/bar/foo' },
+        { type: 'default', value: '/foo/bar/baz' },
+        { type: 'default', value: '/bar/foo/baz' },
+    ]);
+});
+
+test('.css() - "options" argument as an array - should set additional keys', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.css([
+        { value: '/foo/bar', fake: 'prop' },
+        { value: '/bar/foo', prop: 'fake' },
+    ]);
+
+    const result = podlet.toJSON();
+    expect(result.assets.css).toEqual('/foo/bar');
+    expect(result.css).toEqual([
+        { type: 'default', value: '/foo/bar', fake: 'prop' },
+        { type: 'default', value: '/bar/foo', prop: 'fake' },
+    ]);
 });
 
 // #############################################
@@ -606,7 +665,7 @@ test('.js() - set legal value on "value" argument - should return set value', ()
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: "default", value: "/foo/bar" }]);
+    expect(parsed.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
 });
 
 test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -620,7 +679,7 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: "default", value: "/foo/bar" }]);
+    expect(parsed.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
 });
 
 test('.js() - set legal absolute value on "value" argument - should set "js" to set value when serializing Object', () => {
@@ -628,7 +687,9 @@ test('.js() - set legal absolute value on "value" argument - should set "js" to 
     podlet.js({ value: 'http://somewhere.remote.com' });
     const result = podlet.toJSON();
     expect(result.assets.js).toEqual('http://somewhere.remote.com');
-    expect(result.js).toEqual([{ type: "default", value: "http://somewhere.remote.com" }]);
+    expect(result.js).toEqual([
+        { type: 'default', value: 'http://somewhere.remote.com' },
+    ]);
 });
 
 test('.js() - set illegal value on "value" argument - should throw', () => {
@@ -656,7 +717,21 @@ test('.js() - call method twice - should set value twice', () => {
 
     const result = podlet.toJSON();
     expect(result.assets.js).toEqual('/foo/bar');
-    expect(result.js).toEqual([{ type: "default", value: "/foo/bar" }, { type: "default", value: "/bar/foo" }]);
+    expect(result.js).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'default', value: '/bar/foo' },
+    ]);
+});
+
+test('.js() - should accept additional keys', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js({ value: '/foo/bar', fake: 'prop' });
+
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([
+        { type: 'default', value: '/foo/bar', fake: 'prop' },
+    ]);
 });
 
 test('.js() - "type" argument is set to "module" - should set "type" to "module"', () => {
@@ -666,9 +741,56 @@ test('.js() - "type" argument is set to "module" - should set "type" to "module"
 
     const result = podlet.toJSON();
     expect(result.assets.js).toEqual('/foo/bar');
-    expect(result.js).toEqual([{ type: "default", value: "/foo/bar" }, { type: "module", value: "/bar/foo" }]);
+    expect(result.js).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'module', value: '/bar/foo' },
+    ]);
 });
 
+test('.js() - "options" argument as an array - should accept an array of values', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js([{ value: '/foo/bar' }, { value: '/bar/foo', type: 'module' }]);
+
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'module', value: '/bar/foo' },
+    ]);
+});
+
+test('.js() - "options" argument as an array - call method twice - should set all values', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js([{ value: '/foo/bar' }, { value: '/bar/foo', type: 'module' }]);
+    podlet.js([
+        { value: '/foo/bar/baz' },
+        { value: '/bar/foo/baz', type: 'module' },
+    ]);
+
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([
+        { type: 'default', value: '/foo/bar' },
+        { type: 'module', value: '/bar/foo' },
+        { type: 'default', value: '/foo/bar/baz' },
+        { type: 'module', value: '/bar/foo/baz' },
+    ]);
+});
+
+test('.js() - "options" argument as an array - should set additional keys', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    podlet.js([
+        { value: '/foo/bar', fake: 'prop' },
+        { value: '/bar/foo', type: 'module', prop: 'fake' },
+    ]);
+
+    const result = podlet.toJSON();
+    expect(result.assets.js).toEqual('/foo/bar');
+    expect(result.js).toEqual([
+        { type: 'default', value: '/foo/bar', fake: 'prop' },
+        { type: 'module', value: '/bar/foo', prop: 'fake' },
+    ]);
+});
 
 // #############################################
 // .process()
@@ -682,7 +804,12 @@ test('.process() - call method with HttpIncoming - should return HttpIncoming', 
 });
 
 test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy path - should do proxying', async () => {
-    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: '/', development: true });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
     const process = { proxy: true };
 
     // Proxy path is now: /podium-resource/foo/bar
@@ -703,7 +830,12 @@ test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy pa
 });
 
 test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy path - should not do proxying', async () => {
-    const podlet = new Podlet({ name: 'foo', version: 'v1.0.0', pathname: '/', development: true });
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
     const process = { proxy: false };
 
     // Proxy path is now: /podium-resource/foo/bar
@@ -722,7 +854,6 @@ test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy p
     await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
     await server.close();
 });
-
 
 // #############################################
 // .middleware()
@@ -885,9 +1016,7 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
     const result = await server.get({ raw: true });
 
     const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
-    expect(result.response).toEqual(
-        template(incoming, '<h1>OK!</h1>')
-    );
+    expect(result.response).toEqual(template(incoming, '<h1>OK!</h1>'));
 
     await server.close();
 });
