@@ -528,31 +528,6 @@ test('.css() - call method with no arguments - should return default value', () 
     expect(result).toEqual('');
 });
 
-test('.css() - set legal value on "value" argument - should return set value', () => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-
-    const result = podlet.css({ value: '/foo/bar' });
-    const parsed = podlet.toJSON();
-
-    expect(result).toEqual('/foo/bar');
-    expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: 'default', value: '/foo/bar' }]);
-});
-
-test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
-    const options = Object.assign({}, DEFAULT_OPTIONS, {
-        pathname: '/xyz',
-    });
-    const podlet = new Podlet(options);
-
-    const result = podlet.css({ value: '/foo/bar', prefix: true });
-    const parsed = podlet.toJSON();
-
-    expect(result).toEqual('/xyz/foo/bar');
-    expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: 'default', value: '/foo/bar' }]);
-});
-
 test('.css() - set legal absolute value on "value" argument - should set "css" to set value when serializing Object', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: 'http://somewhere.remote.com' });
@@ -655,31 +630,6 @@ test('.js() - call method with no arguments - should return default value', () =
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.js();
     expect(result).toEqual('');
-});
-
-test('.js() - set legal value on "value" argument - should return set value', () => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-
-    const result = podlet.js({ value: '/foo/bar' });
-    const parsed = podlet.toJSON();
-
-    expect(result).toEqual('/foo/bar');
-    expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
-});
-
-test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
-    const options = Object.assign({}, DEFAULT_OPTIONS, {
-        pathname: '/xyz',
-    });
-    const podlet = new Podlet(options);
-
-    const result = podlet.js({ value: '/foo/bar', prefix: true });
-    const parsed = podlet.toJSON();
-
-    expect(result).toEqual('/xyz/foo/bar');
-    expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
 });
 
 test('.js() - set legal absolute value on "value" argument - should set "js" to set value when serializing Object', () => {
