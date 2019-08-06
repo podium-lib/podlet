@@ -779,6 +779,28 @@ test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy pa
     await server.close();
 });
 
+test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy - should use path in actual url', async () => {
+    const podlet = new Podlet({
+        name: 'foo-with-path',
+        version: 'v1.0.0',
+        pathname: '/path',
+        development: true,
+    });
+    const process = { proxy: true };
+
+    expect(podlet.proxy({ target: '/something', name: 'something' })).toBe('/something');
+
+    const server = new FakeHttpServer({ podlet, process }, incoming => {
+        incoming.response.statusCode = 200;
+        incoming.response.end(incoming.url.pathname);
+    });
+
+    await server.listen();
+    const { response } = await server.get({ raw: true, pathname: '/path/podium-resource/foo-with-path/something' });
+    expect(response).toBe('/path/something');
+    await server.close();
+});
+
 test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy path - should not do proxying', async () => {
     const podlet = new Podlet({
         name: 'foo',
