@@ -12,11 +12,11 @@ test('.js() - set legal value on "value" argument - should return set value', ()
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.js({ value: '/foo/bar' });
-    const parsed = podlet.toJSON();
+    const parsed = JSON.parse(JSON.stringify(podlet));
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
+    expect(parsed.js[0].value).toEqual('/foo/bar');
 });
 
 test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -26,23 +26,22 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
     const podlet = new Podlet(options);
 
     const result = podlet.js({ value: '/foo/bar', prefix: true });
-    const parsed = podlet.toJSON();
+    const parsed = JSON.parse(JSON.stringify(podlet));
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
-    expect(parsed.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
+    expect(parsed.js[0].value).toEqual('/foo/bar');
 });
-
 
 test('.css() - set legal value on "value" argument - should return set value', () => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.css({ value: '/foo/bar' });
-    const parsed = podlet.toJSON();
+    const parsed = JSON.parse(JSON.stringify(podlet));
 
     expect(result).toEqual('/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: 'default', value: '/foo/bar' }]);
+    expect(parsed.css[0].value).toEqual('/foo/bar');
 });
 
 test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
@@ -52,9 +51,9 @@ test('.css() - set "prefix" argument to "true" - should prefix value returned by
     const podlet = new Podlet(options);
 
     const result = podlet.css({ value: '/foo/bar', prefix: true });
-    const parsed = podlet.toJSON();
+    const parsed = JSON.parse(JSON.stringify(podlet));
 
     expect(result).toEqual('/xyz/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
-    expect(parsed.css).toEqual([{ type: 'default', value: '/foo/bar' }]);
+    expect(parsed.css[0].value).toEqual('/foo/bar');
 });
