@@ -534,7 +534,7 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.css).toEqual('http://somewhere.remote.com');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', value: 'http://somewhere.remote.com' },
+        { rel: 'stylesheet', type: 'text/css', value: 'http://somewhere.remote.com' },
     ]);
 });
 
@@ -564,8 +564,8 @@ test('.css() - call method twice - should set value twice', () => {
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.css).toEqual('/foo/bar');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', value: '/foo/bar' },
-        { rel: 'stylesheet', value: '/bar/foo' },
+        { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
+        { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
     ]);
 });
 
@@ -577,7 +577,7 @@ test('.css() - should accept additional keys', () => {
 
     expect(result.assets.css).toEqual('/foo/bar');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', value: '/foo/bar' },
+        { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
     ]);
 });
 
@@ -588,8 +588,8 @@ test('.css() - "options" argument as an array - should accept an array of values
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.css).toEqual('/foo/bar');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', value: '/foo/bar' },
-        { rel: 'stylesheet', value: '/bar/foo' },
+        { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
+        { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
     ]);
 });
 
@@ -601,10 +601,10 @@ test('.css() - "options" argument as an array - call method twice - should set a
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.css).toEqual('/foo/bar');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', value: '/foo/bar' },
-        { rel: 'stylesheet', value: '/bar/foo' },
-        { rel: 'stylesheet', value: '/foo/bar/baz' },
-        { rel: 'stylesheet', value: '/bar/foo/baz' },
+        { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
+        { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
+        { rel: 'stylesheet', type: 'text/css', value: '/foo/bar/baz' },
+        { rel: 'stylesheet', type: 'text/css', value: '/bar/foo/baz' },
     ]);
 });
 
@@ -618,8 +618,8 @@ test('.css() - "options" argument as an array - should NOT set additional keys',
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.css).toEqual('/foo/bar');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', value: '/foo/bar' },
-        { rel: 'stylesheet', value: '/bar/foo' },
+        { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
+        { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
     ]);
 });
 
