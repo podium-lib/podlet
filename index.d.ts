@@ -53,5 +53,5 @@ export default class Podlet {
         ...args: unknown[]
     ): string;
 
-    process(httpIncoming: HttpIncoming): Promise<HttpIncoming>;
+    process(incoming: HttpIncoming): Promise<HttpIncoming>;
 }
