@@ -13,8 +13,10 @@
   },
   "homepage": "https://podium-lib.io/",
   "files": [
-    "lib"
+    "lib",
+    "index.d.ts"
   ],
+  "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
