@@ -4,7 +4,7 @@ const Podlet = require('../');
 
 const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
 
-// NB; these tests are here only to test compabillity between
+// NB; these tests are here only to test compatibility between
 // V3 and V4 manifest changes. Can be removed when V3 manifest
 // support is removed.
 
