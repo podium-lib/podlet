@@ -1,5 +1,5 @@
 {
   "extends": [
-    "config:base"
+    "github>finn-no/renovate-presets:js"
   ]
 }
