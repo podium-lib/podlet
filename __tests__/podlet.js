@@ -1,7 +1,7 @@
 'use strict';
 
 const { destinationObjectStream } = require('@podium/test-utils');
-const { template, HttpIncoming } = require('@podium/utils');
+const { template, HttpIncoming, AssetJs, AssetCss } = require('@podium/utils');
 const Metrics = require('@metrics/client');
 const express = require('express');
 const http = require('http');
@@ -534,7 +534,11 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.css).toEqual('http://somewhere.remote.com');
     expect(result.css).toEqual([
-        { rel: 'stylesheet', type: 'text/css', value: 'http://somewhere.remote.com' },
+        {
+            rel: 'stylesheet',
+            type: 'text/css',
+            value: 'http://somewhere.remote.com',
+        },
     ]);
 });
 
@@ -681,9 +685,7 @@ test('.js() - should NOT accept additional keys', () => {
 
     const result = JSON.parse(JSON.stringify(podlet));
     expect(result.assets.js).toEqual('/foo/bar');
-    expect(result.js).toEqual([
-        { type: 'default', value: '/foo/bar' },
-    ]);
+    expect(result.js).toEqual([{ type: 'default', value: '/foo/bar' }]);
 });
 
 test('.js() - "type" argument is set to "module" - should set "type" to "module"', () => {
@@ -871,6 +873,26 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
     expect(result.response.podium.js).toEqual(parsed.js);
 
     await server.close();
+});
+
+test('.js() - passing an instance of AssetsJs - should return set value', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+
+    podlet.js(new AssetJs({ value: '/foo/bar', type: 'module' }));
+    const parsed = JSON.parse(JSON.stringify(podlet));
+
+    expect(parsed.assets.js).toEqual('/foo/bar');
+    expect(parsed.js[0].value).toEqual('/foo/bar');
+});
+
+test('.css() - passing an instance of AssetsCss - should return set value', () => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+
+    podlet.css(new AssetCss({ value: '/foo/bar', type: 'text/css' }));
+    const parsed = JSON.parse(JSON.stringify(podlet));
+
+    expect(parsed.assets.css).toEqual('/foo/bar');
+    expect(parsed.css[0].value).toEqual('/foo/bar');
 });
 
 test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async () => {
