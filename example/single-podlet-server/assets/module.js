@@ -11,7 +11,7 @@ const context = {
 
 const base = new URL(
     context.publicPathname,
-    context.mountOrigin ? context.mountOrigin : window.location.origin
+    context.mountOrigin ? context.mountOrigin : window.location.origin,
 );
 const localApiUri = new URL('localApi', base);
 
