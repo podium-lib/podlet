@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+
 'use strict';
 
 const utils = require('@podium/utils');
@@ -41,17 +43,21 @@ const PodiumPodletHapiPlugin = class PodiumPodletHapiPlugin {
         });
 
         // Decorate response with .podiumSend() method
-        server.decorate('toolkit', 'podiumSend', function(fragment) {
+        server.decorate('toolkit', 'podiumSend', fragment => {
             return this.request.app.podium.render(fragment);
         });
 
         // Mount proxy route
-        const pathname = utils.pathnameBuilder(podlet._proxy.pathname, podlet._proxy.prefix, '/{path*}');
+        const pathname = utils.pathnameBuilder(
+            podlet._proxy.pathname,
+            podlet._proxy.prefix,
+            '/{path*}',
+        );
         server.route([
             {
                 method: '*',
                 path: pathname,
-                handler: async (request, h) => {
+                handler: async request => {
                     await podlet._proxy.process(request.app.podium);
                     return '';
                 },

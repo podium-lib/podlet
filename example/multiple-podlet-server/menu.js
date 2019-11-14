@@ -24,24 +24,12 @@ class Menu {
             const ctx = res.locals.podium.context;
             res.podiumSend(`<menu>
                 <ul>
-                    <li><a href="${ctx.mountOrigin}${
-                ctx.mountPathname
-            }/section_1/">Menu 1</a></li>
-                    <li><a href="${ctx.mountOrigin}${
-                ctx.mountPathname
-            }/section_2/">Menu 2</a></li>
-                    <li><a href="${ctx.mountOrigin}${
-                ctx.mountPathname
-            }/section_3/">Menu 3</a></li>
-                    <li><a href="${ctx.mountOrigin}${
-                ctx.mountPathname
-            }/section_4/">Menu 4</a></li>
-                    <li><a href="${ctx.mountOrigin}${
-                ctx.mountPathname
-            }/section_5/">Menu 5</a></li>
-                    <li><a href="${ctx.mountOrigin}${
-                ctx.mountPathname
-            }/section_6/">Menu 6</a></li>
+                    <li><a href="${ctx.mountOrigin}${ctx.mountPathname}/section_1/">Menu 1</a></li>
+                    <li><a href="${ctx.mountOrigin}${ctx.mountPathname}/section_2/">Menu 2</a></li>
+                    <li><a href="${ctx.mountOrigin}${ctx.mountPathname}/section_3/">Menu 3</a></li>
+                    <li><a href="${ctx.mountOrigin}${ctx.mountPathname}/section_4/">Menu 4</a></li>
+                    <li><a href="${ctx.mountOrigin}${ctx.mountPathname}/section_5/">Menu 5</a></li>
+                    <li><a href="${ctx.mountOrigin}${ctx.mountPathname}/section_6/">Menu 6</a></li>
                 </ul>
             </menu>`);
         });

@@ -1,3 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-console */
+
 'use strict';
 
 const polka = require('polka');
@@ -32,7 +35,7 @@ app.get(podlet.content(), (req, res) => {
 app.get(podlet.fallback(), (req, res) => {
     const p = res.locals.podium;
     res.end(
-        p.render('<h2>We are sorry but we can not display this!</h2>', res)
+        p.render('<h2>We are sorry but we can not display this!</h2>', res),
     );
 });
 

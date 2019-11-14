@@ -1,3 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-console */
+
 'use strict';
 
 const Hapi = require('hapi');
@@ -50,22 +53,19 @@ app.route({
 app.route({
     method: 'GET',
     path: podlet.manifest(),
-    handler: (request, h) => JSON.stringify(podlet),
+    handler: () => JSON.stringify(podlet),
 });
-
 
 app.route({
     method: 'GET',
     path: '/public',
-    handler: (request, h) => JSON.stringify({ say: 'Hello world' }),
+    handler: () => JSON.stringify({ say: 'Hello world' }),
 });
-
 
 // Test URL: http://localhost:7100/podium-resource/podletContent/localApi
 podlet.proxy({ target: '/public', name: 'localApi' });
 // Test URL: http://localhost:7100/podium-resource/podletContent/remoteApi
 podlet.proxy({ target: 'https://api.ipify.org', name: 'remoteApi' });
-
 
 podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });

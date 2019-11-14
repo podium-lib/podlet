@@ -20,9 +20,7 @@ test('.js() - set legal value on "value" argument - should return set value', ()
 });
 
 test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
-    const options = Object.assign({}, DEFAULT_OPTIONS, {
-        pathname: '/xyz',
-    });
+    const options = { ...DEFAULT_OPTIONS, pathname: '/xyz' };
     const podlet = new Podlet(options);
 
     const result = podlet.js({ value: '/foo/bar', prefix: true });
@@ -45,9 +43,7 @@ test('.css() - set legal value on "value" argument - should return set value', (
 });
 
 test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', () => {
-    const options = Object.assign({}, DEFAULT_OPTIONS, {
-        pathname: '/xyz',
-    });
+    const options = { ...DEFAULT_OPTIONS, pathname: '/xyz' };
     const podlet = new Podlet(options);
 
     const result = podlet.css({ value: '/foo/bar', prefix: true });
