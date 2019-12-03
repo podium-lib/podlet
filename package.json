@@ -1,7 +1,7 @@
 {
   "name": "@podium/podlet",
-  "version": "4.2.2",
-  "description": "Module for building page fragment servers in a micro frontend architecture. ",
+  "version": "4.2.4",
+  "description": "Module for building page fragment servers in a micro frontend architecture.",
   "main": "lib/podlet.js",
   "license": "MIT",
   "repository": {
@@ -27,24 +27,25 @@
   },
   "dependencies": {
     "@metrics/client": "2.5.0",
-    "@podium/proxy": "4.0.4",
+    "@podium/proxy": "4.0.6",
     "@podium/schemas": "4.0.0",
-    "@podium/utils": "4.1.0",
+    "@podium/utils": "4.1.2",
     "abslog": "2.4.0",
     "objobj": "^1.0.0"
   },
   "devDependencies": {
     "@podium/test-utils": "2.0.0",
-    "eslint": "^6.0.0",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "express": "^4.16.3",
-    "husky": "^3.0.0",
-    "jest": "^24.5.0",
-    "lint-staged": "^9.0.0",
-    "prettier": "^1.16.3"
+    "eslint-config-prettier": "^6.5.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "express": "^4.17.1",
+    "fastify": "^2.10.0",
+    "hapi": "^18.1.0",
+    "jest": "^24.9.0",
+    "polka": "^0.5.2",
+    "prettier": "^1.19.1"
   },
   "jest": {
     "coveragePathIgnorePatterns": [
@@ -60,15 +61,5 @@
     },
     "testEnvironment": "node",
     "clearMocks": true
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix --config ./.eslintrc",
-      "git add"
-    ],
-    "{*.json,*.md,.eslintrc,.prettierrc}": [
-      "prettier --write",
-      "git add"
-    ]
   }
 }
