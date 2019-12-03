@@ -1,9 +1,6 @@
-name: PR Targeting Master
+name: Run Lint and Tests
 
-on:
-  pull_request:
-    branches:
-      - master
+on: push
 
 jobs:
   build:
@@ -23,7 +20,7 @@ jobs:
           npm install
         env:
           CI: true
-      - name: Run linting and tests
+      - name: Run tests
         run: |
           npm run lint && npm test
         env:
