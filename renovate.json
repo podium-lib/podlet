@@ -1,5 +1,20 @@
 {
   "extends": [
-    "github>finn-no/renovate-presets:js"
-  ]
+    "config:base",
+    "group:linters"
+  ],
+  "packageRules": [{
+    "depTypeList": ["dependencies"],
+    "automerge": false,
+    "major": {
+      "automerge": false
+    }
+  },
+  {
+    "depTypeList": ["devDependencies"],
+    "automerge": true,
+    "major": {
+      "automerge": false
+    }
+  }]
 }
