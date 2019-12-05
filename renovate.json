@@ -1,0 +1,5 @@
+{
+  "extends": [
+    "github>finn-no/renovate-presets:js"
+  ]
+}
