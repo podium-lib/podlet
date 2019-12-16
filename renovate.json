@@ -5,13 +5,16 @@
   ],
   "packageRules": [{
     "depTypeList": ["dependencies"],
-    "automerge": false,
+    "automerge": true,
     "major": {
       "automerge": false
     }
   },
   {
     "depTypeList": ["devDependencies"],
+    "schedule": ["before 4am on monday"],
+    "commitMessage": "Dev dependency {{depName}} updated to version {{newValue}}",
+    "prTitle": "Dev dependency update: {{depName}}",
     "automerge": true,
     "major": {
       "automerge": false
