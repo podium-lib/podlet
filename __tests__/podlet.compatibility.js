@@ -14,7 +14,7 @@ test('.js() - set legal value on "value" argument - should return set value', ()
     const result = podlet.js({ value: '/foo/bar' });
     const parsed = JSON.parse(JSON.stringify(podlet));
 
-    expect(result).toEqual('/foo/bar');
+    expect(result.toString()).toEqual('/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
     expect(parsed.js[0].value).toEqual('/foo/bar');
 });
@@ -26,7 +26,7 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
     const result = podlet.js({ value: '/foo/bar', prefix: true });
     const parsed = JSON.parse(JSON.stringify(podlet));
 
-    expect(result).toEqual('/xyz/foo/bar');
+    expect(result.toString()).toEqual('/xyz/foo/bar');
     expect(parsed.assets.js).toEqual('/foo/bar');
     expect(parsed.js[0].value).toEqual('/foo/bar');
 });
@@ -37,7 +37,7 @@ test('.css() - set legal value on "value" argument - should return set value', (
     const result = podlet.css({ value: '/foo/bar' });
     const parsed = JSON.parse(JSON.stringify(podlet));
 
-    expect(result).toEqual('/foo/bar');
+    expect(result.toString()).toEqual('/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
     expect(parsed.css[0].value).toEqual('/foo/bar');
 });
@@ -49,7 +49,7 @@ test('.css() - set "prefix" argument to "true" - should prefix value returned by
     const result = podlet.css({ value: '/foo/bar', prefix: true });
     const parsed = JSON.parse(JSON.stringify(podlet));
 
-    expect(result).toEqual('/xyz/foo/bar');
+    expect(result.toString()).toEqual('/xyz/foo/bar');
     expect(parsed.assets.css).toEqual('/foo/bar');
     expect(parsed.css[0].value).toEqual('/foo/bar');
 });
