@@ -9,7 +9,7 @@ const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
 // V3 and V4 manifest changes. Can be removed when V3 manifest
 // support is removed.
 
-test('.js() - set legal value on "value" argument - should return set value', (t) => {
+test('.js() - set legal value on "value" argument - should return set value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.js({ value: '/foo/bar' });
@@ -21,7 +21,7 @@ test('.js() - set legal value on "value" argument - should return set value', (t
     t.end();
 });
 
-test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', (t) => {
+test('.js() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', t => {
     const options = { ...DEFAULT_OPTIONS, pathname: '/xyz' };
     const podlet = new Podlet(options);
 
@@ -34,7 +34,7 @@ test('.js() - set "prefix" argument to "true" - should prefix value returned by 
     t.end();
 });
 
-test('.css() - set legal value on "value" argument - should return set value', (t) => {
+test('.css() - set legal value on "value" argument - should return set value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.css({ value: '/foo/bar' });
@@ -46,7 +46,7 @@ test('.css() - set legal value on "value" argument - should return set value', (
     t.end();
 });
 
-test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', (t) => {
+test('.css() - set "prefix" argument to "true" - should prefix value returned by method, but not in manifest', t => {
     const options = { ...DEFAULT_OPTIONS, pathname: '/xyz' };
     const podlet = new Podlet(options);
 
