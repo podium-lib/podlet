@@ -790,6 +790,7 @@ test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy pa
     const server = new FakeHttpServer({ podlet, process }, incoming => {
         if (incoming.url.pathname === '/podium-resource/foo/bar') {
             t.true(incoming.proxy);
+            if (incoming.proxy) return;
         }
 
         incoming.response.statusCode = 200;
@@ -816,6 +817,7 @@ test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy p
     const server = new FakeHttpServer({ podlet, process }, incoming => {
         if (incoming.url.pathname === '/podium-resource/foo/bar') {
             t.false(incoming.proxy);
+            if (incoming.proxy) return;
         }
 
         incoming.response.statusCode = 200;
