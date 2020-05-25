@@ -1,7 +1,7 @@
 'use strict';
 
 const { test } = require('tap');
-const Podlet = require('../');
+const Podlet = require("..");
 
 const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
 

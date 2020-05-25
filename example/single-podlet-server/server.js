@@ -4,7 +4,7 @@
 'use strict';
 
 const express = require('express');
-const Podlet = require('../../');
+const Podlet = require("../..");
 
 const app = express();
 
