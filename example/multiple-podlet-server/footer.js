@@ -3,7 +3,7 @@
 'use strict';
 
 const express = require('express');
-const Podlet = require('../../');
+const Podlet = require("../..");
 
 class Footer {
     constructor(pathname) {

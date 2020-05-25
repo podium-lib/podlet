@@ -11,7 +11,7 @@ const express = require('express');
 const http = require('http');
 const url = require('url');
 
-const Podlet = require('../');
+const Podlet = require("..");
 const VERSION = require('../package.json').version;
 
 const SIMPLE_REQ = {
