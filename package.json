@@ -13,8 +13,12 @@
   },
   "homepage": "https://podium-lib.io/",
   "files": [
-    "lib",
-    "index.d.ts"
+    "package.json",
+    "CHANGELOG.md",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "lib"
   ],
   "types": "index.d.ts",
   "scripts": {
@@ -31,6 +35,13 @@
     "objobj": "1.0.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "5.0.1",
+    "@semantic-release/commit-analyzer": "8.0.1",
+    "@semantic-release/git": "9.0.0",
+    "@semantic-release/github": "7.0.7",
+    "@semantic-release/npm": "7.0.5",
+    "@semantic-release/release-notes-generator": "9.0.1",
+    "semantic-release": "^17.0.8",
     "@podium/test-utils": "2.2.0",
     "eslint": "7.2.0",
     "eslint-config-airbnb-base": "14.2.0",
