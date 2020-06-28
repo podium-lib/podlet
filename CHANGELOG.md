@@ -1,3 +1,10 @@
+# [4.4.0](https://github.com/podium-lib/podlet/compare/v4.3.4...v4.4.0) (2020-06-28)
+
+
+### Features
+
+* Added support for data-* attributes on .js() method ([84b1a48](https://github.com/podium-lib/podlet/commit/84b1a484af669194f0f4521482de1d16325a4606))
+
 # Changelog
 
 Notable changes to this project.
