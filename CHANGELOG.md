@@ -1,3 +1,15 @@
+# [5.0.0-next.1](https://github.com/podium-lib/podlet/compare/v4.4.0...v5.0.0-next.1) (2020-07-14)
+
+
+### Features
+
+* Drop node 10.x support ([1f9ca4f](https://github.com/podium-lib/podlet/commit/1f9ca4f97e8da9addac4e70813ba981e7742ec9e))
+
+
+### BREAKING CHANGES
+
+* Only support node 12 and 14.
+
 # [4.4.0](https://github.com/podium-lib/podlet/compare/v4.3.4...v4.4.0) (2020-06-28)
 
 
