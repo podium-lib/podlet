@@ -293,18 +293,16 @@ test('Podlet() - serialize default values - should set "fallback" to empty Strin
     t.end()
 });
 
-test('Podlet() - serialize default values - should set "assets.js" to empty String', (t) => {
+test('Podlet() - serialize default values - should set ".js" to empty Array', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '');
     t.same(result.js, []);
     t.end()
 });
 
-test('Podlet() - serialize default values - should set "assets.css" to empty String', (t) => {
+test('Podlet() - serialize default values - should set ".css" to empty Array', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.css, '');
     t.same(result.css, []);
     t.end()
 });
@@ -527,10 +525,11 @@ test('.fallback() - constructor has "fallback" set with absolute URI - should re
 // .css()
 // #############################################
 
-test('.css() - call method with no arguments - should return default value', (t) => {
+test('.css() - call method with no arguments - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = podlet.css();
-    t.equal(result, '');
+    t.throws(() => {
+        podlet.css();
+    }, 'Value for argument variable "value", "undefined", is not valid');
     t.end()
 });
 
@@ -538,7 +537,6 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: 'http://somewhere.remote.com' });
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.css, 'http://somewhere.remote.com');
     t.same(result.css, [
         {
             rel: 'stylesheet',
@@ -549,30 +547,13 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     t.end()
 });
 
-test('.css() - set illegal value on "value" argument - should throw', (t) => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-
-    t.throws(() => {
-        podlet.css({ value: '/foo / bar' });
-    }, 'Value for argument variable "value", "/foo / bar", is not valid');
-    t.end()
-});
-
-test('.css() - call method with "value" argument, then call it a second time with no argument - should return first set value on second call', (t) => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-    podlet.css({ value: '/foo/bar' });
-    const result = podlet.css();
-    t.equal(result, '/foo/bar');
-    t.end()
-});
-
 test('.css() - call method twice - should set value twice', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/foo/bar' });
     podlet.css({ value: '/bar/foo' });
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.css, '/foo/bar');
+
     t.same(result.css, [
         { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
         { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
@@ -586,7 +567,6 @@ test('.css() - should accept additional keys', (t) => {
 
     const result = JSON.parse(JSON.stringify(podlet));
 
-    t.equal(result.assets.css, '/foo/bar');
     t.same(result.css, [
         { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
     ]);
@@ -598,7 +578,7 @@ test('.css() - "options" argument as an array - should accept an array of values
     podlet.css([{ value: '/foo/bar' }, { value: '/bar/foo' }]);
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.css, '/foo/bar');
+
     t.same(result.css, [
         { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
         { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
@@ -612,7 +592,7 @@ test('.css() - "options" argument as an array - call method twice - should set a
     podlet.css([{ value: '/foo/bar/baz' }, { value: '/bar/foo/baz' }]);
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.css, '/foo/bar');
+
     t.same(result.css, [
         { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
         { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
@@ -630,7 +610,7 @@ test('.css() - "options" argument as an array - should NOT set additional keys',
     ]);
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.css, '/foo/bar');
+
     t.same(result.css, [
         { rel: 'stylesheet', type: 'text/css', value: '/foo/bar' },
         { rel: 'stylesheet', type: 'text/css', value: '/bar/foo' },
@@ -642,10 +622,11 @@ test('.css() - "options" argument as an array - should NOT set additional keys',
 // .js()
 // #############################################
 
-test('.js() - call method with no arguments - should return default value', (t) => {
+test('.js() - call method with no arguments - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    const result = podlet.js();
-    t.equal(result, '');
+    t.throws(() => {
+        podlet.js();
+    }, 'Value for argument variable "value", "undefined", is not valid');
     t.end()
 });
 
@@ -654,27 +635,10 @@ test('.js() - set legal absolute value on "value" argument - should set "js" to 
     podlet.js({ value: 'http://somewhere.remote.com' });
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, 'http://somewhere.remote.com');
+
     t.same(result.js, [
         { type: 'default', value: 'http://somewhere.remote.com' },
     ]);
-    t.end()
-});
-
-test('.js() - set illegal value on "value" argument - should throw', (t) => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-
-    t.throws(() => {
-        podlet.js({ value: '/foo / bar' });
-    }, 'Value for argument variable "value", "/foo / bar", is not valid');
-    t.end()
-});
-
-test('.js() - call method with "value" argument, then call it a second time with no argument - should return first set value on second call', (t) => {
-    const podlet = new Podlet(DEFAULT_OPTIONS);
-    podlet.js({ value: '/foo/bar' });
-    const result = podlet.js();
-    t.equal(result, '/foo/bar');
     t.end()
 });
 
@@ -684,7 +648,7 @@ test('.js() - call method twice - should set value twice', (t) => {
     podlet.js({ value: '/bar/foo' });
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '/foo/bar');
+
     t.same(result.js, [
         { type: 'default', value: '/foo/bar' },
         { type: 'default', value: '/bar/foo' },
@@ -697,7 +661,7 @@ test('.js() - should NOT accept additional keys', (t) => {
     podlet.js({ value: '/foo/bar', fake: 'prop' });
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '/foo/bar');
+
     t.same(result.js, [{ type: 'default', value: '/foo/bar' }]);
     t.end()
 });
@@ -708,7 +672,7 @@ test('.js() - "type" argument is set to "module" - should set "type" to "module"
     podlet.js({ value: '/bar/foo', type: 'module' });
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '/foo/bar');
+
     t.same(result.js, [
         { type: 'default', value: '/foo/bar' },
         { type: 'module', value: '/bar/foo' },
@@ -721,7 +685,7 @@ test('.js() - "options" argument as an array - should accept an array of values'
     podlet.js([{ value: '/foo/bar' }, { value: '/bar/foo', type: 'module' }]);
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '/foo/bar');
+
     t.same(result.js, [
         { type: 'default', value: '/foo/bar' },
         { type: 'module', value: '/bar/foo' },
@@ -738,7 +702,7 @@ test('.js() - "options" argument as an array - call method twice - should set al
     ]);
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '/foo/bar');
+
     t.same(result.js, [
         { type: 'default', value: '/foo/bar' },
         { type: 'module', value: '/bar/foo' },
@@ -756,7 +720,7 @@ test('.js() - "options" argument as an array - should NOT set additional keys', 
     ]);
 
     const result = JSON.parse(JSON.stringify(podlet));
-    t.equal(result.assets.js, '/foo/bar');
+
     t.same(result.js, [
         { type: 'default', value: '/foo/bar' },
         { type: 'module', value: '/bar/foo' },
@@ -932,7 +896,6 @@ test('.js() - passing an instance of AssetsJs - should return set value', (t) =>
     podlet.js(new AssetJs({ value: '/foo/bar', type: 'module' }));
     const parsed = JSON.parse(JSON.stringify(podlet));
 
-    t.equal(parsed.assets.js, '/foo/bar');
     t.equal(parsed.js[0].value, '/foo/bar');
     t.end()
 });
@@ -943,7 +906,6 @@ test('.css() - passing an instance of AssetsCss - should return set value', (t) 
     podlet.css(new AssetCss({ value: '/foo/bar', type: 'text/css' }));
     const parsed = JSON.parse(JSON.stringify(podlet));
 
-    t.equal(parsed.assets.css, '/foo/bar');
     t.equal(parsed.css[0].value, '/foo/bar');
     t.end()
 });
