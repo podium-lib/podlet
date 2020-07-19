@@ -1,3 +1,34 @@
+# [5.0.0-next.2](https://github.com/podium-lib/podlet/compare/v5.0.0-next.1...v5.0.0-next.2) (2020-07-19)
+
+
+### Features
+
+* Remove deprecated return value on .js and .css methods ([4052c02](https://github.com/podium-lib/podlet/commit/4052c02750a0071487bfa1ffb76ccebcc55bf185))
+
+
+### BREAKING CHANGES
+
+* In version 4 of podium it became possible to set multiple assets to a podlet through its `.js()` and `.css()` methods. This did make it impossible to let these methods return a resonable value, but to keep a backwards compabillity with version 3 of Podium, the first item passed in was returned for compabillity. This removes this compaillity with version 3 of Podium.
+
+# [5.0.0-next.1](https://github.com/podium-lib/podlet/compare/v4.4.0...v5.0.0-next.1) (2020-07-14)
+
+
+### Features
+
+* Drop node 10.x support ([1f9ca4f](https://github.com/podium-lib/podlet/commit/1f9ca4f97e8da9addac4e70813ba981e7742ec9e))
+
+
+### BREAKING CHANGES
+
+* Only support node 12 and 14.
+
+# [4.4.0](https://github.com/podium-lib/podlet/compare/v4.3.4...v4.4.0) (2020-06-28)
+
+
+### Features
+
+* Added support for data-* attributes on .js() method ([84b1a48](https://github.com/podium-lib/podlet/commit/84b1a484af669194f0f4521482de1d16325a4606))
+
 # Changelog
 
 Notable changes to this project.
