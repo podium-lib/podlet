@@ -30,7 +30,7 @@
     "@metrics/client": "2.5.0",
     "@podium/proxy": "4.2.4",
     "@podium/schemas": "4.0.5",
-    "@podium/utils": "4.3.1",
+    "@podium/utils": "4.3.3",
     "abslog": "2.4.0",
     "objobj": "1.0.0"
   },
