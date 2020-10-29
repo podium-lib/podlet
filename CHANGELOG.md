@@ -1,3 +1,10 @@
+## [4.4.13](https://github.com/podium-lib/podlet/compare/v4.4.12...v4.4.13) (2020-10-29)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.1 ([a3efa6b](https://github.com/podium-lib/podlet/commit/a3efa6b94b2c311e405cd21c0525b4d19c0c37c5))
+
 ## [4.4.12](https://github.com/podium-lib/podlet/compare/v4.4.11...v4.4.12) (2020-10-12)
 
 
