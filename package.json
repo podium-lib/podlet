@@ -29,7 +29,7 @@
   "dependencies": {
     "@metrics/client": "2.5.0",
     "@podium/proxy": "4.2.20",
-    "@podium/schemas": "4.1.4",
+    "@podium/schemas": "4.1.5",
     "@podium/utils": "4.4.7",
     "abslog": "2.4.0",
     "objobj": "1.0.0"
