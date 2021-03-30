@@ -1,3 +1,10 @@
+## [4.4.15](https://github.com/podium-lib/podlet/compare/v4.4.14...v4.4.15) (2021-03-30)
+
+
+### Bug Fixes
+
+* Update @podium/schema to version 4.1.9 to fix ajv error ([4b13199](https://github.com/podium-lib/podlet/commit/4b1319940b5ae2d47e3a0fa338ac96eb5201be25))
+
 ## [4.4.14](https://github.com/podium-lib/podlet/compare/v4.4.13...v4.4.14) (2020-10-29)
 
 
