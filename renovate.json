@@ -5,6 +5,8 @@
   ],
   "packageRules": [{
     "depTypeList": ["dependencies"],
+    "timezone": "Europe/Oslo",
+    "schedule": ["daily"],
     "automerge": true,
     "major": {
       "automerge": false
@@ -12,12 +14,17 @@
   },
   {
     "depTypeList": ["devDependencies"],
-    "schedule": ["before 4am on monday"],
+    "timezone": "Europe/Oslo",
+    "schedule": ["weekly"],
     "commitMessage": "Dev dependency {{depName}} updated to version {{newValue}}",
     "prTitle": "Dev dependency update: {{depName}}",
     "automerge": true,
     "major": {
       "automerge": false
     }
+  },
+  {
+    "groupName": "@podium packages",
+    "packagePatterns": ["^@podium/", "^podium"]
   }]
 }
