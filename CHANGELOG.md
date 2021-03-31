@@ -1,3 +1,10 @@
+## [4.4.16](https://github.com/podium-lib/podlet/compare/v4.4.15...v4.4.16) (2021-03-31)
+
+
+### Bug Fixes
+
+* Add ajv as a dependency to deal with peer dep issues ([0a199fe](https://github.com/podium-lib/podlet/commit/0a199fe361760b6f55ad0f7bb851c0b70d969498))
+
 ## [4.4.15](https://github.com/podium-lib/podlet/compare/v4.4.14...v4.4.15) (2021-03-30)
 
 
