@@ -1,3 +1,10 @@
+## [4.4.18](https://github.com/podium-lib/podlet/compare/v4.4.17...v4.4.18) (2021-04-03)
+
+
+### Bug Fixes
+
+* **deps:** update [@podium](https://github.com/podium) packages ([77fb104](https://github.com/podium-lib/podlet/commit/77fb104e008ce285331b22b2cb1a1e4cd99e1361))
+
 ## [4.4.17](https://github.com/podium-lib/podlet/compare/v4.4.16...v4.4.17) (2021-03-31)
 
 
