@@ -6,7 +6,10 @@
   "packageRules": [{
     "depTypeList": ["dependencies"],
     "timezone": "Europe/Oslo",
-    "schedule": ["daily"],
+    "schedule": [
+      "after 12am",
+      "before 4am"
+    ],
     "automerge": true,
     "major": {
       "automerge": false
@@ -15,9 +18,7 @@
   {
     "depTypeList": ["devDependencies"],
     "timezone": "Europe/Oslo",
-    "schedule": ["weekly"],
-    "commitMessage": "Dev dependency {{depName}} updated to version {{newValue}}",
-    "prTitle": "Dev dependency update: {{depName}}",
+    "schedule": ["before 6am on Monday"],
     "automerge": true,
     "major": {
       "automerge": false
