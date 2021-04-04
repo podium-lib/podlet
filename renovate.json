@@ -25,7 +25,7 @@
     }
   },
   {
-    "groupName": "@podium packages",
-    "packagePatterns": ["^@podium/", "^podium"]
+    "groupName": "All dependencies",
+    "matchDepTypes": ["dependencies"]
   }]
 }
