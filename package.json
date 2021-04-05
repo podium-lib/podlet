@@ -24,7 +24,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap tests/*.js"
+    "test": "tap --no-check-coverage"
   },
   "dependencies": {
     "@metrics/client": "2.5.0",
