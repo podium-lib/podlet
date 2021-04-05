@@ -24,7 +24,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap tests/*.js"
+    "test": "tap --no-check-coverage"
   },
   "dependencies": {
     "@metrics/client": "2.5.0",
@@ -51,6 +51,6 @@
     "eslint-plugin-prettier": "3.3.1",
     "express": "4.17.1",
     "prettier": "2.2.1",
-    "tap": "14.11.0"
+    "tap": "15.0.1"
   }
 }
