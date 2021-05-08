@@ -5,6 +5,11 @@
   ],
   "packageRules": [{
     "depTypeList": ["dependencies"],
+    "timezone": "Europe/Oslo",
+    "schedule": [
+      "after 12am",
+      "before 4am"
+    ],
     "automerge": true,
     "major": {
       "automerge": false
@@ -12,12 +17,15 @@
   },
   {
     "depTypeList": ["devDependencies"],
-    "schedule": ["before 4am on monday"],
-    "commitMessage": "Dev dependency {{depName}} updated to version {{newValue}}",
-    "prTitle": "Dev dependency update: {{depName}}",
+    "timezone": "Europe/Oslo",
+    "schedule": ["before 6am on Monday"],
     "automerge": true,
     "major": {
       "automerge": false
     }
+  },
+  {
+    "groupName": "All dependencies",
+    "matchDepTypes": ["dependencies"]
   }]
 }

@@ -168,7 +168,7 @@ const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
 test('Podlet() - instantiate new podlet object - should create an object', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     // expect(podlet).toBeInstanceOf(Podlet);
-    t.true(podlet instanceof Podlet);
+    t.ok(podlet instanceof Podlet);
     t.end();
 });
 
@@ -845,7 +845,7 @@ test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy pa
 
     const server = new FakeHttpServer({ podlet, process }, incoming => {
         if (incoming.url.pathname === '/podium-resource/foo/bar') {
-            t.true(incoming.proxy);
+            t.ok(incoming.proxy);
             if (incoming.proxy) return;
         }
 
@@ -872,7 +872,7 @@ test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy p
 
     const server = new FakeHttpServer({ podlet, process }, incoming => {
         if (incoming.url.pathname === '/podium-resource/foo/bar') {
-            t.false(incoming.proxy);
+            t.notOk(incoming.proxy);
             if (incoming.proxy) return;
         }
 
@@ -977,7 +977,7 @@ test('.middleware() - contructor argument "development" is NOT set and "user-age
     await server.listen();
 
     const result = await server.get();
-    t.false(result.response.podium.development);
+    t.notOk(result.response.podium.development);
 
     await server.close();
 });
@@ -993,7 +993,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
             'user-agent': '@podium/client',
         },
     });
-    t.false(result.response.podium.development);
+    t.notOk(result.response.podium.development);
 
     await server.close();
 });
@@ -1005,7 +1005,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
     await server.listen();
 
     const result = await server.get();
-    t.true(result.response.podium.development);
+    t.ok(result.response.podium.development);
 
     await server.close();
 });
@@ -1293,8 +1293,8 @@ test('.view() - append a custom wireframe document - should render development o
 
 test('.metrics - assigned object to property - should be instance of @metrics/client', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
-    t.true(podlet.metrics instanceof Metrics);
-    t.end();
+    t.ok(podlet.metrics instanceof Metrics);
+    t.end()
 });
 
 test('.metrics - assigned object to property - should have object tag with "Metrics" as name', t => {
