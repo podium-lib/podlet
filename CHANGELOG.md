@@ -1,3 +1,15 @@
+# [5.0.0-next.4](https://github.com/podium-lib/podlet/compare/v5.0.0-next.3...v5.0.0-next.4) (2021-05-09)
+
+
+### Features
+
+* Convert to ESM ([cedb222](https://github.com/podium-lib/podlet/commit/cedb222127c25469bf856942463ce02491d5ad08))
+
+
+### BREAKING CHANGES
+
+* Convert from CommonJS module to ESM
+
 # [5.0.0-next.3](https://github.com/podium-lib/podlet/compare/v5.0.0-next.2...v5.0.0-next.3) (2021-05-08)
 
 
