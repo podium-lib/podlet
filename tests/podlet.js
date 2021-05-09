@@ -1,18 +1,24 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-classes-per-file */
+/* eslint-disable no-param-reassign */
 
-'use strict';
+import { destinationObjectStream } from '@podium/test-utils';
+import { template, HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
+import { join, dirname } from 'path';
+import Metrics from '@metrics/client';
+import tap from 'tap';
+import express from 'express';
+import http from 'http';
+import url from 'url';
+import fs from 'fs';
 
-const { destinationObjectStream } = require('@podium/test-utils');
-const { template, HttpIncoming, AssetJs, AssetCss } = require('@podium/utils');
-const Metrics = require('@metrics/client');
-const { test } = require('tap');
-const express = require('express');
-const http = require('http');
-const url = require('url');
+import Podlet from '../lib/podlet.js';
 
-const Podlet = require("..");
-const VERSION = require('../package.json').version;
+const currentDirectory = dirname(url.fileURLToPath(import.meta.url));
+
+const pkgJson = fs.readFileSync(join(currentDirectory, '../package.json'), 'utf-8');
+const pkg = JSON.parse(pkgJson);
+const VERSION = pkg.version;
 
 const SIMPLE_REQ = {
     headers: {},
@@ -165,27 +171,27 @@ const DEFAULT_OPTIONS = { name: 'foo', version: 'v1.0.0', pathname: '/' };
 // Constructor
 // #############################################
 
-test('Podlet() - instantiate new podlet object - should create an object', t => {
+tap.test('Podlet() - instantiate new podlet object - should create an object', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     // expect(podlet).toBeInstanceOf(Podlet);
     t.ok(podlet instanceof Podlet);
     t.end();
 });
 
-test('Podlet() - object tag - should be PodiumPodlet', t => {
+tap.test('Podlet() - object tag - should be PodiumPodlet', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.equal(Object.prototype.toString.call(podlet), '[object PodiumPodlet]');
     t.end();
 });
 
-test('Podlet() - no value given to "name" argument - should throw', t => {
+tap.test('Podlet() - no value given to "name" argument - should throw', t => {
     t.throws(() => {
         const podlet = new Podlet({ version: 'v1.0.0', pathname: '/' }); // eslint-disable-line no-unused-vars
     }, 'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.');
     t.end();
 });
 
-test('Podlet() - invalid value given to "name" argument - should throw', t => {
+tap.test('Podlet() - invalid value given to "name" argument - should throw', t => {
     t.throws(() => {
         // Yeah; silly formatting, but only way to please ESLint
         const options = {
@@ -198,14 +204,14 @@ test('Podlet() - invalid value given to "name" argument - should throw', t => {
     t.end();
 });
 
-test('Podlet() - no value given to "version" argument - should throw', t => {
+tap.test('Podlet() - no value given to "version" argument - should throw', t => {
     t.throws(() => {
         const podlet = new Podlet({ name: 'foo', pathname: '/' }); // eslint-disable-line no-unused-vars
     }, 'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.');
     t.end();
 });
 
-test('Podlet() - invalid value given to "version" argument - should throw', t => {
+tap.test('Podlet() - invalid value given to "version" argument - should throw', t => {
     t.throws(() => {
         // Yeah; silly formatting, but only way to please ESLint
         const options = {
@@ -218,14 +224,14 @@ test('Podlet() - invalid value given to "version" argument - should throw', t =>
     t.end();
 });
 
-test('Podlet() - no value given to "pathname" argument - should throw', t => {
+tap.test('Podlet() - no value given to "pathname" argument - should throw', t => {
     t.throws(() => {
         const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' }); // eslint-disable-line no-unused-vars
     }, 'The value, "", for the required argument "pathname" on the Podlet constructor is not defined or not valid.');
     t.end();
 });
 
-test('Podlet() - invalid value given to "pathname" argument - should throw', t => {
+tap.test('Podlet() - invalid value given to "pathname" argument - should throw', t => {
     t.throws(() => {
         // Yeah; silly formatting, but only way to please ESLint
         const options = {
@@ -238,7 +244,7 @@ test('Podlet() - invalid value given to "pathname" argument - should throw', t =
     t.end();
 });
 
-test('Podlet() - invalid value given to "manifest" argument - should throw', t => {
+tap.test('Podlet() - invalid value given to "manifest" argument - should throw', t => {
     t.throws(() => {
         // Yeah; silly formatting, but only way to please ESLint
         const options = { manifest: 'æ / ø', ...DEFAULT_OPTIONS };
@@ -247,7 +253,7 @@ test('Podlet() - invalid value given to "manifest" argument - should throw', t =
     t.end();
 });
 
-test('Podlet() - invalid value given to "content" argument - should throw', t => {
+tap.test('Podlet() - invalid value given to "content" argument - should throw', t => {
     t.throws(() => {
         // Yeah; silly formatting, but only way to please ESLint
         const options = { content: 'æ / ø', ...DEFAULT_OPTIONS };
@@ -256,7 +262,7 @@ test('Podlet() - invalid value given to "content" argument - should throw', t =>
     t.end();
 });
 
-test('Podlet() - invalid value given to "fallback" argument - should throw', t => {
+tap.test('Podlet() - invalid value given to "fallback" argument - should throw', t => {
     t.throws(() => {
         // Yeah; silly formatting, but only way to please ESLint
         const options = { fallback: 'æ / ø', ...DEFAULT_OPTIONS };
@@ -265,56 +271,56 @@ test('Podlet() - invalid value given to "fallback" argument - should throw', t =
     t.end();
 });
 
-test('Podlet() - serialize default values - should set "name" to same as on constructor', t => {
+tap.test('Podlet() - serialize default values - should set "name" to same as on constructor', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.equal(result.name, 'foo');
     t.end();
 });
 
-test('Podlet() - serialize default values - should set "version" to same as on constructor', t => {
+tap.test('Podlet() - serialize default values - should set "version" to same as on constructor', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.equal(result.version, 'v1.0.0');
     t.end();
 });
 
-test('Podlet() - serialize default values - should set "content" to "/"', t => {
+tap.test('Podlet() - serialize default values - should set "content" to "/"', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.equal(result.content, '/');
     t.end();
 });
 
-test('Podlet() - serialize default values - should set "fallback" to empty String', t => {
+tap.test('Podlet() - serialize default values - should set "fallback" to empty String', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.equal(result.fallback, '');
     t.end();
 });
 
-test('Podlet() - serialize default values - should set ".js" to empty Array', (t) => {
+tap.test('Podlet() - serialize default values - should set ".js" to empty Array', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.same(result.js, []);
     t.end();
 });
 
-test('Podlet() - serialize default values - should set ".css" to empty Array', (t) => {
+tap.test('Podlet() - serialize default values - should set ".css" to empty Array', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.same(result.css, []);
     t.end();
 });
 
-test('Podlet() - serialize default values - should set "proxy" to empty Object', t => {
+tap.test('Podlet() - serialize default values - should set "proxy" to empty Object', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = JSON.parse(JSON.stringify(podlet));
     t.same(result.proxy, {});
     t.end();
 });
 
-test('Podlet() - should collect metric with version info', t => {
+tap.test('Podlet() - should collect metric with version info', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const dest = destinationObjectStream(arr => {
@@ -345,14 +351,14 @@ test('Podlet() - should collect metric with version info', t => {
 // .pathname()
 // #############################################
 
-test('.pathname() - call method - should return default value', t => {
+tap.test('.pathname() - call method - should return default value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.pathname();
     t.equal(result, '/');
     t.end();
 });
 
-test('.pathname() - constructor has "pathname" set - should return set value', t => {
+tap.test('.pathname() - constructor has "pathname" set - should return set value', t => {
     const options = { ...DEFAULT_OPTIONS, pathname: '/foo' };
     const podlet = new Podlet(options);
     const result = podlet.pathname();
@@ -364,14 +370,14 @@ test('.pathname() - constructor has "pathname" set - should return set value', t
 // .manifest()
 // #############################################
 
-test('.manifest() - call method - should return default value', t => {
+tap.test('.manifest() - call method - should return default value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.manifest();
     t.equal(result, '/manifest.json');
     t.end();
 });
 
-test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" argument is default - should return "manifest" value', t => {
+tap.test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" argument is default - should return "manifest" value', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -384,7 +390,7 @@ test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" arg
     t.end();
 });
 
-test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" argument is set "true" - should return "manifest" prefixed with "pathname"', t => {
+tap.test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" argument is set "true" - should return "manifest" prefixed with "pathname"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -397,7 +403,7 @@ test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" arg
     t.end();
 });
 
-test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" argument is set "false" - should return "manifest" without "pathname" prefix', t => {
+tap.test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" argument is set "false" - should return "manifest" without "pathname" prefix', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -414,7 +420,7 @@ test('.manifest() - constructor has "pathname" and "manifest" set - "prefix" arg
 // .content()
 // #############################################
 
-test('.content() - call method - should return default value', t => {
+tap.test('.content() - call method - should return default value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.content();
@@ -425,7 +431,7 @@ test('.content() - call method - should return default value', t => {
     t.end();
 });
 
-test('.content() - constructor has "pathname" and "content" set - "prefix" argument is default - should return "content" value prefixed with "pathname"', t => {
+tap.test('.content() - constructor has "pathname" and "content" set - "prefix" argument is default - should return "content" value prefixed with "pathname"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -441,7 +447,7 @@ test('.content() - constructor has "pathname" and "content" set - "prefix" argum
     t.end();
 });
 
-test('.content() - constructor has "pathname" and "content" set - "prefix" argument is set "true" - should return "content" prefixed with "pathname"', t => {
+tap.test('.content() - constructor has "pathname" and "content" set - "prefix" argument is set "true" - should return "content" prefixed with "pathname"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -457,7 +463,7 @@ test('.content() - constructor has "pathname" and "content" set - "prefix" argum
     t.end();
 });
 
-test('.content() - constructor has "pathname" and "content" set - "prefix" argument is set "false" - should return "content"', t => {
+tap.test('.content() - constructor has "pathname" and "content" set - "prefix" argument is set "false" - should return "content"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -473,7 +479,7 @@ test('.content() - constructor has "pathname" and "content" set - "prefix" argum
     t.end();
 });
 
-test('.content() - constructor has "content" set with absolute URI - should return absolute URI', t => {
+tap.test('.content() - constructor has "content" set with absolute URI - should return absolute URI', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         content: 'http://somewhere.remote.com',
@@ -492,7 +498,7 @@ test('.content() - constructor has "content" set with absolute URI - should retu
 // .fallback()
 // #############################################
 
-test('.fallback() - call method - should return default value', t => {
+tap.test('.fallback() - call method - should return default value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     const result = podlet.fallback();
@@ -503,7 +509,7 @@ test('.fallback() - call method - should return default value', t => {
     t.end();
 });
 
-test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" argument is default - should return "fallback" value prefixed with "pathname"', t => {
+tap.test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" argument is default - should return "fallback" value prefixed with "pathname"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -519,7 +525,7 @@ test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" arg
     t.end();
 });
 
-test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" argument is set "true" - should return "fallback" prefixed with "pathname"', t => {
+tap.test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" argument is set "true" - should return "fallback" prefixed with "pathname"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -535,7 +541,7 @@ test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" arg
     t.end();
 });
 
-test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" argument is set "false" - should return "fallback"', t => {
+tap.test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" argument is set "false" - should return "fallback"', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         pathname: '/foo',
@@ -551,7 +557,7 @@ test('.fallback() - constructor has "pathname" and "fallback" set - "prefix" arg
     t.end();
 });
 
-test('.fallback() - constructor has "fallback" set with absolute URI - should return absolute URI', t => {
+tap.test('.fallback() - constructor has "fallback" set with absolute URI - should return absolute URI', t => {
     const options = {
         ...DEFAULT_OPTIONS,
         fallback: 'http://somewhere.remote.com',
@@ -570,7 +576,7 @@ test('.fallback() - constructor has "fallback" set with absolute URI - should re
 // .css()
 // #############################################
 
-test('.css() - call method with no arguments - should throw', (t) => {
+tap.test('.css() - call method with no arguments - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.css();
@@ -578,7 +584,7 @@ test('.css() - call method with no arguments - should throw', (t) => {
     t.end()
 });
 
-test('.css() - set legal absolute value on "value" argument - should set "css" to set value when serializing Object', t => {
+tap.test('.css() - set legal absolute value on "value" argument - should set "css" to set value when serializing Object', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: 'http://somewhere.remote.com' });
     const result = JSON.parse(JSON.stringify(podlet));
@@ -592,7 +598,7 @@ test('.css() - set legal absolute value on "value" argument - should set "css" t
     t.end();
 });
 
-test('.css() - set legal relative value on "value" argument and "pathname" defined - should set "css" to set value with prefix prepended', t => {
+tap.test('.css() - set legal relative value on "value" argument and "pathname" defined - should set "css" to set value with prefix prepended', t => {
     const podlet = new Podlet({ ...DEFAULT_OPTIONS, pathname: '/foo' });
     podlet.css({ value: '/styles.css' });
 
@@ -608,7 +614,7 @@ test('.css() - set legal relative value on "value" argument and "pathname" defin
     t.end();
 });
 
-test('.css() - call method twice - should set value twice', (t) => {
+tap.test('.css() - call method twice - should set value twice', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/foo/bar' });
     podlet.css({ value: '/bar/foo' });
@@ -622,7 +628,7 @@ test('.css() - call method twice - should set value twice', (t) => {
     t.end();
 });
 
-test('.css() - should accept additional keys', t => {
+tap.test('.css() - should accept additional keys', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/foo/bar', fake: 'prop' });
 
@@ -634,7 +640,7 @@ test('.css() - should accept additional keys', t => {
     t.end();
 });
 
-test('.css() - "options" argument as an array - should accept an array of values', t => {
+tap.test('.css() - "options" argument as an array - should accept an array of values', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css([{ value: '/foo/bar' }, { value: '/bar/foo' }]);
 
@@ -647,7 +653,7 @@ test('.css() - "options" argument as an array - should accept an array of values
     t.end();
 });
 
-test('.css() - "options" argument as an array - call method twice - should set all values', t => {
+tap.test('.css() - "options" argument as an array - call method twice - should set all values', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css([{ value: '/foo/bar' }, { value: '/bar/foo' }]);
     podlet.css([{ value: '/foo/bar/baz' }, { value: '/bar/foo/baz' }]);
@@ -663,7 +669,7 @@ test('.css() - "options" argument as an array - call method twice - should set a
     t.end();
 });
 
-test('.css() - "options" argument as an array - should NOT set additional keys', t => {
+tap.test('.css() - "options" argument as an array - should NOT set additional keys', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css([
         { value: '/foo/bar', fake: 'prop' },
@@ -683,7 +689,7 @@ test('.css() - "options" argument as an array - should NOT set additional keys',
 // .js()
 // #############################################
 
-test('.js() - call method with no arguments - should throw', (t) => {
+tap.test('.js() - call method with no arguments - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.js();
@@ -691,7 +697,7 @@ test('.js() - call method with no arguments - should throw', (t) => {
     t.end()
 });
 
-test('.js() - set legal absolute value on "value" argument - should set "js" to set value when serializing Object', t => {
+tap.test('.js() - set legal absolute value on "value" argument - should set "js" to set value when serializing Object', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: 'http://somewhere.remote.com' });
 
@@ -703,7 +709,7 @@ test('.js() - set legal absolute value on "value" argument - should set "js" to 
     t.end();
 });
 
-test('.js() - call method twice - should set value twice', (t) => {
+tap.test('.js() - call method twice - should set value twice', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/foo/bar' });
     podlet.js({ value: '/bar/foo' });
@@ -717,7 +723,7 @@ test('.js() - call method twice - should set value twice', (t) => {
     t.end();
 });
 
-test('.js() - should NOT accept additional keys', t => {
+tap.test('.js() - should NOT accept additional keys', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/foo/bar', fake: 'prop' });
 
@@ -727,7 +733,7 @@ test('.js() - should NOT accept additional keys', t => {
     t.end();
 });
 
-test('.js() - "type" argument is set to "module" - should set "type" to "module"', t => {
+tap.test('.js() - "type" argument is set to "module" - should set "type" to "module"', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/foo/bar' });
     podlet.js({ value: '/bar/foo', type: 'module' });
@@ -741,7 +747,7 @@ test('.js() - "type" argument is set to "module" - should set "type" to "module"
     t.end();
 });
 
-test('.js() - "options" argument as an array - should accept an array of values', t => {
+tap.test('.js() - "options" argument as an array - should accept an array of values', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js([{ value: '/foo/bar' }, { value: '/bar/foo', type: 'module' }]);
 
@@ -754,7 +760,7 @@ test('.js() - "options" argument as an array - should accept an array of values'
     t.end();
 });
 
-test('.js() - "options" argument as an array - call method twice - should set all values', t => {
+tap.test('.js() - "options" argument as an array - call method twice - should set all values', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js([{ value: '/foo/bar' }, { value: '/bar/foo', type: 'module' }]);
     podlet.js([
@@ -773,7 +779,7 @@ test('.js() - "options" argument as an array - call method twice - should set al
     t.end();
 });
 
-test('.js() - "options" argument as an array - should NOT set additional keys', t => {
+tap.test('.js() - "options" argument as an array - should NOT set additional keys', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js([
         { value: '/foo/bar', fake: 'prop' },
@@ -789,7 +795,7 @@ test('.js() - "options" argument as an array - should NOT set additional keys', 
     t.end();
 });
 
-test('.js() - data attribute object - should convert to array of key / value objects', (t) => {
+tap.test('.js() - data attribute object - should convert to array of key / value objects', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js([
         { 
@@ -824,14 +830,14 @@ test('.js() - data attribute object - should convert to array of key / value obj
 // .process()
 // #############################################
 
-test('.process() - call method with HttpIncoming - should return HttpIncoming', async t => {
+tap.test('.process() - call method with HttpIncoming - should return HttpIncoming', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const incoming = new HttpIncoming(SIMPLE_REQ, SIMPLE_RES);
     const result = await podlet.process(incoming);
     t.same(result, incoming);
 });
 
-test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy path - should do proxying', async t => {
+tap.test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy path - should do proxying', async t => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
@@ -858,7 +864,7 @@ test('.process() - .process(HttpIncoming, { proxy: true }) - request to proxy pa
     await server.close();
 });
 
-test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy path - should not do proxying', async t => {
+tap.test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy path - should not do proxying', async t => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
@@ -889,7 +895,7 @@ test('.process() - .process(HttpIncoming, { proxy: false }) - request to proxy p
 // .middleware()
 // #############################################
 
-test('.middleware() - call method - should append podlet name on "res.locals.podium.name"', async t => {
+tap.test('.middleware() - call method - should append podlet name on "res.locals.podium.name"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet);
     await server.listen();
@@ -900,7 +906,7 @@ test('.middleware() - call method - should append podlet name on "res.locals.pod
     await server.close();
 });
 
-test('.middleware() - .css() is NOT set with a value - should append empty Array to "res.locals.podium.css"', async t => {
+tap.test('.middleware() - .css() is NOT set with a value - should append empty Array to "res.locals.podium.css"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet);
     await server.listen();
@@ -911,7 +917,7 @@ test('.middleware() - .css() is NOT set with a value - should append empty Array
     await server.close();
 });
 
-test('.middleware() - .css() is set with a value - should append value to "res.locals.podium.css"', async t => {
+tap.test('.middleware() - .css() is set with a value - should append value to "res.locals.podium.css"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.css({ value: '/style.css' });
 
@@ -925,7 +931,7 @@ test('.middleware() - .css() is set with a value - should append value to "res.l
     await server.close();
 });
 
-test('.middleware() - .js() is NOT set with a value - should append empty Array to "res.locals.podium.js"', async t => {
+tap.test('.middleware() - .js() is NOT set with a value - should append empty Array to "res.locals.podium.js"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet);
     await server.listen();
@@ -936,7 +942,7 @@ test('.middleware() - .js() is NOT set with a value - should append empty Array 
     await server.close();
 });
 
-test('.middleware() - .js() is set with a value - should append value to "res.locals.podium.js"', async t => {
+tap.test('.middleware() - .js() is set with a value - should append value to "res.locals.podium.js"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.js({ value: '/script.js' });
 
@@ -951,7 +957,7 @@ test('.middleware() - .js() is set with a value - should append value to "res.lo
     await server.close();
 });
 
-test('.js() - passing an instance of AssetsJs - should return set value', t => {
+tap.test('.js() - passing an instance of AssetsJs - should return set value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     podlet.js(new AssetJs({ value: '/foo/bar', type: 'module' }));
@@ -961,7 +967,7 @@ test('.js() - passing an instance of AssetsJs - should return set value', t => {
     t.end();
 });
 
-test('.css() - passing an instance of AssetsCss - should return set value', t => {
+tap.test('.css() - passing an instance of AssetsCss - should return set value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
 
     podlet.css(new AssetCss({ value: '/foo/bar', type: 'text/css' }));
@@ -971,7 +977,7 @@ test('.css() - passing an instance of AssetsCss - should return set value', t =>
     t.end();
 });
 
-test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async t => {
+tap.test('.middleware() - contructor argument "development" is NOT set and "user-agent" on request is NOT set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet);
     await server.listen();
@@ -982,7 +988,7 @@ test('.middleware() - contructor argument "development" is NOT set and "user-age
     await server.close();
 });
 
-test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async t => {
+tap.test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is set to "@podium/client" - should append "false" value on "res.locals.podium.decorate"', async t => {
     const options = { ...DEFAULT_OPTIONS, development: true };
     const podlet = new Podlet(options);
     const server = new FakeExpressServer(podlet);
@@ -998,7 +1004,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
     await server.close();
 });
 
-test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is NOT set to "@podium/client" - should append "true" value on "res.locals.podium.decorate"', async t => {
+tap.test('.middleware() - contructor argument "development" is set to "true" and "user-agent" on request is NOT set to "@podium/client" - should append "true" value on "res.locals.podium.decorate"', async t => {
     const options = { ...DEFAULT_OPTIONS, development: true };
     const podlet = new Podlet(options);
     const server = new FakeExpressServer(podlet);
@@ -1010,7 +1016,7 @@ test('.middleware() - contructor argument "development" is set to "true" and "us
     await server.close();
 });
 
-test('.middleware() - valid "version" value is set on constructor - should append "podlet-version" http header with the given version value', async t => {
+tap.test('.middleware() - valid "version" value is set on constructor - should append "podlet-version" http header with the given version value', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet);
     await server.listen();
@@ -1025,7 +1031,7 @@ test('.middleware() - valid "version" value is set on constructor - should appen
 // .res.podiumSend()
 // #############################################
 
-test('res.podiumSend() - .podiumSend() method - should be a function on http.response', async t => {
+tap.test('res.podiumSend() - .podiumSend() method - should be a function on http.response', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet, (req, res) => {
         t.type(res.podiumSend, 'function');
@@ -1037,7 +1043,7 @@ test('res.podiumSend() - .podiumSend() method - should be a function on http.res
     await server.close();
 });
 
-test('res.podiumSend() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async t => {
+tap.test('res.podiumSend() - contructor argument "development" is NOT set to "true" - should NOT append default wireframe document', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
@@ -1050,7 +1056,7 @@ test('res.podiumSend() - contructor argument "development" is NOT set to "true" 
     await server.close();
 });
 
-test('res.podiumSend() - contructor argument "development" is set to "true" - should append default wireframe document', async t => {
+tap.test('res.podiumSend() - contructor argument "development" is set to "true" - should append default wireframe document', async t => {
     const options = { ...DEFAULT_OPTIONS, development: true };
     const podlet = new Podlet(options);
     const server = new FakeExpressServer(podlet, (req, res) => {
@@ -1070,7 +1076,7 @@ test('res.podiumSend() - contructor argument "development" is set to "true" - sh
 // .defaults()
 // #############################################
 
-test('.defaults() - call method with no arguments - should return default value', t => {
+tap.test('.defaults() - call method with no arguments - should return default value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.defaults();
     t.same(result, {
@@ -1085,7 +1091,7 @@ test('.defaults() - call method with no arguments - should return default value'
     t.end();
 });
 
-test('.defaults() - set value on "context" argument - should return set value', t => {
+tap.test('.defaults() - set value on "context" argument - should return set value', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.defaults({ foo: 'bar' });
     t.same(result, {
@@ -1101,7 +1107,7 @@ test('.defaults() - set value on "context" argument - should return set value', 
     t.end();
 });
 
-test('.defaults() - call method with "context" argument, then call it a second time with no argument - should return first set value on second call', t => {
+tap.test('.defaults() - call method with "context" argument, then call it a second time with no argument - should return first set value on second call', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     podlet.defaults({ foo: 'bar' });
     const result = podlet.defaults();
@@ -1118,7 +1124,7 @@ test('.defaults() - call method with "context" argument, then call it a second t
     t.end();
 });
 
-test('.defaults() - constructor argument "development" is not set - should not append a default context to "res.locals"', async t => {
+tap.test('.defaults() - constructor argument "development" is not set - should not append a default context to "res.locals"', async t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet);
     await server.listen();
@@ -1129,7 +1135,7 @@ test('.defaults() - constructor argument "development" is not set - should not a
     await server.close();
 });
 
-test('.defaults() - constructor argument "development" is to "true" - should append a default context to "res.locals"', async t => {
+tap.test('.defaults() - constructor argument "development" is to "true" - should append a default context to "res.locals"', async t => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
@@ -1154,7 +1160,7 @@ test('.defaults() - constructor argument "development" is to "true" - should app
     await server.close();
 });
 
-test('.defaults() - set "context" argument where a key overrides one existing context value - should override default context value but keep rest untouched', async t => {
+tap.test('.defaults() - set "context" argument where a key overrides one existing context value - should override default context value but keep rest untouched', async t => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
@@ -1182,7 +1188,7 @@ test('.defaults() - set "context" argument where a key overrides one existing co
     await server.close();
 });
 
-test('.defaults() - set "context" argument where a key is not a default context value - should append key and value to default context', async t => {
+tap.test('.defaults() - set "context" argument where a key is not a default context value - should append key and value to default context', async t => {
     const podlet = new Podlet({
         name: 'foo',
         version: 'v1.0.0',
@@ -1215,7 +1221,7 @@ test('.defaults() - set "context" argument where a key is not a default context 
 // .proxy()
 // #############################################
 
-test('.proxy() - no arguments - should throw', t => {
+tap.test('.proxy() - no arguments - should throw', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.proxy();
@@ -1223,7 +1229,7 @@ test('.proxy() - no arguments - should throw', t => {
     t.end();
 });
 
-test('.proxy() - set a non valid "target" argument value - should throw', t => {
+tap.test('.proxy() - set a non valid "target" argument value - should throw', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.proxy({ target: 'æøå æåø', name: 'foo' });
@@ -1231,7 +1237,7 @@ test('.proxy() - set a non valid "target" argument value - should throw', t => {
     t.end();
 });
 
-test('.proxy() - set a non valid "name" argument value - should throw', t => {
+tap.test('.proxy() - set a non valid "name" argument value - should throw', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.proxy({ target: '/foo', name: 'æøå æåø' });
@@ -1239,7 +1245,7 @@ test('.proxy() - set a non valid "name" argument value - should throw', t => {
     t.end();
 });
 
-test('.proxy() - set more than 4 proxy entries - should throw', t => {
+tap.test('.proxy() - set more than 4 proxy entries - should throw', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.proxy({ target: '/foo1', name: 'foo1' });
@@ -1251,7 +1257,7 @@ test('.proxy() - set more than 4 proxy entries - should throw', t => {
     t.end();
 });
 
-test('.proxy() - set valid "name" and "target" - should return target', t => {
+tap.test('.proxy() - set valid "name" and "target" - should return target', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const result = podlet.proxy({ target: '/foo', name: 'foo' });
     t.equal(result, '/foo');
@@ -1262,7 +1268,7 @@ test('.proxy() - set valid "name" and "target" - should return target', t => {
 // .view()
 // #############################################
 
-test('.view() - set a non valid argument value - should throw', t => {
+tap.test('.view() - set a non valid argument value - should throw', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
         podlet.view('test');
@@ -1270,7 +1276,7 @@ test('.view() - set a non valid argument value - should throw', t => {
     t.end();
 });
 
-test('.view() - append a custom wireframe document - should render development output with custom wireframe document', async t => {
+tap.test('.view() - append a custom wireframe document - should render development output with custom wireframe document', async t => {
     const options = { ...DEFAULT_OPTIONS, development: true };
 
     const podlet = new Podlet(options);
@@ -1291,13 +1297,13 @@ test('.view() - append a custom wireframe document - should render development o
 // .metrics()
 // #############################################
 
-test('.metrics - assigned object to property - should be instance of @metrics/client', t => {
+tap.test('.metrics - assigned object to property - should be instance of @metrics/client', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.ok(podlet.metrics instanceof Metrics);
     t.end()
 });
 
-test('.metrics - assigned object to property - should have object tag with "Metrics" as name', t => {
+tap.test('.metrics - assigned object to property - should have object tag with "Metrics" as name', t => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.equal(
         Object.prototype.toString.call(podlet.metrics),
