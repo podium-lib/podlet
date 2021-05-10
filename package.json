@@ -51,6 +51,6 @@
     "eslint-plugin-prettier": "3.4.0",
     "express": "4.17.1",
     "prettier": "2.2.1",
-    "tap": "15.0.6"
+    "tap": "15.0.9"
   }
 }
