@@ -32,7 +32,7 @@
     "@podium/schemas": "4.1.22",
     "@podium/utils": "4.4.23",
     "abslog": "2.4.0",
-    "ajv": "8.6.1",
+    "ajv": "8.6.2",
     "objobj": "1.0.0"
   },
   "devDependencies": {
