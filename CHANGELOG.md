@@ -1,3 +1,10 @@
+## [4.4.34](https://github.com/podium-lib/podlet/compare/v4.4.33...v4.4.34) (2021-07-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.53 ([59c66a6](https://github.com/podium-lib/podlet/commit/59c66a6525551e2fa7bd01516ea7620ac991befa))
+
 ## [4.4.33](https://github.com/podium-lib/podlet/compare/v4.4.32...v4.4.33) (2021-07-16)
 
 
