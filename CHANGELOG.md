@@ -1,3 +1,10 @@
+## [4.4.35](https://github.com/podium-lib/podlet/compare/v4.4.34...v4.4.35) (2021-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.24 ([f8f44f2](https://github.com/podium-lib/podlet/commit/f8f44f2576c5e897a572fe0228a960599daf18ea))
+
 ## [4.4.34](https://github.com/podium-lib/podlet/compare/v4.4.33...v4.4.34) (2021-07-16)
 
 
