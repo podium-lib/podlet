@@ -1,3 +1,10 @@
+## [4.4.41](https://github.com/podium-lib/podlet/compare/v4.4.40...v4.4.41) (2021-11-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.7.1 ([3dfedfa](https://github.com/podium-lib/podlet/commit/3dfedfab2306f0e1c3a2e2b904746fc9cdc713ed))
+
 ## [4.4.40](https://github.com/podium-lib/podlet/compare/v4.4.39...v4.4.40) (2021-10-27)
 
 
