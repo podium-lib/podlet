@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet",
-  "version": "4.4.55",
+  "version": "4.4.56",
   "description": "Module for building page fragment servers in a micro frontend architecture.",
   "main": "lib/podlet.js",
   "license": "MIT",
