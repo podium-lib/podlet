@@ -1,3 +1,10 @@
+## [4.4.60](https://github.com/podium-lib/podlet/compare/v4.4.59...v4.4.60) (2022-02-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.35 ([a5c53fb](https://github.com/podium-lib/podlet/commit/a5c53fb5310a46b16d360ddc27d2ddbac674fcab))
+
 ## [4.4.59](https://github.com/podium-lib/podlet/compare/v4.4.58...v4.4.59) (2022-02-05)
 
 
