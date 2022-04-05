@@ -1,3 +1,10 @@
+## [4.4.63](https://github.com/podium-lib/podlet/compare/v4.4.62...v4.4.63) (2022-04-05)
+
+
+### Bug Fixes
+
+* update Proxy module to fix trailer header vulnerability ([0f67d23](https://github.com/podium-lib/podlet/commit/0f67d23307fc67bef9855835f5d3b3fcfcf6601d))
+
 ## [4.4.62](https://github.com/podium-lib/podlet/compare/v4.4.61...v4.4.62) (2022-03-28)
 
 
