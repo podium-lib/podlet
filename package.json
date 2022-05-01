@@ -47,10 +47,10 @@
     "eslint": "7.32.0",
     "eslint-config-airbnb-base": "14.2.1",
     "eslint-config-prettier": "8.5.0",
-    "eslint-plugin-import": "2.25.4",
+    "eslint-plugin-import": "2.26.0",
     "eslint-plugin-prettier": "3.4.1",
     "express": "4.18.1",
-    "prettier": "2.6.1",
+    "prettier": "2.6.2",
     "tap": "15.2.3"
   }
 }
