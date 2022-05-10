@@ -1,8 +1,8 @@
 {
   "name": "@podium/podlet",
-  "version": "5.0.0-next.3",
+  "version": "5.0.0-next.4",
+  "type": "module",
   "description": "Module for building page fragment servers in a micro frontend architecture.",
-  "main": "lib/podlet.js",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,19 +18,27 @@
     "index.d.ts",
     "README.md",
     "LICENSE",
+    "dist",
     "lib"
   ],
+  "main": "./dist/podlet.js",
+  "exports": {
+    "require": "./dist/podlet.js",
+    "import": "./lib/podlet.js"
+  },
   "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap --no-check-coverage"
+    "test": "tap --no-check-coverage",
+    "prepare": "npm run -s build",
+    "build": "rollup -c"
   },
   "dependencies": {
     "@metrics/client": "2.5.0",
-    "@podium/proxy": "5.0.0-next.2",
-    "@podium/schemas": "5.0.0-next.1",
-    "@podium/utils": "5.0.0-next.2",
+    "@podium/proxy": "5.0.0-next.5",
+    "@podium/schemas": "5.0.0-next.4",
+    "@podium/utils": "5.0.0-next.6",
     "abslog": "2.4.0",
     "ajv": "8.11.0",
     "objobj": "1.0.0"
