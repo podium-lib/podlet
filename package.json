@@ -21,18 +21,12 @@
     "dist",
     "lib"
   ],
-  "main": "./dist/podlet.js",
-  "exports": {
-    "require": "./dist/podlet.js",
-    "import": "./lib/podlet.js"
-  },
+  "main": "./lib/podlet.js",
   "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap --no-check-coverage",
-    "prepare": "npm run -s build",
-    "build": "rollup -c"
+    "test": "tap --no-check-coverage"
   },
   "dependencies": {
     "@metrics/client": "2.5.0",
@@ -45,18 +39,15 @@
   },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.1",
-    "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "8.0.4",
-    "@semantic-release/npm": "9.0.1",
-    "@semantic-release/release-notes-generator": "10.0.3",
     "semantic-release": "19.0.2",
     "@podium/test-utils": "2.5.2",
-    "eslint": "7.32.0",
-    "eslint-config-airbnb-base": "14.2.1",
+    "@babel/eslint-parser": "7.17.0",
+    "eslint": "8.15.0",
+    "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-prettier": "3.4.1",
+    "eslint-plugin-prettier": "4.0.0",
     "express": "4.18.1",
     "prettier": "2.6.2",
     "tap": "16.2.0"
