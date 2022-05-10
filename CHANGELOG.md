@@ -1,4 +1,5 @@
 # [5.0.0-next.3](https://github.com/podium-lib/podlet/compare/v5.0.0-next.2...v5.0.0-next.3) (2021-05-08)
+## [4.4.64](https://github.com/podium-lib/podlet/compare/v4.4.63...v4.4.64) (2022-05-09)
 
 
 ### Bug Fixes
@@ -49,6 +50,295 @@
 ### BREAKING CHANGES
 
 * Only support node 12 and 14.
+* **deps:** update dependency @podium/proxy to v4.2.75 ([3d26c35](https://github.com/podium-lib/podlet/commit/3d26c356571f2f3f141a13f168aee0e64997c5ad))
+
+## [4.4.63](https://github.com/podium-lib/podlet/compare/v4.4.62...v4.4.63) (2022-04-05)
+
+
+### Bug Fixes
+
+* update Proxy module to fix trailer header vulnerability ([0f67d23](https://github.com/podium-lib/podlet/commit/0f67d23307fc67bef9855835f5d3b3fcfcf6601d))
+
+## [4.4.62](https://github.com/podium-lib/podlet/compare/v4.4.61...v4.4.62) (2022-03-28)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([a26feeb](https://github.com/podium-lib/podlet/commit/a26feeb4ccdd85876be25a4dedfb2b3786ab30f7))
+
+## [4.4.61](https://github.com/podium-lib/podlet/compare/v4.4.60...v4.4.61) (2022-02-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.72 ([fb00921](https://github.com/podium-lib/podlet/commit/fb00921a1607954c50168849a84a76625fc621bc))
+
+## [4.4.60](https://github.com/podium-lib/podlet/compare/v4.4.59...v4.4.60) (2022-02-05)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.35 ([a5c53fb](https://github.com/podium-lib/podlet/commit/a5c53fb5310a46b16d360ddc27d2ddbac674fcab))
+
+## [4.4.59](https://github.com/podium-lib/podlet/compare/v4.4.58...v4.4.59) (2022-02-05)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([37ed836](https://github.com/podium-lib/podlet/commit/37ed8364377d625097a11d31c4d28e7930d3d914))
+
+## [4.4.58](https://github.com/podium-lib/podlet/compare/v4.4.57...v4.4.58) (2022-02-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.10.0 ([5eeb704](https://github.com/podium-lib/podlet/commit/5eeb70431de127af3613b23762b4b98b14500915))
+
+## [4.4.57](https://github.com/podium-lib/podlet/compare/v4.4.56...v4.4.57) (2022-01-16)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([0e4abcb](https://github.com/podium-lib/podlet/commit/0e4abcb6a10236d9fd9b8acdcad08d462ede6d28))
+
+## [4.4.56](https://github.com/podium-lib/podlet/compare/v4.4.55...v4.4.56) (2022-01-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.68 ([140c6a0](https://github.com/podium-lib/podlet/commit/140c6a0b31e39ea663b9cc58fe1c55a8806da195))
+
+## [4.4.55](https://github.com/podium-lib/podlet/compare/v4.4.54...v4.4.55) (2022-01-02)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v4.4.33 ([198324f](https://github.com/podium-lib/podlet/commit/198324fe0e6f9d18b4ad994ab55bb3fd381f02cc))
+
+## [4.4.54](https://github.com/podium-lib/podlet/compare/v4.4.53...v4.4.54) (2021-11-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.67 ([b9db2e6](https://github.com/podium-lib/podlet/commit/b9db2e626c22a15b90c9887c2dea710835926e0c))
+
+## [4.4.53](https://github.com/podium-lib/podlet/compare/v4.4.52...v4.4.53) (2021-11-22)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([29e88ff](https://github.com/podium-lib/podlet/commit/29e88ff756f1eee69827847d15d35aedfa453d41))
+
+## [4.4.52](https://github.com/podium-lib/podlet/compare/v4.4.51...v4.4.52) (2021-11-22)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([f102755](https://github.com/podium-lib/podlet/commit/f10275597920e6b7d5190e97cb5b550258cde240))
+
+## [4.4.51](https://github.com/podium-lib/podlet/compare/v4.4.50...v4.4.51) (2021-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.65 ([2569533](https://github.com/podium-lib/podlet/commit/2569533fada1652d6070580c2fef55c63b1413cf))
+
+## [4.4.50](https://github.com/podium-lib/podlet/compare/v4.4.49...v4.4.50) (2021-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([938fe6c](https://github.com/podium-lib/podlet/commit/938fe6cb93e7cf582e4d83cfba8e0543578caa20))
+
+## [4.4.49](https://github.com/podium-lib/podlet/compare/v4.4.48...v4.4.49) (2021-11-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.28 ([5c0fdde](https://github.com/podium-lib/podlet/commit/5c0fdde560fc2feabd33bb4d3496bb92c72e568d))
+
+## [4.4.48](https://github.com/podium-lib/podlet/compare/v4.4.47...v4.4.48) (2021-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.8.1 ([b9127d8](https://github.com/podium-lib/podlet/commit/b9127d89b9bfaa5fd72663e34313c4559fc1e563))
+
+## [4.4.47](https://github.com/podium-lib/podlet/compare/v4.4.46...v4.4.47) (2021-11-15)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([f248848](https://github.com/podium-lib/podlet/commit/f248848bea2081735953658dc3eadbb2a21c2ac9))
+
+## [4.4.46](https://github.com/podium-lib/podlet/compare/v4.4.45...v4.4.46) (2021-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.62 ([c1f9159](https://github.com/podium-lib/podlet/commit/c1f915917ccb9b8981ab4248458652c77b81480a))
+
+## [4.4.45](https://github.com/podium-lib/podlet/compare/v4.4.44...v4.4.45) (2021-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([42a93bf](https://github.com/podium-lib/podlet/commit/42a93bf95e2bc690641202277fe31bb59e04319a))
+
+## [4.4.44](https://github.com/podium-lib/podlet/compare/v4.4.43...v4.4.44) (2021-11-13)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.8.0 ([e1550ef](https://github.com/podium-lib/podlet/commit/e1550ef04ba12ee6f08af564b8697751d0c9d7e4))
+
+## [4.4.43](https://github.com/podium-lib/podlet/compare/v4.4.42...v4.4.43) (2021-11-09)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([e93d3bc](https://github.com/podium-lib/podlet/commit/e93d3bc84b9dbfa4f9959506deb6c6a8ed5d210f))
+
+## [4.4.42](https://github.com/podium-lib/podlet/compare/v4.4.41...v4.4.42) (2021-11-09)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.26 ([90e1339](https://github.com/podium-lib/podlet/commit/90e1339a746f568fa5589fe87e96a7d503051dfe))
+
+## [4.4.41](https://github.com/podium-lib/podlet/compare/v4.4.40...v4.4.41) (2021-11-08)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.7.1 ([3dfedfa](https://github.com/podium-lib/podlet/commit/3dfedfab2306f0e1c3a2e2b904746fc9cdc713ed))
+
+## [4.4.40](https://github.com/podium-lib/podlet/compare/v4.4.39...v4.4.40) (2021-10-27)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([8368aa0](https://github.com/podium-lib/podlet/commit/8368aa005431dd127cbb83ec1c8a8e808a6ce1d1))
+
+## [4.4.39](https://github.com/podium-lib/podlet/compare/v4.4.38...v4.4.39) (2021-09-13)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([82a9a4a](https://github.com/podium-lib/podlet/commit/82a9a4a35c61853460661a9ba173667ac33440b4))
+
+## [4.4.38](https://github.com/podium-lib/podlet/compare/v4.4.37...v4.4.38) (2021-09-12)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.6.3 ([cc4b489](https://github.com/podium-lib/podlet/commit/cc4b489d9605c112e9bdbc466ad76da57f247b47))
+
+## [4.4.37](https://github.com/podium-lib/podlet/compare/v4.4.36...v4.4.37) (2021-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.55 ([76cb389](https://github.com/podium-lib/podlet/commit/76cb389e9b19cc8c67534a15589d220ed6138ceb))
+
+## [4.4.36](https://github.com/podium-lib/podlet/compare/v4.4.35...v4.4.36) (2021-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([83f4364](https://github.com/podium-lib/podlet/commit/83f43642321c7aa3b5d29a639a3dbfe45bcc7a77))
+
+## [4.4.35](https://github.com/podium-lib/podlet/compare/v4.4.34...v4.4.35) (2021-08-14)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/schemas to v4.1.24 ([f8f44f2](https://github.com/podium-lib/podlet/commit/f8f44f2576c5e897a572fe0228a960599daf18ea))
+
+## [4.4.34](https://github.com/podium-lib/podlet/compare/v4.4.33...v4.4.34) (2021-07-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.53 ([59c66a6](https://github.com/podium-lib/podlet/commit/59c66a6525551e2fa7bd01516ea7620ac991befa))
+
+## [4.4.33](https://github.com/podium-lib/podlet/compare/v4.4.32...v4.4.33) (2021-07-16)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([88302c8](https://github.com/podium-lib/podlet/commit/88302c854869bec4a8db1fa53ac8395a2465ecc4))
+
+## [4.4.32](https://github.com/podium-lib/podlet/compare/v4.4.31...v4.4.32) (2021-07-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.6.2 ([d57e0f6](https://github.com/podium-lib/podlet/commit/d57e0f6b4db4db415edf601e388b93e5f6aea6c7))
+
+## [4.4.31](https://github.com/podium-lib/podlet/compare/v4.4.30...v4.4.31) (2021-07-04)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([a4116ba](https://github.com/podium-lib/podlet/commit/a4116ba53a5c988678ae51bb84f467b41e0d73d9))
+
+## [4.4.30](https://github.com/podium-lib/podlet/compare/v4.4.29...v4.4.30) (2021-07-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.6.1 ([1e112b3](https://github.com/podium-lib/podlet/commit/1e112b3faef4d4225b0a1f68e131a4eeaef8edf7))
+
+## [4.4.29](https://github.com/podium-lib/podlet/compare/v4.4.28...v4.4.29) (2021-06-07)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([caa9fcf](https://github.com/podium-lib/podlet/commit/caa9fcf8f174144f62a92700af43839b2784de80))
+
+## [4.4.28](https://github.com/podium-lib/podlet/compare/v4.4.27...v4.4.28) (2021-06-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.6.0 ([b5723a9](https://github.com/podium-lib/podlet/commit/b5723a93e5fe70c567d230b0e70c0895d6608561))
+
+## [4.4.27](https://github.com/podium-lib/podlet/compare/v4.4.26...v4.4.27) (2021-05-24)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([d970008](https://github.com/podium-lib/podlet/commit/d9700085acb0779181cef168f84080bbd9d03f0e))
+
+## [4.4.26](https://github.com/podium-lib/podlet/compare/v4.4.25...v4.4.26) (2021-05-24)
+
+
+### Bug Fixes
+
+* **deps:** update dependency ajv to v8.5.0 ([2a0131b](https://github.com/podium-lib/podlet/commit/2a0131bd5126cd0a572cadf199d57185ef5cc7be))
+
+## [4.4.25](https://github.com/podium-lib/podlet/compare/v4.4.24...v4.4.25) (2021-05-15)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v4.2.45 ([81df855](https://github.com/podium-lib/podlet/commit/81df855ce6c15e3d36f30e3eb778d8e906edae78))
+
+## [4.4.24](https://github.com/podium-lib/podlet/compare/v4.4.23...v4.4.24) (2021-05-15)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([7fd8e49](https://github.com/podium-lib/podlet/commit/7fd8e494ea55043c65634f3c49d5e4dedcc03b73))
+
+## [4.4.23](https://github.com/podium-lib/podlet/compare/v4.4.22...v4.4.23) (2021-05-09)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies ([763da37](https://github.com/podium-lib/podlet/commit/763da374e57d935e93892f415a43a3c485e52cba))
+
 ## [4.4.22](https://github.com/podium-lib/podlet/compare/v4.4.21...v4.4.22) (2021-05-05)
 
 
