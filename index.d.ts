@@ -23,6 +23,8 @@ export interface PodletOptions {
 export default class Podlet {
     constructor(options: PodletOptions);
 
+    pathname(): string;
+
     middleware(): (req: any, res: any, next: any) => Promise<void>;
 
     manifest(options?: { prefix?: boolean }): string;
