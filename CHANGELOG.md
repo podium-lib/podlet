@@ -1,3 +1,10 @@
+## [4.4.65](https://github.com/podium-lib/podlet/compare/v4.4.64...v4.4.65) (2022-09-02)
+
+
+### Bug Fixes
+
+* **types:** Add pathname() method to Podium type ([779f8c3](https://github.com/podium-lib/podlet/commit/779f8c33dc92183acec90cd647865a83a99b558e))
+
 ## [4.4.64](https://github.com/podium-lib/podlet/compare/v4.4.63...v4.4.64) (2022-05-09)
 
 
