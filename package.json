@@ -30,9 +30,9 @@
   },
   "dependencies": {
     "@metrics/client": "2.5.0",
-    "@podium/proxy": "5.0.0-next.5",
-    "@podium/schemas": "5.0.0-next.4",
-    "@podium/utils": "5.0.0-next.6",
+    "@podium/proxy": "5.0.0-next.7",
+    "@podium/schemas": "5.0.0-next.6",
+    "@podium/utils": "5.0.0-next.8",
     "abslog": "2.4.0",
     "ajv": "8.11.0",
     "objobj": "1.0.0"
@@ -40,16 +40,16 @@
   "devDependencies": {
     "@semantic-release/changelog": "6.0.1",
     "@semantic-release/git": "10.0.1",
-    "semantic-release": "19.0.2",
+    "semantic-release": "19.0.5",
     "@podium/test-utils": "2.5.2",
-    "@babel/eslint-parser": "7.17.0",
-    "eslint": "8.15.0",
+    "@babel/eslint-parser": "7.19.1",
+    "eslint": "8.23.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.26.0",
-    "eslint-plugin-prettier": "4.0.0",
+    "eslint-plugin-prettier": "4.2.1",
     "express": "4.18.1",
-    "prettier": "2.6.2",
-    "tap": "16.2.0"
+    "prettier": "2.7.1",
+    "tap": "16.3.0"
   }
 }
