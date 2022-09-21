@@ -1,3 +1,10 @@
+# [5.0.0-next.6](https://github.com/podium-lib/podlet/compare/v5.0.0-next.5...v5.0.0-next.6) (2022-09-21)
+
+
+### Bug Fixes
+
+* Use latest proxy ([42f622c](https://github.com/podium-lib/podlet/commit/42f622c64f86b49796cc34e0871371ae74088cf1))
+
 # [5.0.0-next.5](https://github.com/podium-lib/podlet/compare/v5.0.0-next.4...v5.0.0-next.5) (2022-05-10)
 
 
