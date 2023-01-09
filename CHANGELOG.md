@@ -1,3 +1,10 @@
+## [4.4.69](https://github.com/podium-lib/podlet/compare/v4.4.68...v4.4.69) (2023-01-09)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([0d14c8a](https://github.com/podium-lib/podlet/commit/0d14c8aae8a69ba80a32021fcd87f7f6e06b791f))
+
 ## [4.4.68](https://github.com/podium-lib/podlet/compare/v4.4.67...v4.4.68) (2022-12-12)
 
 
