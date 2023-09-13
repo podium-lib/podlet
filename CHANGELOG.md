@@ -1,3 +1,10 @@
+## [4.4.70](https://github.com/podium-lib/podlet/compare/v4.4.69...v4.4.70) (2023-09-13)
+
+
+### Bug Fixes
+
+* adding type information closes [#344](https://github.com/podium-lib/podlet/issues/344) ([28e6ed9](https://github.com/podium-lib/podlet/commit/28e6ed9508d9218046f925e85fd97d17479bf390))
+
 ## [4.4.69](https://github.com/podium-lib/podlet/compare/v4.4.68...v4.4.69) (2023-01-09)
 
 
