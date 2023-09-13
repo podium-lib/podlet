@@ -1,4 +1,6 @@
-import { HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
+import {HttpIncoming, AssetJs, AssetCss} from '@podium/utils';
+import * as Proxy from '@podium/proxy';
+import MetricsClient from '@metrics/client';
 
 // Use declaration merging to extend Express.
 declare global {
@@ -9,6 +11,27 @@ declare global {
     }
 }
 
+type AbsLogger = {
+    trace: LogFunction;
+    debug: LogFunction;
+    info: LogFunction;
+    warn: LogFunction;
+    error: LogFunction;
+    fatal: LogFunction;
+}
+
+type LogFunction = (...args: any) => void
+
+type PodletContext = {
+    debug: 'true' | 'false';
+    locale: string;
+    deviceType: string;
+    requestedBy: string;
+    mountOrigin: string;
+    mountPathname: string;
+    publicPathname: string;
+}
+
 export interface PodletOptions {
     name: string;
     pathname: string;
@@ -16,12 +39,40 @@ export interface PodletOptions {
     manifest?: string;
     content?: string;
     fallback?: string;
-    logger?: any;
+    logger?: Console | AbsLogger;
     development?: boolean;
 }
 
 export default class Podlet {
     constructor(options: PodletOptions);
+
+    name: string;
+
+    version: string;
+
+    manifestRoute: string;
+
+    contentRoute: string;
+
+    fallbackRoute: string;
+
+    cssRoute: [];
+
+    jsRoute: [];
+
+    proxyRoutes: Record<string, string>;
+
+    log: AbsLogger;
+
+    development: boolean;
+
+    httpProxy: Proxy;
+
+    baseContext: PodletContext;
+
+    defaultContext: PodletContext;
+
+    metrics: MetricsClient;
 
     pathname(): string;
 
