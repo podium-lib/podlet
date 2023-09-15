@@ -1,5 +1,5 @@
-import {HttpIncoming, AssetJs, AssetCss} from '@podium/utils';
-import * as Proxy from '@podium/proxy';
+import { HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
+import PodiumProxy from '@podium/proxy';
 import MetricsClient from '@metrics/client';
 
 // Use declaration merging to extend Express.
@@ -11,40 +11,8 @@ declare global {
     }
 }
 
-type AbsLogger = {
-    trace: LogFunction;
-    debug: LogFunction;
-    info: LogFunction;
-    warn: LogFunction;
-    error: LogFunction;
-    fatal: LogFunction;
-}
-
-type LogFunction = (...args: any) => void
-
-type PodletContext = {
-    debug: 'true' | 'false';
-    locale: string;
-    deviceType: string;
-    requestedBy: string;
-    mountOrigin: string;
-    mountPathname: string;
-    publicPathname: string;
-}
-
-export interface PodletOptions {
-    name: string;
-    pathname: string;
-    version: string;
-    manifest?: string;
-    content?: string;
-    fallback?: string;
-    logger?: Console | AbsLogger;
-    development?: boolean;
-}
-
-export default class Podlet {
-    constructor(options: PodletOptions);
+declare class Podlet {
+    constructor(options: Podlet.PodletOptions);
 
     name: string;
 
@@ -56,21 +24,21 @@ export default class Podlet {
 
     fallbackRoute: string;
 
-    cssRoute: [];
+    cssRoute: AssetCss[];
 
-    jsRoute: [];
+    jsRoute: AssetJs[];
 
     proxyRoutes: Record<string, string>;
 
-    log: AbsLogger;
+    log: Podlet.AbsLogger;
 
     development: boolean;
 
-    httpProxy: Proxy;
+    httpProxy: PodiumProxy;
 
-    baseContext: PodletContext;
+    baseContext: Podlet.PodletContext;
 
-    defaultContext: PodletContext;
+    defaultContext: Podlet.PodletContext;
 
     metrics: MetricsClient;
 
@@ -92,19 +60,55 @@ export default class Podlet {
 
     defaults(context: any): any;
 
-    view(
+    view<T = { [key: string]: unknown }>(
         template: (
-            incoming: HttpIncoming,
+            incoming: HttpIncoming<T>,
             fragment: string,
             ...args: unknown[]
         ) => string,
     ): void;
 
-    render(
-        incoming: HttpIncoming,
+    render<T = { [key: string]: unknown }>(
+        incoming: HttpIncoming<T>,
         fragment: string,
         ...args: unknown[]
     ): string;
 
     process(incoming: HttpIncoming): Promise<HttpIncoming>;
 }
+
+declare namespace Podlet {
+    export type AbsLogger = {
+        trace: LogFunction;
+        debug: LogFunction;
+        info: LogFunction;
+        warn: LogFunction;
+        error: LogFunction;
+        fatal: LogFunction;
+    };
+
+    type LogFunction = (...args: any) => void;
+
+    export type PodletContext = {
+        debug: 'true' | 'false';
+        locale: string;
+        deviceType: string;
+        requestedBy: string;
+        mountOrigin: string;
+        mountPathname: string;
+        publicPathname: string;
+    };
+
+    export interface PodletOptions {
+        name: string;
+        pathname: string;
+        version: string;
+        manifest?: string;
+        content?: string;
+        fallback?: string;
+        logger?: Console | AbsLogger;
+        development?: boolean;
+    }
+}
+
+export = Podlet;
