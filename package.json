@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet",
-  "version": "4.4.70",
+  "version": "4.4.72",
   "description": "Module for building page fragment servers in a micro frontend architecture.",
   "main": "lib/podlet.js",
   "license": "MIT",
@@ -27,7 +27,7 @@
     "test": "tap --no-check-coverage"
   },
   "dependencies": {
-    "@metrics/client": "2.5.0",
+    "@metrics/client": "2.5.2",
     "@podium/proxy": "4.2.83",
     "@podium/schemas": "4.1.34",
     "@podium/utils": "4.4.40",
@@ -51,6 +51,6 @@
     "eslint-plugin-prettier": "3.4.1",
     "express": "4.18.2",
     "prettier": "2.8.8",
-    "tap": "16.3.8"
+    "tap": "16.3.9"
   }
 }
