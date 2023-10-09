@@ -1,3 +1,10 @@
+## [4.4.73](https://github.com/podium-lib/podlet/compare/v4.4.72...v4.4.73) (2023-10-09)
+
+
+### Bug Fixes
+
+* CJS-shaped export in type definition ([fd96046](https://github.com/podium-lib/podlet/commit/fd96046ca16b89d02526453ff3cbf6d3ace694bd))
+
 ## [4.4.72](https://github.com/podium-lib/podlet/compare/v4.4.71...v4.4.72) (2023-09-25)
 
 
