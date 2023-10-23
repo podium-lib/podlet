@@ -28,9 +28,9 @@
   },
   "dependencies": {
     "@metrics/client": "2.5.2",
-    "@podium/proxy": "4.2.83",
+    "@podium/proxy": "4.2.84",
     "@podium/schemas": "4.1.34",
-    "@podium/utils": "4.4.40",
+    "@podium/utils": "4.4.41",
     "abslog": "2.4.0",
     "ajv": "8.12.0",
     "objobj": "1.0.0"
