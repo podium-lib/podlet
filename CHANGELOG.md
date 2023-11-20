@@ -1,3 +1,10 @@
+# [5.0.0-next.7](https://github.com/podium-lib/podlet/compare/v5.0.0-next.6...v5.0.0-next.7) (2023-11-20)
+
+
+### Features
+
+* add support for strategy and scope via @podium/schemas and @podium/utils update ([128eaa1](https://github.com/podium-lib/podlet/commit/128eaa1b3de35581d8fe537c63ebc001ce82c282))
+
 # [5.0.0-next.6](https://github.com/podium-lib/podlet/compare/v5.0.0-next.5...v5.0.0-next.6) (2022-09-21)
 
 
