@@ -1,3 +1,10 @@
+# [4.5.0](https://github.com/podium-lib/podlet/compare/v4.4.75...v4.5.0) (2023-11-22)
+
+
+### Features
+
+* filter assets by scope if scope is provided ([95129b3](https://github.com/podium-lib/podlet/commit/95129b3e2de5b955cc4b5a2aa5942ddc0af39e8e))
+
 ## [4.4.75](https://github.com/podium-lib/podlet/compare/v4.4.74...v4.4.75) (2023-11-20)
 
 
