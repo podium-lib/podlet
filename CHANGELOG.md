@@ -1,3 +1,87 @@
+# [4.5.0](https://github.com/podium-lib/podlet/compare/v4.4.75...v4.5.0) (2023-11-22)
+
+
+### Features
+
+* filter assets by scope if scope is provided ([95129b3](https://github.com/podium-lib/podlet/commit/95129b3e2de5b955cc4b5a2aa5942ddc0af39e8e))
+
+## [4.4.75](https://github.com/podium-lib/podlet/compare/v4.4.74...v4.4.75) (2023-11-20)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([bf963ad](https://github.com/podium-lib/podlet/commit/bf963ad4f82ca1dabad6a960c2a836f075512385))
+
+## [4.4.74](https://github.com/podium-lib/podlet/compare/v4.4.73...v4.4.74) (2023-10-23)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([4475c67](https://github.com/podium-lib/podlet/commit/4475c67d637af2bcc7f843eed386614efc3d7c61))
+
+## [4.4.73](https://github.com/podium-lib/podlet/compare/v4.4.72...v4.4.73) (2023-10-09)
+
+
+### Bug Fixes
+
+* CJS-shaped export in type definition ([fd96046](https://github.com/podium-lib/podlet/commit/fd96046ca16b89d02526453ff3cbf6d3ace694bd))
+
+## [4.4.72](https://github.com/podium-lib/podlet/compare/v4.4.71...v4.4.72) (2023-09-25)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([0a47c72](https://github.com/podium-lib/podlet/commit/0a47c7289869c023235d32d301e83fd5de77f7f2))
+
+## [4.4.71](https://github.com/podium-lib/podlet/compare/v4.4.70...v4.4.71) (2023-09-18)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([08a5c70](https://github.com/podium-lib/podlet/commit/08a5c702797432b7668195d10c96def7bfc0c0bf))
+
+## [4.4.70](https://github.com/podium-lib/podlet/compare/v4.4.69...v4.4.70) (2023-09-13)
+
+
+### Bug Fixes
+
+* adding type information closes [#344](https://github.com/podium-lib/podlet/issues/344) ([28e6ed9](https://github.com/podium-lib/podlet/commit/28e6ed9508d9218046f925e85fd97d17479bf390))
+
+## [4.4.69](https://github.com/podium-lib/podlet/compare/v4.4.68...v4.4.69) (2023-01-09)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([0d14c8a](https://github.com/podium-lib/podlet/commit/0d14c8aae8a69ba80a32021fcd87f7f6e06b791f))
+
+## [4.4.68](https://github.com/podium-lib/podlet/compare/v4.4.67...v4.4.68) (2022-12-12)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([94707a5](https://github.com/podium-lib/podlet/commit/94707a5f92f72af94b23b77ac6b27b1dd379efcb))
+
+## [4.4.67](https://github.com/podium-lib/podlet/compare/v4.4.66...v4.4.67) (2022-11-21)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([6ab8c85](https://github.com/podium-lib/podlet/commit/6ab8c85ff5ef299049a21e0dc3882d1a8ae1a837))
+
+## [4.4.66](https://github.com/podium-lib/podlet/compare/v4.4.65...v4.4.66) (2022-11-14)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([bf8620d](https://github.com/podium-lib/podlet/commit/bf8620dc2693a5c25daa9ae26969b591848ec541))
+
+## [4.4.65](https://github.com/podium-lib/podlet/compare/v4.4.64...v4.4.65) (2022-09-02)
+
+
+### Bug Fixes
+
+* **types:** Add pathname() method to Podium type ([779f8c3](https://github.com/podium-lib/podlet/commit/779f8c33dc92183acec90cd647865a83a99b558e))
+
 # [5.0.0-next.7](https://github.com/podium-lib/podlet/compare/v5.0.0-next.6...v5.0.0-next.7) (2023-11-20)
 
 
