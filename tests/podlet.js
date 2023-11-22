@@ -1416,3 +1416,87 @@ test('Asset scope filtering - pathname "/foo" and content "/bar"', async (t) => 
     await server.close();
     t.end();
 });
+
+test('Asset scope filtering - pathname "/foo" and fallback "/"', async (t) => {
+    t.plan(2);
+    const podlet = new Podlet({
+        name: 'test',
+        version: '1.0.0',
+        pathname: '/foo',
+        content: '/content',
+        fallback: '/',
+    });
+    podlet.js([
+        new AssetJs({ value: '/foo', scope: 'content' }),
+        new AssetJs({ value: '/bar', scope: 'fallback' }),
+        new AssetJs({ value: '/baz', scope: 'all' }),
+        new AssetJs({ value: '/foobar' }),
+    ]);
+
+    const server = new FakeExpressServer(podlet, null, async (req, res) => {
+        t.equal(res.locals.podium.js.length, 3);
+        t.equal(res.locals.podium.js[0].scope, 'content');
+        res.send({ ok: true });
+    });
+
+    await server.listen();
+    await server.get({ path: '/foo/content' });
+    await server.close();
+    t.end();
+});
+
+test('Asset scope filtering - fallback "/"', async (t) => {
+    t.plan(2);
+    const podlet = new Podlet({
+        name: 'test',
+        version: '1.0.0',
+        pathname: '/',
+        content: '/content',
+        fallback: '/',
+    });
+    podlet.js([
+        new AssetJs({ value: '/foo', scope: 'content' }),
+        new AssetJs({ value: '/bar', scope: 'fallback' }),
+        new AssetJs({ value: '/baz', scope: 'all' }),
+        new AssetJs({ value: '/foobar' }),
+    ]);
+
+    const server = new FakeExpressServer(podlet, null, null, async (req, res) => {
+        t.equal(res.locals.podium.js.length, 3);
+        t.equal(res.locals.podium.js[0].scope, 'fallback');
+        res.send({ ok: true });
+    });
+
+    await server.listen();
+    await server.get();
+    await server.close();
+    t.end();
+});
+
+test('Asset scope filtering - pathname "/foo" and fallback "/"', async (t) => {
+    t.plan(2);
+    const podlet = new Podlet({
+        name: 'test',
+        version: '1.0.0',
+        pathname: '/foo',
+        content: '/content',
+        fallback: '/',
+    });
+    podlet.js([
+        new AssetJs({ value: '/foo', scope: 'content' }),
+        new AssetJs({ value: '/bar', scope: 'fallback' }),
+        new AssetJs({ value: '/baz', scope: 'all' }),
+        new AssetJs({ value: '/foobar' }),
+    ]);
+
+    const server = new FakeExpressServer(podlet, null, null, async (req, res) => {
+        t.equal(res.locals.podium.js.length, 3);
+        t.equal(res.locals.podium.js[0].scope, 'fallback');
+        res.send({ ok: true });
+    });
+
+    await server.listen();
+    await server.get({ path: '/foo' });
+    await server.close();
+    t.end();
+});
