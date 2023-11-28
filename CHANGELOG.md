@@ -1,3 +1,25 @@
+# [5.0.0](https://github.com/podium-lib/podlet/compare/v4.5.0...v5.0.0) (2023-11-28)
+
+
+### Bug Fixes
+
+* Use latest proxy ([42f622c](https://github.com/podium-lib/podlet/commit/42f622c64f86b49796cc34e0871371ae74088cf1))
+
+
+### Features
+
+* add support for strategy and scope via @podium/schemas and @podium/utils update ([128eaa1](https://github.com/podium-lib/podlet/commit/128eaa1b3de35581d8fe537c63ebc001ce82c282))
+* Convert to ESM ([cedb222](https://github.com/podium-lib/podlet/commit/cedb222127c25469bf856942463ce02491d5ad08))
+* Drop node 10.x support ([1f9ca4f](https://github.com/podium-lib/podlet/commit/1f9ca4f97e8da9addac4e70813ba981e7742ec9e))
+* Remove deprecated return value on .js and .css methods ([4052c02](https://github.com/podium-lib/podlet/commit/4052c02750a0071487bfa1ffb76ccebcc55bf185))
+
+
+### BREAKING CHANGES
+
+* Convert from CommonJS module to ESM
+* In version 4 of podium it became possible to set multiple assets to a podlet through its `.js()` and `.css()` methods. This did make it impossible to let these methods return a resonable value, but to keep a backwards compabillity with version 3 of Podium, the first item passed in was returned for compabillity. This removes this compaillity with version 3 of Podium.
+* Only support node 12 and 14.
+
 # [5.0.0-next.8](https://github.com/podium-lib/podlet/compare/v5.0.0-next.7...v5.0.0-next.8) (2023-11-22)
 
 
