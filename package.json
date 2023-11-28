@@ -1,8 +1,8 @@
 {
   "name": "@podium/podlet",
-  "version": "4.5.0",
+  "version": "5.0.0-next.8",
+  "type": "module",
   "description": "Module for building page fragment servers in a micro frontend architecture.",
-  "main": "lib/podlet.js",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -18,8 +18,10 @@
     "index.d.ts",
     "README.md",
     "LICENSE",
+    "dist",
     "lib"
   ],
+  "main": "./lib/podlet.js",
   "types": "index.d.ts",
   "scripts": {
     "lint": "eslint .",
@@ -27,15 +29,19 @@
     "test": "tap --no-check-coverage"
   },
   "dependencies": {
+    "@podium/schemas": "5.0.0",
+    "@podium/utils": "5.0.0",
+    "@podium/proxy": "5.0.0",
     "@metrics/client": "2.5.2",
-    "@podium/proxy": "4.2.86",
-    "@podium/schemas": "4.2.0",
-    "@podium/utils": "4.5.1",
     "abslog": "2.4.0",
     "ajv": "8.12.0",
     "objobj": "1.0.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "7.19.1",
+    "eslint": "8.23.1",
+    "eslint-config-airbnb-base": "15.0.0",
+    "eslint-plugin-prettier": "4.2.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "9.0.2",
     "@semantic-release/git": "10.0.1",
@@ -44,11 +50,8 @@
     "@semantic-release/release-notes-generator": "10.0.3",
     "semantic-release": "19.0.5",
     "@podium/test-utils": "2.5.2",
-    "eslint": "7.32.0",
-    "eslint-config-airbnb-base": "14.2.1",
     "eslint-config-prettier": "8.10.0",
     "eslint-plugin-import": "2.29.0",
-    "eslint-plugin-prettier": "3.4.1",
     "express": "4.18.2",
     "prettier": "2.8.8",
     "tap": "16.3.9"

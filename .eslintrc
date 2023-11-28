@@ -1,18 +1,20 @@
 {
-  "root": true,
   "extends": ["airbnb-base", "prettier"],
-  "overrides": [
-    {
-      "files": "__tests__/**/*",
-      "env": {
-        "jest": true
-      }
-    }
-  ],
   "plugins": ["prettier"],
-  "rules": {
-    "strict": [0, "global"],
-    "class-methods-use-this": [0],
-    "no-param-reassign": [0]
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+      "requireConfigFile": false,
+      "ecmaVersion": 2020,
+      "sourceType": "module"
+  },
+"rules": {
+  "default-param-last": [0],
+  "import/prefer-default-export": "off",
+  "class-methods-use-this": [0],
+  "lines-between-class-members": [0],
+  "import/extensions": ["error", {
+        "js": "ignorePackages"
+      }
+    ]
   }
 }

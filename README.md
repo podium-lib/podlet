@@ -1,4 +1,4 @@
-# @podium/podlet
+# @podium/podlet v5
 
 A Module for building page fragment servers in a micro frontend architecture.
 
