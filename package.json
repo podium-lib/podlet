@@ -38,8 +38,8 @@
     "objobj": "1.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.19.1",
-    "eslint": "8.23.1",
+    "@babel/eslint-parser": "7.23.3",
+    "eslint": "8.54.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-prettier": "5.0.1",
     "@semantic-release/changelog": "6.0.3",
