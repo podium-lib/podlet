@@ -36,8 +36,8 @@ $ npm install @podium/podlet
 Building a simple podlet server using [Express].
 
 ```js
-const express = require('express');
-const Podlet = require('@podium/podlet');
+import express from 'express';
+import Podlet from '@podium/podlet';
 
 // create a new podlet instance
 const podlet = new Podlet({
@@ -281,8 +281,8 @@ The method takes the following arguments:
 An instance of the [HttpIncoming] class.
 
 ```js
-const { HttpIncoming } = require('@podium/utils');
-const Podlet = require('@podium/podlet');
+import { HttpIncoming } from '@podium/utils';
+import Podlet from '@podium/podlet';
 
 const podlet = new Podlet({
     name: 'myPodlet',
