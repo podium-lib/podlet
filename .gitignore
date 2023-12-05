@@ -13,3 +13,4 @@ tmp/**/*
 .idea/**/*
 coverage
 dist/
+types

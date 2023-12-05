@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-param-reassign */
