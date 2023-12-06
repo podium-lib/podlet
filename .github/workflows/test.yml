@@ -11,22 +11,20 @@ jobs:
         node-version: [18.x, 20.x]
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: npm install
-        run: |
-          npm install
-        env:
-          CI: true
+        run: npm install
+
       - name: npm lint
-        run: |
-          npm run lint
-        env:
-          CI: true
+        run: npm run lint
+
+      - name: npm types
+        run: npm run types
+
       - name: npm test
-        run: |
-          npm test
-        env:
-          CI: true
+        run: npm test
