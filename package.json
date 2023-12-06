@@ -15,11 +15,11 @@
   "files": [
     "package.json",
     "CHANGELOG.md",
-    "index.d.ts",
     "README.md",
     "LICENSE",
     "dist",
-    "lib"
+    "lib",
+    "types"
   ],
   "main": "./lib/podlet.js",
   "types": "./types/podlet.d.ts",
