@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/podium-lib/podlet/compare/v5.0.0...v5.0.1) (2023-12-06)
+
+
+### Bug Fixes
+
+* update types to match ESM export ([a25608a](https://github.com/podium-lib/podlet/commit/a25608a2c9ac0fec9c3c3271a5423bdb118b29f6))
+
 # [5.0.0](https://github.com/podium-lib/podlet/compare/v4.5.0...v5.0.0) (2023-11-28)
 
 
