@@ -27,7 +27,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "test": "tap --no-check-coverage",
-    "types": "tsc --declaration --emitDeclarationOnly && echo 'declare global {\n  namespace Express {\n    interface Response {\n      podiumSend(fragment: string, ...args: unknown[]): Response;\n    }\n  }\n};' >> ./types/podlet.d.ts"
+    "types": "tsc --declaration --emitDeclarationOnly && ./fixup.sh"
   },
   "dependencies": {
     "@metrics/client": "2.5.2",
