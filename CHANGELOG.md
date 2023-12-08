@@ -1,3 +1,10 @@
+## [5.0.2](https://github.com/podium-lib/podlet/compare/v5.0.1...v5.0.2) (2023-12-08)
+
+
+### Bug Fixes
+
+* Pass podlet name to proxy ([190eddd](https://github.com/podium-lib/podlet/commit/190eddd4c017c0da5d6c8206a015419d77ac395c))
+
 ## [5.0.1](https://github.com/podium-lib/podlet/compare/v5.0.0...v5.0.1) (2023-12-06)
 
 
