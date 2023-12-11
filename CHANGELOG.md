@@ -1,3 +1,10 @@
+## [5.0.3](https://github.com/podium-lib/podlet/compare/v5.0.2...v5.0.3) (2023-12-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/utils to v5.0.1 ([7bf9073](https://github.com/podium-lib/podlet/commit/7bf9073b83ad8fda275902c986d573ea00521039))
+
 ## [5.0.2](https://github.com/podium-lib/podlet/compare/v5.0.1...v5.0.2) (2023-12-08)
 
 
