@@ -1,3 +1,10 @@
+## [5.0.4](https://github.com/podium-lib/podlet/compare/v5.0.3...v5.0.4) (2024-01-03)
+
+
+### Bug Fixes
+
+* mark proxy as optional ([#367](https://github.com/podium-lib/podlet/issues/367)) ([8374810](https://github.com/podium-lib/podlet/commit/8374810ff88aadb5ed8a24b84836e8a82e0e0685))
+
 ## [5.0.3](https://github.com/podium-lib/podlet/compare/v5.0.2...v5.0.3) (2023-12-11)
 
 
