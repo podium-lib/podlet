@@ -1303,6 +1303,24 @@ tap.test('.view() - append a custom wireframe document - should render developme
     await server.close();
 });
 
+tap.test('.view() - append a custom wireframe document - should render development output with custom wireframe document', async (t) => {
+    const options = { ...DEFAULT_OPTIONS, development: true };
+
+    const podlet = new Podlet(options);
+    podlet.view((incoming, data) => `<div data-foo="${incoming.params.foo}">${data}</div>`);
+
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.locals.params.foo = 'bar';
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    t.equal(result.response, '<div data-foo="bar"><h1>OK!</h1></div>');
+    await server.close();
+});
+
 // #############################################
 // .metrics()
 // #############################################
