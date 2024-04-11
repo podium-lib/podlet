@@ -1,11 +1,13 @@
 // @ts-nocheck
 
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-param-reassign */
 
 import { destinationObjectStream } from '@podium/test-utils';
 import { template, HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
+import stringify from 'json-stringify-safe';
 import { join, dirname } from 'path';
 import Metrics from '@metrics/client';
 import tap from 'tap';
@@ -120,7 +122,7 @@ class FakeExpressServer {
         this.app.use(
             onRequest ||
                 ((req, res) => {
-                    res.status(200).json(res.locals);
+                    res.status(200).send(stringify(res.locals));
                 }),
         );
         this.server = undefined;
@@ -1310,7 +1312,8 @@ tap.test('.view() - append a custom wireframe document - should render developme
     podlet.view((incoming, data) => `<div data-foo="${incoming.params.foo}">${data}</div>`);
 
     const server = new FakeExpressServer(podlet, (req, res) => {
-        res.locals.params.foo = 'bar';
+        res.locals.params = res.locals.params || {};
+        res.locals.foo = 'bar';
         res.podiumSend('<h1>OK!</h1>');
     });
 
