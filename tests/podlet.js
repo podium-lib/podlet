@@ -1312,7 +1312,6 @@ tap.test('.view() - append a custom wireframe document - should render developme
     podlet.view((incoming, data) => `<div data-foo="${incoming.params.foo}">${data}</div>`);
 
     const server = new FakeExpressServer(podlet, (req, res) => {
-        res.locals.params = res.locals.params || {};
         res.locals.foo = 'bar';
         res.podiumSend('<h1>OK!</h1>');
     });
