@@ -1,11 +1,13 @@
 // @ts-nocheck
 
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-param-reassign */
 
 import { destinationObjectStream } from '@podium/test-utils';
 import { template, HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
+import stringify from 'json-stringify-safe';
 import { join, dirname } from 'path';
 import Metrics from '@metrics/client';
 import tap from 'tap';
@@ -120,7 +122,7 @@ class FakeExpressServer {
         this.app.use(
             onRequest ||
                 ((req, res) => {
-                    res.status(200).json(res.locals);
+                    res.status(200).send(stringify(res.locals));
                 }),
         );
         this.server = undefined;
@@ -1300,6 +1302,24 @@ tap.test('.view() - append a custom wireframe document - should render developme
     const result = await server.get({ raw: true });
 
     t.equal(result.response, '<div><h1>OK!</h1></div>');
+    await server.close();
+});
+
+tap.test('.view() - append a custom wireframe document - should render development output with custom wireframe document', async (t) => {
+    const options = { ...DEFAULT_OPTIONS, development: true };
+
+    const podlet = new Podlet(options);
+    podlet.view((incoming, data) => `<div data-foo="${incoming.params.foo}">${data}</div>`);
+
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.locals.foo = 'bar';
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    t.equal(result.response, '<div data-foo="bar"><h1>OK!</h1></div>');
     await server.close();
 });
 
