@@ -1,3 +1,15 @@
+# [5.1.0](https://github.com/podium-lib/podlet/compare/v5.0.7...v5.1.0) (2024-04-14)
+
+
+### Bug Fixes
+
+* pass res.locals to HttpIncoming constructor ([f9b6336](https://github.com/podium-lib/podlet/commit/f9b63360921d2ca045ddd3379ece9d67edac63ef))
+
+
+### Features
+
+* pass a new res.locals.params object to http-incoming ([b9ef277](https://github.com/podium-lib/podlet/commit/b9ef2778e4e5b68d93c2bc8d3825a0d14b3a5d0a))
+
 ## [5.0.7](https://github.com/podium-lib/podlet/compare/v5.0.6...v5.0.7) (2024-04-08)
 
 
