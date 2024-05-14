@@ -42,7 +42,11 @@ const SIMPLE_RES = {
  */
 
 class FakeHttpServer {
-    constructor({ podlet, process } = {}, onRequest) {
+    /**
+     * @param {{ podlet: Podlet, process?: { proxy: boolean } }} options
+     * @param {(incoming: import('@podium/utils').HttpIncoming) => void} [onRequest]
+     */
+    constructor({ podlet, process }, onRequest) {
         this.app = http.createServer(async (req, res) => {
             const incoming = new HttpIncoming(req, res);
             const reslt = await podlet.process(incoming, process);
@@ -68,15 +72,17 @@ class FakeHttpServer {
     }
 
     close() {
-        return new Promise((resolve, reject) => {
-            this.server.close((err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
+        return /** @type {Promise<void>} */ (
+            new Promise((resolve, reject) => {
+                this.server.close((err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            })
+        );
     }
 
     get(options = {}) {
@@ -109,14 +115,20 @@ class FakeHttpServer {
 }
 
 class FakeExpressServer {
+    /**
+     * @param {Podlet} podlet
+     * @param {(incoming: import('@podium/utils').HttpIncoming) => void} [onRequest]
+     * @param {{ path: string; handler: import('express').Handler } | import('express').Handler} [onContentRoute]
+     * @param {import('express').Handler} [onFallbackRoute]
+     */
     constructor(podlet, onRequest, onContentRoute, onFallbackRoute) {
         this.app = express();
         this.app.use(podlet.middleware());
         if (onContentRoute) {
-            if (onContentRoute.path && onContentRoute.handler) {
-                this.app.get(onContentRoute.path, onContentRoute.handler);
-            } else {
+            if (typeof onContentRoute === 'function') {
                 this.app.get(podlet.content({ prefix: true }), onContentRoute);
+            } else {
+                this.app.get(onContentRoute.path, onContentRoute.handler);
             }
         }
         if (onFallbackRoute)
@@ -143,15 +155,17 @@ class FakeExpressServer {
     }
 
     close() {
-        return new Promise((resolve, reject) => {
-            this.server.close((err) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
-        });
+        return /** @type {Promise<void>} */ (
+            new Promise((resolve, reject) => {
+                this.server.close((err) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
+            })
+        );
     }
 
     get(options = {}) {
@@ -167,6 +181,7 @@ class FakeExpressServer {
                 res.on('end', () => {
                     resolve({
                         headers: res.headers,
+                        // @ts-ignore
                         response: opts.raw
                             ? chunks.join('')
                             : JSON.parse(chunks.join('')),
@@ -203,6 +218,7 @@ tap.test('Podlet() - object tag - should be PodiumPodlet', (t) => {
 
 tap.test('Podlet() - no value given to "name" argument - should throw', (t) => {
     t.throws(() => {
+        // @ts-expect-error Testing bad input
         const podlet = new Podlet({ version: 'v1.0.0', pathname: '/' }); // eslint-disable-line no-unused-vars
     }, 'The value, "", for the required argument "name" on the Podlet constructor is not defined or not valid.');
     t.end();
@@ -212,7 +228,6 @@ tap.test(
     'Podlet() - invalid value given to "name" argument - should throw',
     (t) => {
         t.throws(() => {
-            // Yeah; silly formatting, but only way to please ESLint
             const options = {
                 name: 'foo bar',
                 version: 'v1.0.0',
@@ -228,6 +243,7 @@ tap.test(
     'Podlet() - no value given to "version" argument - should throw',
     (t) => {
         t.throws(() => {
+            // @ts-expect-error Testing bad input
             const podlet = new Podlet({ name: 'foo', pathname: '/' }); // eslint-disable-line no-unused-vars
         }, 'The value, "", for the required argument "version" on the Podlet constructor is not defined or not valid.');
         t.end();
@@ -238,12 +254,12 @@ tap.test(
     'Podlet() - invalid value given to "version" argument - should throw',
     (t) => {
         t.throws(() => {
-            // Yeah; silly formatting, but only way to please ESLint
             const options = {
                 name: 'foo',
                 version: true,
                 pathname: '/',
             };
+            // @ts-expect-error Testing bad input
             const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
         }, 'The value, "true", for the required argument "version" on the Podlet constructor is not defined or not valid.');
         t.end();
@@ -254,6 +270,7 @@ tap.test(
     'Podlet() - no value given to "pathname" argument - should throw',
     (t) => {
         t.throws(() => {
+            // @ts-expect-error Testing bad input
             const podlet = new Podlet({ name: 'foo', version: 'v1.0.0' }); // eslint-disable-line no-unused-vars
         }, 'The value, "", for the required argument "pathname" on the Podlet constructor is not defined or not valid.');
         t.end();
@@ -264,7 +281,6 @@ tap.test(
     'Podlet() - invalid value given to "pathname" argument - should throw',
     (t) => {
         t.throws(() => {
-            // Yeah; silly formatting, but only way to please ESLint
             const options = {
                 name: 'foo',
                 version: 'v1.0.0',
@@ -280,7 +296,6 @@ tap.test(
     'Podlet() - invalid value given to "manifest" argument - should throw',
     (t) => {
         t.throws(() => {
-            // Yeah; silly formatting, but only way to please ESLint
             const options = { manifest: 'æ / ø', ...DEFAULT_OPTIONS };
             const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
         }, 'The value, "æ / ø", for the optional argument "manifest" on the Podlet constructor is not valid.');
@@ -292,7 +307,6 @@ tap.test(
     'Podlet() - invalid value given to "content" argument - should throw',
     (t) => {
         t.throws(() => {
-            // Yeah; silly formatting, but only way to please ESLint
             const options = { content: 'æ / ø', ...DEFAULT_OPTIONS };
             const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
         }, 'The value, "æ / ø", for the optional argument "content" on the Podlet constructor is not valid.');
@@ -304,7 +318,6 @@ tap.test(
     'Podlet() - invalid value given to "fallback" argument - should throw',
     (t) => {
         t.throws(() => {
-            // Yeah; silly formatting, but only way to please ESLint
             const options = { fallback: 'æ / ø', ...DEFAULT_OPTIONS };
             const podlet = new Podlet(options); // eslint-disable-line no-unused-vars
         }, 'The value, "æ / ø", for the optional argument "fallback" on the Podlet constructor is not valid.');
@@ -677,6 +690,7 @@ tap.test(
 tap.test('.css() - call method with no arguments - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
+        // @ts-expect-error Testing bad input
         podlet.css();
     }, 'Value for argument variable "value", "undefined", is not valid');
     t.end();
@@ -937,6 +951,7 @@ tap.test(
             {
                 value: '/foo/bar',
                 data: {
+                    // @ts-expect-error Testing older input
                     bar: 'a',
                     foo: 'b',
                 },
@@ -1435,6 +1450,7 @@ tap.test(
 tap.test('.proxy() - no arguments - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
+        // @ts-expect-error Testing bad input
         podlet.proxy();
     }, 'Value on argument variable "target", "null", is not valid');
     t.end();
@@ -1491,6 +1507,7 @@ tap.test(
 tap.test('.view() - set a non valid argument value - should throw', (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     t.throws(() => {
+        // @ts-expect-error Testing bad input
         podlet.view('test');
     }, 'Value on argument variable "template" must be a function');
     t.end();
