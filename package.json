@@ -26,13 +26,13 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "tap --disable-coverage --allow-empty-coverage",
+    "test": "tap --disable-coverage --allow-empty-coverage && tsc --project tsconfig.test.json",
     "types": "tsc --declaration --emitDeclarationOnly && ./fixup.sh"
   },
   "dependencies": {
     "@metrics/client": "2.5.2",
-    "@podium/proxy": "5.0.14",
-    "@podium/schemas": "5.0.1",
+    "@podium/proxy": "5.0.16",
+    "@podium/schemas": "5.0.2",
     "@podium/utils": "5.0.6",
     "abslog": "2.4.4",
     "ajv": "8.13.0",
@@ -48,6 +48,7 @@
     "@semantic-release/npm": "11.0.3",
     "@semantic-release/release-notes-generator": "12.1.0",
     "@types/node": "^20.10.3",
+    "@types/readable-stream": "4.0.14",
     "eslint": "8.57.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "9.1.0",
