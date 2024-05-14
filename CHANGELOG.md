@@ -1,3 +1,11 @@
+## [5.1.5](https://github.com/podium-lib/podlet/compare/v5.1.4...v5.1.5) (2024-05-14)
+
+
+### Bug Fixes
+
+* add docs to podiumSend method ([6f087f2](https://github.com/podium-lib/podlet/commit/6f087f2b9a815d02b844719706499e22912073b2))
+* update dependency typings ([bf4bc75](https://github.com/podium-lib/podlet/commit/bf4bc7550e5364f133b84e01e1a562aed35fed06))
+
 ## [5.1.4](https://github.com/podium-lib/podlet/compare/v5.1.3...v5.1.4) (2024-05-13)
 
 
