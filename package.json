@@ -57,7 +57,7 @@
     "express": "4.19.2",
     "json-stringify-safe": "5.0.1",
     "prettier": "3.2.5",
-    "semantic-release": "23.0.8",
+    "semantic-release": "23.1.1",
     "tap": "18.7.2",
     "typescript": "5.4.5"
   }
