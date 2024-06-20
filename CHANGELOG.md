@@ -1,3 +1,10 @@
+## [5.1.8](https://github.com/podium-lib/podlet/compare/v5.1.7...v5.1.8) (2024-06-20)
+
+
+### Bug Fixes
+
+* update @podium/proxy to address security issue ([12fc385](https://github.com/podium-lib/podlet/commit/12fc385714ca82735a5fa14bddd08bd491cd098a))
+
 ## [5.1.7](https://github.com/podium-lib/podlet/compare/v5.1.6...v5.1.7) (2024-06-10)
 
 
