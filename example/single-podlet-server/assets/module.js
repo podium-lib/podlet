@@ -16,7 +16,7 @@ const base = new URL(
 const localApiUri = new URL('localApi', base);
 
 fetch(localApiUri)
-    .then(response => response.json())
-    .then(obj => {
+    .then((response) => response.json())
+    .then((obj) => {
         element.innerHTML = `Proxied local REST API says: ${obj.say}`;
     });

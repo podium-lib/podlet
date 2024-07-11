@@ -1,9 +1,7 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 'use strict';
 
 const express = require('express');
-const Podlet = require("../..");
+const Podlet = require('../..');
 
 class Footer {
     constructor(pathname) {
@@ -16,7 +14,7 @@ class Footer {
             development: true,
         });
 
-        this.app = express.Router(); // eslint-disable-line new-cap
+        this.app = express.Router();
 
         this.app.use(podlet.middleware());
 

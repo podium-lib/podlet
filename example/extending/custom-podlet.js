@@ -1,6 +1,6 @@
 'use strict';
 
-const PodiumPodlet = require("../..");
+const PodiumPodlet = require('../..');
 
 const CustomPodlet = class CustomPodlet extends PodiumPodlet {
     constructor(...args) {
