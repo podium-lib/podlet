@@ -1,8 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable max-classes-per-file */
-/* eslint-disable no-param-reassign */
-
 import { destinationObjectStream } from '@podium/test-utils';
 import { template, HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
 import stringify from 'json-stringify-safe';
