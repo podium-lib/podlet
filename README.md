@@ -993,7 +993,7 @@ SOFTWARE.
 [@podium/proxy]: https://github.com/podium-lib/proxy '@podium/proxy'
 [express]: https://expressjs.com/ 'Express'
 [hapi podlet plugin]: https://github.com/podium-lib/hapi-podlet 'Hapi Podlet Plugin'
-[httpincoming]: https://github.com/podium-lib/utils/blob/master/lib/http-incoming.js 'HttpIncoming'
+[httpincoming]: https://github.com/podium-lib/utils/blob/main/lib/http-incoming.js 'HttpIncoming'
 [publicpathname]: https://github.com/podium-lib/context#public-pathname '`publicPathname`'
 [mountorigin]: https://github.com/podium-lib/context#mount-origin '`mountOrigin`'
 [abslog]: https://github.com/trygve-lie/abslog 'abslog'
