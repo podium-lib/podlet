@@ -1,7 +1,11 @@
-#!/usr/bin/env bash
+import fs from 'node:fs';
+import path from 'node:path';
 
-## Append the following to types/podlet.d.ts
-cat >> types/podlet.d.ts <<!EOF
+let module = path.join(process.cwd(), 'types', 'podlet.d.ts');
+
+fs.writeFileSync(
+    module,
+    /* ts */ `
 declare global {
   namespace Express {
     export interface Response {
@@ -21,4 +25,7 @@ declare global {
     }
   }
 }
-!EOF
+
+${fs.readFileSync(module, 'utf-8')}`,
+    'utf-8',
+);
