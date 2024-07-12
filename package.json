@@ -29,7 +29,9 @@
     "test": "run-s test:*",
     "test:unit": "tap --disable-coverage --allow-empty-coverage",
     "test:types": "tsc --project tsconfig.test.json",
-    "types": "tsc --declaration --emitDeclarationOnly && ./fixup.sh"
+    "types": "run-s types:tsc types:fixup",
+    "types:tsc": "tsc --declaration --emitDeclarationOnly",
+    "types:fixup": "node ./fixup.js"
   },
   "dependencies": {
     "@metrics/client": "2.5.2",

@@ -31,7 +31,6 @@ jobs:
         run: npm run lint
 
       - name: npm types
-        if: runner.os != 'Windows' # because of ./fixup.sh
         run: npm run types
 
       - name: npm test
