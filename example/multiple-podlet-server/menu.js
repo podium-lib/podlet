@@ -1,10 +1,8 @@
-'use strict';
+import express from 'express';
+import Podlet from '../../lib/podlet.js';
 
-const express = require('express');
-const Podlet = require('../..');
-
-class Menu {
-    constructor(pathname) {
+export default class Menu {
+    constructor(pathname = '/') {
         const podlet = new Podlet({
             pathname,
             fallback: '/fallback',
@@ -58,5 +56,3 @@ class Menu {
         return this.app;
     }
 }
-
-module.exports = Menu;

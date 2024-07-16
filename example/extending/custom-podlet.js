@@ -1,8 +1,6 @@
-'use strict';
+import PodiumPodlet from '../../lib/podlet.js';
 
-const PodiumPodlet = require('../..');
-
-const CustomPodlet = class CustomPodlet extends PodiumPodlet {
+export default class CustomPodlet extends PodiumPodlet {
     constructor(...args) {
         super(...args);
 
@@ -15,6 +13,4 @@ const CustomPodlet = class CustomPodlet extends PodiumPodlet {
     get [Symbol.toStringTag]() {
         return 'CustomPodlet';
     }
-};
-
-module.exports = CustomPodlet;
+}

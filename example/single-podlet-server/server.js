@@ -1,7 +1,5 @@
-'use strict';
-
-const express = require('express');
-const Podlet = require('../..');
+import express from 'express';
+import Podlet from '../../lib/podlet.js';
 
 const app = express();
 
@@ -52,5 +50,5 @@ podlet.css({ value: '/assets/module.css' });
 podlet.js({ value: '/assets/module.js' });
 
 app.listen(7100, () => {
-    console.log(`http://localhost:7100`);
+    console.log(`Podlet server running at http://localhost:7100/`);
 });

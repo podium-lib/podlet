@@ -1,10 +1,8 @@
-'use strict';
+import express from 'express';
+import Podlet from '../../lib/podlet.js';
 
-const express = require('express');
-const Podlet = require('../..');
-
-class Header {
-    constructor(pathname) {
+export default class Header {
+    constructor(pathname = '/') {
         const podlet = new Podlet({
             pathname,
             fallback: '/fallback',
@@ -38,5 +36,3 @@ class Header {
         return this.app;
     }
 }
-
-module.exports = Header;
