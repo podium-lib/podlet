@@ -1,3 +1,10 @@
+## [5.1.10](https://github.com/podium-lib/podlet/compare/v5.1.9...v5.1.10) (2024-07-17)
+
+
+### Bug Fixes
+
+* add podium context to locals type ([6827f8c](https://github.com/podium-lib/podlet/commit/6827f8ca545a08685cf702028faeb9ca6514b68a))
+
 ## [5.1.9](https://github.com/podium-lib/podlet/compare/v5.1.8...v5.1.9) (2024-07-15)
 
 
