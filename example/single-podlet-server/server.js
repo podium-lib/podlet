@@ -19,11 +19,16 @@ podlet.defaults({
 app.use(podlet.middleware());
 
 app.get(podlet.content(), (req, res) => {
-    if (res.locals.podium.context.locale === 'nb-NO') {
-        res.podiumSend('<h2>Hei verden</h2>');
-        return;
-    }
-    res.podiumSend('<h2>Hello world</h2>');
+    const { mountOrigin, publicPathname } = res.locals.podium.context;
+    res.podiumSend(/* html */ `
+        <div
+            id="content"
+            data-mount-origin="${mountOrigin}"
+            data-public-pathname="${publicPathname + '/'}"
+        >
+            <h2>${res.locals.podium.context.locale === 'nb-NO' ? 'Hei verden' : 'Hello world'}</h2>
+        </div>
+    `);
 });
 
 app.get(podlet.fallback(), (req, res) => {
