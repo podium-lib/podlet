@@ -6,8 +6,14 @@ let module = path.join(process.cwd(), 'types', 'podlet.d.ts');
 fs.writeFileSync(
     module,
     /* ts */ `
+import type { HttpIncoming } from "@podium/utils";
+
 declare global {
   namespace Express {
+    export interface Locals {
+      podium: HttpIncoming;
+    }
+
     export interface Response {
       /**
        * Calls the send / write method on the \`http.ServerResponse\` object.
