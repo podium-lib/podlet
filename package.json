@@ -52,7 +52,7 @@
     "@semantic-release/npm": "11.0.3",
     "@semantic-release/release-notes-generator": "12.1.0",
     "@types/node": "^20.10.3",
-    "@types/readable-stream": "4.0.14",
+    "@types/readable-stream": "4.0.15",
     "eslint": "9.6.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.3",
