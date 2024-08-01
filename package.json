@@ -63,6 +63,6 @@
     "prettier": "3.3.2",
     "semantic-release": "23.1.1",
     "tap": "18.8.0",
-    "typescript": "5.5.3"
+    "typescript": "5.5.4"
   }
 }
