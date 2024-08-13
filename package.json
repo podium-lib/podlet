@@ -30,6 +30,7 @@
     "types": "tsc --declaration --emitDeclarationOnly && ./fixup.sh"
   },
   "dependencies": {
+    "@hide-in-shadows/html": "^0.0.5",
     "@metrics/client": "2.5.2",
     "@podium/proxy": "5.0.5",
     "@podium/schemas": "5.0.0",
