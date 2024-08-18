@@ -26,6 +26,7 @@ const SIMPLE_REQ = {
 
 const SIMPLE_RES = {
     locals: {},
+    writeEarlyHints: () => {},
 };
 
 /**
@@ -410,6 +411,7 @@ tap.test('Podlet() - should collect metric with version info', (t) => {
         t.end();
     });
 
+    // @ts-expect-error
     podlet.metrics.pipe(dest);
 
     setImmediate(() => {
@@ -1627,6 +1629,7 @@ tap.test(
 
         const server = new FakeExpressServer(
             podlet,
+            // @ts-expect-error
             null,
             null,
             async (req, res) => {
@@ -1660,6 +1663,7 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
+        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1690,6 +1694,7 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
+        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1720,6 +1725,7 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
+        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1751,6 +1757,7 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
+        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1782,6 +1789,7 @@ tap.test('Asset scope filtering - fallback "/"', async (t) => {
 
     const server = new FakeExpressServer(
         podlet,
+        // @ts-expect-error
         null,
         null,
         async (req, res) => {
@@ -1817,6 +1825,7 @@ tap.test(
 
         const server = new FakeExpressServer(
             podlet,
+            // @ts-expect-error
             null,
             null,
             async (req, res) => {
@@ -1850,6 +1859,7 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
+        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, {
             path: '/:id',
             handler: async (req, res) => {
@@ -1883,6 +1893,7 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
+        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, {
             path: '/foo/:id',
             handler: async (req, res) => {
