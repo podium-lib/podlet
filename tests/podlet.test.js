@@ -1,8 +1,8 @@
-import { destinationObjectStream } from '@podium/test-utils';
+import Metrics from '@metrics/client';
 import { template, HttpIncoming, AssetJs, AssetCss } from '@podium/utils';
 import stringify from 'json-stringify-safe';
+import stream from 'readable-stream';
 import { join, dirname } from 'path';
-import Metrics from '@metrics/client';
 import tap from 'tap';
 import express from 'express';
 import http from 'http';
@@ -11,6 +11,35 @@ import fs from 'fs';
 import { request } from 'undici';
 
 import Podlet from '../lib/podlet.js';
+
+/**
+ * @template [T=import('@metrics/metric')]
+ * @param {(result: T[]) => void} done
+ * @returns
+ */
+const destinationObjectStream = (done) => {
+    /** @type {T[]} */
+    const arr = [];
+
+    const dStream = new stream.Writable({
+        objectMode: true,
+        /**
+         * @param {T} chunk
+         * @param {string} encoding
+         * @param {() => void} callback
+         */
+        write(chunk, encoding, callback) {
+            arr.push(chunk);
+            callback();
+        },
+    });
+
+    dStream.on('finish', () => {
+        done(arr);
+    });
+
+    return dStream;
+};
 
 const currentDirectory = dirname(url.fileURLToPath(import.meta.url));
 
