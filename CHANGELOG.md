@@ -1,3 +1,16 @@
+# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-08-19)
+
+
+### Bug Fixes
+
+* ensure both key/value and object conversion are supported for JS data attributes ([ccdfd1e](https://github.com/podium-lib/podlet/commit/ccdfd1e791c81b4c5aed045b47a316683911d929))
+* **types:** fix AssetJsLike type ([1c29350](https://github.com/podium-lib/podlet/commit/1c29350a9f0682df675b44cf4c5e88468ab24043))
+
+
+### Features
+
+* add res.assets for request bound, early hinted asset sending ([caca302](https://github.com/podium-lib/podlet/commit/caca302a2d80144e24d2078c3ae8f7a8f423b1dd))
+
 ## [5.1.12](https://github.com/podium-lib/podlet/compare/v5.1.11...v5.1.12) (2024-08-19)
 
 
