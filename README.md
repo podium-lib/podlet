@@ -551,6 +551,8 @@ Sets the pathname for a podlet's javascript assets.
 When a value is set it will be internally kept and used when the podlet
 instance is serialized into a manifest JSON string.
 
+In addition, JS information will be serialized into a Link header and sent as an HTTP 103 early hint with content and fallback responses so that the layout client can get access to assets before the main podlet body. The layout can use this information to generate 103 early hints for the browser so that the browser can begin downloading asset files while still waiting for the podlet and layout bodys.
+
 ### options
 
 | option | type      | default   | required |
@@ -646,6 +648,8 @@ Sets the options for a podlet's CSS assets.
 
 When a value is set it will be internally kept and used when the podlet
 instance is serialized into a manifest JSON string.
+
+In addition, CSS information will be serialized into a Link header and sent as an HTTP 103 early hint with content and fallback responses so that the layout client can get access to assets before the main podlet body. The layout can use this information to generate 103 early hints for the browser so that the browser can begin downloading asset files while still waiting for the podlet and layout bodys.
 
 ### options
 
