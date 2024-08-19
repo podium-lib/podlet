@@ -8,6 +8,7 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 import fs from 'fs';
+import { request } from 'undici';
 
 import Podlet from '../lib/podlet.js';
 
@@ -82,31 +83,27 @@ class FakeHttpServer {
     }
 
     get(options = {}) {
-        return new Promise((resolve, reject) => {
-            let opts = {};
-            if (options.pathname) {
-                opts = url.parse(`${this.address}${options.pathname}`);
-            } else {
-                opts = url.parse(this.address);
-            }
+        const hintCallbacks = [];
+        const url = new URL(`${this.address}${options.pathname}`);
+        return {
+            hints(cb) {
+                hintCallbacks.push(cb);
+            },
+            async result() {
+                const { statusCode, headers, body } = await request(url, {
+                    // Early hints
+                    onInfo: (info) => {
+                        if (info.statusCode === 103) {
+                            for (const cb of hintCallbacks) {
+                                cb(info.headers);
+                            }
+                        }
+                    },
+                });
 
-            http.get(opts, (res) => {
-                const chunks = [];
-                res.on('data', (chunk) => {
-                    chunks.push(chunk);
-                });
-                res.on('end', () => {
-                    resolve({
-                        headers: res.headers,
-                        response: options.raw
-                            ? chunks.join('')
-                            : JSON.parse(chunks.join('')),
-                    });
-                });
-            }).on('error', (error) => {
-                reject(error);
-            });
-        });
+                return { statusCode, headers, body };
+            },
+        };
     }
 }
 
@@ -411,7 +408,6 @@ tap.test('Podlet() - should collect metric with version info', (t) => {
         t.end();
     });
 
-    // @ts-expect-error
     podlet.metrics.pipe(dest);
 
     setImmediate(() => {
@@ -948,7 +944,6 @@ tap.test(
             {
                 value: '/foo/bar',
                 data: {
-                    // @ts-expect-error Testing older input
                     bar: 'a',
                     foo: 'b',
                 },
@@ -1016,7 +1011,8 @@ tap.test(
         });
 
         await server.listen();
-        await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+        const res = server.get({ pathname: '/podium-resource/foo/bar' });
+        await res.result();
         await server.close();
     },
 );
@@ -1046,7 +1042,8 @@ tap.test(
         });
 
         await server.listen();
-        await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+        const res = server.get({ pathname: '/podium-resource/foo/bar' });
+        await res.result();
         await server.close();
     },
 );
@@ -1629,7 +1626,6 @@ tap.test(
 
         const server = new FakeExpressServer(
             podlet,
-            // @ts-expect-error
             null,
             null,
             async (req, res) => {
@@ -1663,7 +1659,6 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
-        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1694,7 +1689,6 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
-        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1725,7 +1719,6 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
-        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1757,7 +1750,6 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
-        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, async (req, res) => {
             t.equal(res.locals.podium.js.length, 3);
             t.equal(res.locals.podium.js[0].scope, 'content');
@@ -1789,7 +1781,6 @@ tap.test('Asset scope filtering - fallback "/"', async (t) => {
 
     const server = new FakeExpressServer(
         podlet,
-        // @ts-expect-error
         null,
         null,
         async (req, res) => {
@@ -1825,7 +1816,6 @@ tap.test(
 
         const server = new FakeExpressServer(
             podlet,
-            // @ts-expect-error
             null,
             null,
             async (req, res) => {
@@ -1859,7 +1849,6 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
-        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, {
             path: '/:id',
             handler: async (req, res) => {
@@ -1893,7 +1882,6 @@ tap.test(
             new AssetJs({ value: '/foobar' }),
         ]);
 
-        // @ts-expect-error
         const server = new FakeExpressServer(podlet, null, {
             path: '/foo/:id',
             handler: async (req, res) => {
@@ -1907,5 +1895,104 @@ tap.test(
         await server.get({ path: '/foo/1234' });
         await server.close();
         t.end();
+    },
+);
+
+// #############################################
+// Asset sending using 103 Early hints
+// #############################################
+
+tap.test('assets - .js() - should send 103 Early hints', async (t) => {
+    t.plan(1);
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
+
+    podlet.js({
+        value: '/scripts.js',
+        type: 'module',
+        async: true,
+        data: { foo: 'bar' },
+    });
+
+    const server = new FakeHttpServer({ podlet }, (incoming) => {
+        incoming.response.statusCode = 200;
+        incoming.response.end('OK');
+    });
+
+    await server.listen();
+    const res = server.get({ pathname: '/' });
+    res.hints((info) => {
+        t.equal(
+            info.link,
+            '</scripts.js>; async=true; type=module; data-foo=bar',
+        );
+    });
+    await res.result();
+    await server.close();
+});
+
+tap.test('assets - .css() - should send 103 Early hints', async (t) => {
+    t.plan(1);
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
+
+    podlet.css({ value: '/styles.css' });
+
+    const server = new FakeHttpServer({ podlet }, (incoming) => {
+        incoming.response.statusCode = 200;
+        incoming.response.end('OK');
+    });
+
+    await server.listen();
+    const res = server.get({ pathname: '/' });
+    res.hints((info) => {
+        t.equal(info.link, '</styles.css>; type=text/css; rel=stylesheet');
+    });
+    await res.result();
+    await server.close();
+});
+
+tap.test(
+    'assets - .js() and .css() - should send 103 Early hints',
+    async (t) => {
+        t.plan(1);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
+        });
+
+        podlet.js({
+            value: '/scripts.js',
+            type: 'module',
+            async: true,
+            data: [{ key: 'foo', value: 'bar' }],
+        });
+        podlet.css({ value: '/styles.css' });
+
+        const server = new FakeHttpServer({ podlet }, (incoming) => {
+            incoming.response.statusCode = 200;
+            incoming.response.end('OK');
+        });
+
+        await server.listen();
+        const res = server.get({ pathname: '/' });
+        res.hints((info) => {
+            t.equal(
+                info.link,
+                '</scripts.js>; async=true; type=module; data-foo=bar, </styles.css>; type=text/css; rel=stylesheet',
+            );
+        });
+        await res.result();
+        await server.close();
     },
 );
