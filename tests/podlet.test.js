@@ -1935,30 +1935,74 @@ tap.test('assets - .js() - should send 103 Early hints', async (t) => {
     await server.close();
 });
 
-tap.test('assets - .css() - should send 103 Early hints', async (t) => {
-    t.plan(1);
-    const podlet = new Podlet({
-        name: 'foo',
-        version: 'v1.0.0',
-        pathname: '/',
-        development: true,
-    });
+tap.test(
+    'assets - .css() - should send 103 Early hints respecting scope',
+    async (t) => {
+        t.plan(1);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
+        });
 
-    podlet.css({ value: '/styles.css' });
+        podlet.css([
+            { value: '/styles1.css', scope: 'content' },
+            { value: '/styles2.css', scope: 'fallback' },
+        ]);
 
-    const server = new FakeHttpServer({ podlet }, (incoming) => {
-        incoming.response.statusCode = 200;
-        incoming.response.end('OK');
-    });
+        const server = new FakeHttpServer({ podlet }, (incoming) => {
+            incoming.response.statusCode = 200;
+            incoming.response.end('OK');
+        });
 
-    await server.listen();
-    const res = server.get({ pathname: '/' });
-    res.hints((info) => {
-        t.equal(info.link, '</styles.css>; type=text/css; rel=stylesheet');
-    });
-    await res.result();
-    await server.close();
-});
+        await server.listen();
+        const res = server.get({ pathname: '/' });
+        res.hints((info) => {
+            t.equal(
+                info.link,
+                '</styles1.css>; type=text/css; rel=stylesheet; scope=content',
+            );
+        });
+        await res.result();
+        await server.close();
+    },
+);
+
+tap.test(
+    'assets - .css() - should send 103 Early hints respecting scope - fallback',
+    async (t) => {
+        t.plan(1);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
+            fallback: '/fallback',
+        });
+
+        podlet.css([
+            { value: '/styles1.css', scope: 'content' },
+            { value: '/styles2.css', scope: 'fallback' },
+        ]);
+
+        const server = new FakeHttpServer({ podlet }, (incoming) => {
+            incoming.response.statusCode = 200;
+            incoming.response.end('OK');
+        });
+
+        await server.listen();
+        const res = server.get({ pathname: '/fallback' });
+        res.hints((info) => {
+            t.equal(
+                info.link,
+                '</styles2.css>; type=text/css; rel=stylesheet; scope=fallback',
+            );
+        });
+        await res.result();
+        await server.close();
+    },
+);
 
 tap.test(
     'assets - .js() and .css() - should send 103 Early hints',
@@ -1976,8 +2020,9 @@ tap.test(
             type: 'module',
             async: true,
             data: [{ key: 'foo', value: 'bar' }],
+            scope: 'content',
         });
-        podlet.css({ value: '/styles.css' });
+        podlet.css({ value: '/styles.css', scope: 'content' });
 
         const server = new FakeHttpServer({ podlet }, (incoming) => {
             incoming.response.statusCode = 200;
@@ -1989,7 +2034,7 @@ tap.test(
         res.hints((info) => {
             t.equal(
                 info.link,
-                '</scripts.js>; async=true; type=module; data-foo=bar, </styles.css>; type=text/css; rel=stylesheet',
+                '</scripts.js>; async=true; type=module; data-foo=bar; scope=content, </styles.css>; type=text/css; rel=stylesheet; scope=content',
             );
         });
         await res.result();
