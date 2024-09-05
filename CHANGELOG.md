@@ -5,6 +5,20 @@
 
 * ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
 * **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
+* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+
+
+### Features
+
+* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
+
+# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
+
+
+### Bug Fixes
+
+* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
+* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
 
 
 ### Features
