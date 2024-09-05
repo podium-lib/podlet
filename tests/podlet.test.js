@@ -1928,7 +1928,7 @@ tap.test('assets - .js() - should send 103 Early hints', async (t) => {
     res.hints((info) => {
         t.equal(
             info.link,
-            '</scripts.js>; async=true; type=module; data-foo=bar',
+            '</scripts.js>; async=true; type=module; data-foo=bar; asset-type=script',
         );
     });
     await res.result();
@@ -1961,7 +1961,7 @@ tap.test(
         res.hints((info) => {
             t.equal(
                 info.link,
-                '</styles1.css>; type=text/css; rel=stylesheet; scope=content',
+                '</styles1.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
             );
         });
         await res.result();
@@ -1996,7 +1996,7 @@ tap.test(
         res.hints((info) => {
             t.equal(
                 info.link,
-                '</styles2.css>; type=text/css; rel=stylesheet; scope=fallback',
+                '</styles2.css>; type=text/css; rel=stylesheet; scope=fallback; asset-type=style',
             );
         });
         await res.result();
@@ -2034,7 +2034,7 @@ tap.test(
         res.hints((info) => {
             t.equal(
                 info.link,
-                '</scripts.js>; async=true; type=module; data-foo=bar; scope=content, </styles.css>; type=text/css; rel=stylesheet; scope=content',
+                '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
             );
         });
         await res.result();
