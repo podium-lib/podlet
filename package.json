@@ -34,6 +34,7 @@
     "types:fixup": "node ./fixup.js"
   },
   "dependencies": {
+    "@hide-in-shadows/html": "0.0.5",
     "@metrics/client": "2.5.3",
     "@podium/proxy": "5.0.24",
     "@podium/schemas": "5.0.6",
