@@ -1,3 +1,14 @@
+# [5.2.0-next.2](https://github.com/podium-lib/podlet/compare/v5.2.0-next.1...v5.2.0-next.2) (2024-09-06)
+
+
+### Bug Fixes
+
+* force release 5.2.0-next.2 ([b2fc84c](https://github.com/podium-lib/podlet/commit/b2fc84cd6ced3716aa0964d76f55063db5c37fce))
+* force release 5.2.0-next.2 ([84223e8](https://github.com/podium-lib/podlet/commit/84223e823125544eb40cbd50b2558bcb78ba9ce6))
+* force release 5.2.0-next.2 ([4f5f19d](https://github.com/podium-lib/podlet/commit/4f5f19d9e486461b822dddf4bf278207927c63be))
+* force release 5.2.0-next.2 ([a5a1953](https://github.com/podium-lib/podlet/commit/a5a19536aab17130e79f14b2a8d7e7f58e61d0f0))
+* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+
 # [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
 
 
