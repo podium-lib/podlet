@@ -1,3 +1,10 @@
+# [5.2.0-next.3](https://github.com/podium-lib/podlet/compare/v5.2.0-next.2...v5.2.0-next.3) (2024-09-10)
+
+
+### Features
+
+* add DSD shadow DOM encapsulation support ([02c9a64](https://github.com/podium-lib/podlet/commit/02c9a64a6bb2f460c035416e43405ae380cb6d1c))
+
 # [5.2.0-next.2](https://github.com/podium-lib/podlet/compare/v5.2.0-next.1...v5.2.0-next.2) (2024-09-06)
 
 
