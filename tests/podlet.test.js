@@ -2041,3 +2041,87 @@ tap.test(
         await server.close();
     },
 );
+
+// #############################################
+// Wrap content using shadow DOM
+// #############################################
+
+tap.test(
+    'useShadowDOM - use of useShadowDOM flag - should render content inside shadow DOM',
+    async (t) => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            name: 'my-podlet',
+            useShadowDOM: true,
+        };
+
+        const podlet = new Podlet(options);
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+
+        t.match(
+            result.response.replaceAll(/\s+/g, ''),
+            /<my-podlet><templateshadowrootmode="open"><h1>OK!<\/h1><\/template><\/my-podlet>/,
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'useShadowDOM - css assets with shadow-dom scope - should render link tags inside shadow DOM',
+    async (t) => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            name: 'my-podlet',
+            useShadowDOM: true,
+        };
+
+        const podlet = new Podlet(options);
+        podlet.css({ value: '/foo', scope: 'shadow-dom' });
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+
+        t.match(
+            result.response.replaceAll(/\s+/g, ''),
+            /<my-podlet><templateshadowrootmode="open"><linkhref="\/foo"type="text\/css"rel="stylesheet"><h1>OK!<\/h1><\/template><\/my-podlet>/,
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'useShadowDOM - css assets with all scope - should not render link tags inside shadow DOM',
+    async (t) => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            name: 'my-podlet',
+            useShadowDOM: true,
+        };
+
+        const podlet = new Podlet(options);
+        podlet.css({ value: '/foo', scope: 'all' });
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+
+        t.match(
+            result.response.replaceAll(/\s+/g, ''),
+            /<my-podlet><templateshadowrootmode="open"><h1>OK!<\/h1><\/template><\/my-podlet>/,
+        );
+        await server.close();
+    },
+);

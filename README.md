@@ -79,16 +79,17 @@ const podlet = new Podlet(options);
 
 ### options
 
-| option      | type      | default          | required |
-| ----------- | --------- | ---------------- | -------- |
-| name        | `string`  |                  | &check;  |
-| version     | `string`  |                  | &check;  |
-| pathname    | `string`  |                  | &check;  |
-| manifest    | `string`  | `/manifest.json` |          |
-| content     | `string`  | `/`              |          |
-| fallback    | `string`  |                  |          |
-| logger      | `object`  |                  |          |
-| development | `boolean` | `false`          |          |
+| option       | type      | default          | required |
+| ------------ | --------- | ---------------- | -------- |
+| name         | `string`  |                  | &check;  |
+| version      | `string`  |                  | &check;  |
+| pathname     | `string`  |                  | &check;  |
+| manifest     | `string`  | `/manifest.json` |          |
+| content      | `string`  | `/`              |          |
+| fallback     | `string`  |                  |          |
+| logger       | `object`  |                  |          |
+| development  | `boolean` | `false`          |          |
+| useShadowDOM | `boolean` | `false`          |          |
 
 #### name
 
@@ -256,6 +257,52 @@ further details.
 #### development
 
 Turns development mode on or off. See the section about development mode.
+
+#### useShadowDOM
+
+Turns declarative shadow DOM encapsulation on for the podlet. When enabled, the podlet content will be wrapped inside a declarative shadow DOM wrapper to isolate it from the rest of whichever
+page it is being included on.
+
+```js
+const podlet = new Podlet({ ..., useShadowDOM: true });
+```
+
+Please note the following caveats when using this feature:
+1. You must name your podlet following custom element naming conventions as explained here: https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define#valid_custom_element_names
+2. In order to style your content, you will need to include your CSS inside the shadow DOM wrapper. You can do this using one of the following 2 options:
+
+You can include a `<style>` tag before your content
+
+```js
+res.podiumSend(`
+	<style>
+		...styles here...
+	</style>
+	<div>...content here...</div>
+`);
+```
+
+You can have your podlet CSS included for you by using the "shadow-dom" scope
+
+```js
+podlet.css({ value: '/path/to/css', scope: 'shadow-dom' });
+res.podiumSend(`
+	<div>...content here...</div>
+`);
+```
+
+For more fine grained control, you can use the `podlet.wrapWithShadowDOM` method directly
+
+```js
+const podlet = new Podlet({ ..., useShadowDOM: false });
+```
+
+```js
+const wrapped = podlet.wrapWithShadowDOM(`<div>...content here...</div>`);
+res.podiumSend(`
+	${wrapped}
+`);
+```
 
 ## Podlet Instance
 
