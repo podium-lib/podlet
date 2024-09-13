@@ -44,7 +44,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.25.1",
-    "@podium/test-utils": "2.5.2",
+    "@podium/test-utils": "3.0.8",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "11.1.0",
     "@semantic-release/git": "10.0.1",
