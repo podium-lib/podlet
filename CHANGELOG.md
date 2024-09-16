@@ -1,3 +1,10 @@
+## [5.1.15](https://github.com/podium-lib/podlet/compare/v5.1.14...v5.1.15) (2024-09-16)
+
+
+### Bug Fixes
+
+* correct the JSDoc for fallback ([#423](https://github.com/podium-lib/podlet/issues/423)) ([7444897](https://github.com/podium-lib/podlet/commit/7444897b7cf45a9e2b9c310ce309f69f80fa91d1))
+
 ## [5.1.14](https://github.com/podium-lib/podlet/compare/v5.1.13...v5.1.14) (2024-09-16)
 
 
