@@ -56,7 +56,7 @@
     "eslint": "9.9.1",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
-    "express": "4.19.2",
+    "express": "4.20.0",
     "globals": "15.9.0",
     "json-stringify-safe": "5.0.1",
     "npm-run-all2": "6.2.3",
