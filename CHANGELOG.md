@@ -1,3 +1,10 @@
+# [5.2.0-next.4](https://github.com/podium-lib/podlet/compare/v5.2.0-next.3...v5.2.0-next.4) (2024-09-22)
+
+
+### Bug Fixes
+
+* tag asset type when sending hint headers ([56c8614](https://github.com/podium-lib/podlet/commit/56c86144207956c63c7ce1d1103efe4f8ff7d7bf))
+
 # [5.2.0-next.3](https://github.com/podium-lib/podlet/compare/v5.2.0-next.2...v5.2.0-next.3) (2024-09-10)
 
 
