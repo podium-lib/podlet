@@ -1,5 +1,3 @@
-import type { HttpIncoming } from '@podium/utils';
-
 declare global {
     namespace Express {
         export interface PodiumHttpIncomingParameters {
