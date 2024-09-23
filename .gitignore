@@ -13,5 +13,6 @@ tmp/**/*
 .idea/**/*
 coverage
 dist/
-types
+*.d.ts
+!fixup.d.ts
 .tap
