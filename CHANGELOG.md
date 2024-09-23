@@ -1,3 +1,10 @@
+## [5.1.17](https://github.com/podium-lib/podlet/compare/v5.1.16...v5.1.17) (2024-09-23)
+
+
+### Bug Fixes
+
+* type the known context values in an extendable way ([#427](https://github.com/podium-lib/podlet/issues/427)) ([f90ef57](https://github.com/podium-lib/podlet/commit/f90ef577cf6f0fdeabb08edb121a8a0107e77c4d))
+
 ## [5.1.16](https://github.com/podium-lib/podlet/compare/v5.1.15...v5.1.16) (2024-09-23)
 
 
