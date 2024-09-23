@@ -14,5 +14,5 @@ tmp/**/*
 coverage
 dist/
 *.d.ts
-!fixup.d.ts
+!podium.d.ts
 .tap
