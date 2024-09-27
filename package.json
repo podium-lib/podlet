@@ -43,7 +43,7 @@
     "objobj": "1.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.25.1",
+    "@podium/eslint-config": "1.0.0",
     "@podium/test-utils": "3.0.8",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "11.1.0",
@@ -54,10 +54,7 @@
     "@types/node": "^20.10.3",
     "@types/readable-stream": "4.0.15",
     "eslint": "9.9.1",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-plugin-prettier": "5.2.1",
     "express": "4.20.0",
-    "globals": "15.9.0",
     "json-stringify-safe": "5.0.1",
     "npm-run-all2": "6.2.3",
     "prettier": "3.3.3",
