@@ -26,11 +26,10 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "test": "run-s test:*",
-    "test:unit": "tap --disable-coverage --allow-empty-coverage",
-    "test:types": "tsc --project tsconfig.test.json",
-    "types": "run-s types:tsc types:fixup",
+    "test": "tap --disable-coverage --allow-empty-coverage",
+    "types": "run-s types:tsc types:fixup types:test",
     "types:tsc": "tsc --declaration --emitDeclarationOnly",
+    "types:test": "tsc --project tsconfig.test.json",
     "types:fixup": "node ./fixup.js"
   },
   "dependencies": {
@@ -45,13 +44,10 @@
   "devDependencies": {
     "@podium/eslint-config": "1.0.0",
     "@podium/test-utils": "3.0.8",
+    "@podium/typescript-config": "1.0.0",
     "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/commit-analyzer": "11.1.0",
     "@semantic-release/git": "10.0.1",
-    "@semantic-release/github": "9.2.6",
-    "@semantic-release/npm": "11.0.3",
-    "@semantic-release/release-notes-generator": "12.1.0",
-    "@types/node": "^20.10.3",
+    "@types/node": "20.10.3",
     "@types/readable-stream": "4.0.15",
     "eslint": "9.9.1",
     "express": "4.20.0",
