@@ -1,3 +1,10 @@
+# [5.2.0-next.5](https://github.com/podium-lib/podlet/compare/v5.2.0-next.4...v5.2.0-next.5) (2024-09-29)
+
+
+### Bug Fixes
+
+* sharpen up shadow dom usage assertion ([a47c8bc](https://github.com/podium-lib/podlet/commit/a47c8bc7bb33bc6c685d882a7f922cd39914a874))
+
 # [5.2.0-next.4](https://github.com/podium-lib/podlet/compare/v5.2.0-next.3...v5.2.0-next.4) (2024-09-22)
 
 
