@@ -93,7 +93,9 @@ const podlet = new Podlet(options);
 
 #### name
 
-The name the podlet identifies itself by. This value must be in camelCase.
+The name the podlet identifies itself by. This value can contain upper and lower case letters, numbers, the - character and the \_ character. No spaces.
+When shadow DOM is used, either via the `useShadowDOM` constructor option or via the `wrapWithShadowDOM` method, the name must comply with custom element naming rules.
+See [MDN](https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define#valid_custom_element_names) for more information.
 
 _Example:_
 
@@ -268,6 +270,7 @@ const podlet = new Podlet({ ..., useShadowDOM: true });
 ```
 
 Please note the following caveats when using this feature:
+
 1. You must name your podlet following custom element naming conventions as explained here: https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define#valid_custom_element_names
 2. In order to style your content, you will need to include your CSS inside the shadow DOM wrapper. You can do this using one of the following 2 options:
 
