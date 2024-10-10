@@ -2019,7 +2019,7 @@ tap.test(
 tap.test(
     'assets - .js() and .css() - Link headers - should be sent before body',
     async (t) => {
-        t.plan(3);
+        t.plan(4);
         const podlet = new Podlet({
             name: 'foo',
             version: 'v1.0.0',
@@ -2046,6 +2046,7 @@ tap.test(
         });
 
         await server.listen();
+        let start = 0;
         const result = await server.get({
             raw: true,
             onHeaders(headers) {
@@ -2054,11 +2055,14 @@ tap.test(
                     '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
                 );
                 orderArray.push('assets');
+                start = Date.now();
             },
         });
+        const timeTaken = Date.now() - start;
         orderArray.push('body');
         t.match(result.response, /<h1>OK!<\/h1>/);
         t.same(orderArray, ['assets', 'body']);
+        t.ok(timeTaken > 900);
         await server.close();
     },
 );
