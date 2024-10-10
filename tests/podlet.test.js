@@ -83,24 +83,10 @@ class FakeHttpServer {
     }
 
     get(options = {}) {
-        const hintCallbacks = [];
         const url = new URL(`${this.address}${options.pathname}`);
         return {
-            hints(cb) {
-                hintCallbacks.push(cb);
-            },
             async result() {
-                const { statusCode, headers, body } = await request(url, {
-                    // Early hints
-                    onInfo: (info) => {
-                        if (info.statusCode === 103) {
-                            for (const cb of hintCallbacks) {
-                                cb(info.headers);
-                            }
-                        }
-                    },
-                });
-
+                const { statusCode, headers, body } = await request(url);
                 return { statusCode, headers, body };
             },
         };
@@ -168,6 +154,7 @@ class FakeExpressServer {
 
             http.get(opts, (res) => {
                 const chunks = [];
+                options?.onHeaders && options.onHeaders(res.headers);
                 res.on('data', (chunk) => {
                     chunks.push(chunk);
                 });
@@ -1899,10 +1886,10 @@ tap.test(
 );
 
 // #############################################
-// Asset sending using 103 Early hints
+// Asset sending using Link header
 // #############################################
 
-tap.test('assets - .js() - should send 103 Early hints', async (t) => {
+tap.test('assets - .js() - should send Link header', async (t) => {
     t.plan(1);
     const podlet = new Podlet({
         name: 'foo',
@@ -1918,59 +1905,49 @@ tap.test('assets - .js() - should send 103 Early hints', async (t) => {
         data: { foo: 'bar' },
     });
 
-    const server = new FakeHttpServer({ podlet }, (incoming) => {
-        incoming.response.statusCode = 200;
-        incoming.response.end('OK');
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
     });
 
     await server.listen();
-    const res = server.get({ pathname: '/' });
-    res.hints((info) => {
-        t.equal(
-            info.link,
-            '</scripts.js>; async=true; type=module; data-foo=bar; asset-type=script',
-        );
+    const result = await server.get({ raw: true });
+
+    t.equal(
+        result.headers.link,
+        '</scripts.js>; async=true; type=module; data-foo=bar; asset-type=script',
+    );
+    await server.close();
+});
+
+tap.test('assets - .css() - should send assets respecting scope', async (t) => {
+    t.plan(1);
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
     });
-    await res.result();
+
+    podlet.css([
+        { value: '/styles1.css', scope: 'content' },
+        { value: '/styles2.css', scope: 'fallback' },
+    ]);
+
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+    t.equal(
+        result.headers.link,
+        '</styles1.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+    );
     await server.close();
 });
 
 tap.test(
-    'assets - .css() - should send 103 Early hints respecting scope',
-    async (t) => {
-        t.plan(1);
-        const podlet = new Podlet({
-            name: 'foo',
-            version: 'v1.0.0',
-            pathname: '/',
-            development: true,
-        });
-
-        podlet.css([
-            { value: '/styles1.css', scope: 'content' },
-            { value: '/styles2.css', scope: 'fallback' },
-        ]);
-
-        const server = new FakeHttpServer({ podlet }, (incoming) => {
-            incoming.response.statusCode = 200;
-            incoming.response.end('OK');
-        });
-
-        await server.listen();
-        const res = server.get({ pathname: '/' });
-        res.hints((info) => {
-            t.equal(
-                info.link,
-                '</styles1.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
-            );
-        });
-        await res.result();
-        await server.close();
-    },
-);
-
-tap.test(
-    'assets - .css() - should send 103 Early hints respecting scope - fallback',
+    'assets - .css() - should send assets using Link header respecting scope - fallback',
     async (t) => {
         t.plan(1);
         const podlet = new Podlet({
@@ -1986,26 +1963,27 @@ tap.test(
             { value: '/styles2.css', scope: 'fallback' },
         ]);
 
-        const server = new FakeHttpServer({ podlet }, (incoming) => {
-            incoming.response.statusCode = 200;
-            incoming.response.end('OK');
-        });
+        const server = new FakeExpressServer(
+            podlet,
+            undefined,
+            undefined,
+            (req, res) => {
+                res.podiumSend('<h1>OK!</h1>');
+            },
+        );
 
         await server.listen();
-        const res = server.get({ pathname: '/fallback' });
-        res.hints((info) => {
-            t.equal(
-                info.link,
-                '</styles2.css>; type=text/css; rel=stylesheet; scope=fallback; asset-type=style',
-            );
-        });
-        await res.result();
+        const result = await server.get({ path: '/fallback', raw: true });
+        t.equal(
+            result.headers.link,
+            '</styles2.css>; type=text/css; rel=stylesheet; scope=fallback; asset-type=style',
+        );
         await server.close();
     },
 );
 
 tap.test(
-    'assets - .js() and .css() - should send 103 Early hints',
+    'assets - .js() and .css() - should send assets using Link header',
     async (t) => {
         t.plan(1);
         const podlet = new Podlet({
@@ -2024,20 +2002,63 @@ tap.test(
         });
         podlet.css({ value: '/styles.css', scope: 'content' });
 
-        const server = new FakeHttpServer({ podlet }, (incoming) => {
-            incoming.response.statusCode = 200;
-            incoming.response.end('OK');
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
         });
 
         await server.listen();
-        const res = server.get({ pathname: '/' });
-        res.hints((info) => {
-            t.equal(
-                info.link,
-                '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
-            );
+        const result = await server.get({ raw: true });
+        t.equal(
+            result.headers.link,
+            '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'assets - .js() and .css() - Link headers - should be sent before body',
+    async (t) => {
+        t.plan(3);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
         });
-        await res.result();
+
+        podlet.js({
+            value: '/scripts.js',
+            type: 'module',
+            async: true,
+            data: [{ key: 'foo', value: 'bar' }],
+            scope: 'content',
+        });
+        podlet.css({ value: '/styles.css', scope: 'content' });
+
+        const orderArray = [];
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.sendHeaders();
+            setTimeout(() => {
+                res.podiumSend('<h1>OK!</h1>');
+            }, 1000);
+        });
+
+        await server.listen();
+        const result = await server.get({
+            raw: true,
+            onHeaders(headers) {
+                t.equal(
+                    headers.link,
+                    '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+                );
+                orderArray.push('assets');
+            },
+        });
+        orderArray.push('body');
+        t.match(result.response, /<h1>OK!<\/h1>/);
+        t.same(orderArray, ['assets', 'body']);
         await server.close();
     },
 );
