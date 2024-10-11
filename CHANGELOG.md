@@ -1,3 +1,10 @@
+# [5.2.0-next.6](https://github.com/podium-lib/podlet/compare/v5.2.0-next.5...v5.2.0-next.6) (2024-10-11)
+
+
+### Features
+
+* replace early hints with link header ([815ea97](https://github.com/podium-lib/podlet/commit/815ea97df599676a6a1dd56dd6aeef4f91b27c95))
+
 # [5.2.0-next.5](https://github.com/podium-lib/podlet/compare/v5.2.0-next.4...v5.2.0-next.5) (2024-09-29)
 
 
