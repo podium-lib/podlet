@@ -1,3 +1,10 @@
+## [5.1.18](https://github.com/podium-lib/podlet/compare/v5.1.17...v5.1.18) (2024-10-11)
+
+
+### Bug Fixes
+
+* include some app info as a default metric ([5c9fdcb](https://github.com/podium-lib/podlet/commit/5c9fdcb269f9b1867f8df127fcd412f150d3ca95))
+
 ## [5.1.17](https://github.com/podium-lib/podlet/compare/v5.1.16...v5.1.17) (2024-09-23)
 
 
