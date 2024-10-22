@@ -1,3 +1,15 @@
+# [5.2.0-next.7](https://github.com/podium-lib/podlet/compare/v5.2.0-next.6...v5.2.0-next.7) (2024-10-22)
+
+
+### Bug Fixes
+
+* correct the JSDoc for fallback ([#423](https://github.com/podium-lib/podlet/issues/423)) ([7444897](https://github.com/podium-lib/podlet/commit/7444897b7cf45a9e2b9c310ce309f69f80fa91d1))
+* **deps:** update all dependencies (non-major) ([b8eddfd](https://github.com/podium-lib/podlet/commit/b8eddfd676810607adc56cdc71d2622e73b25e0e))
+* **deps:** update all dependencies (non-major) ([81119fe](https://github.com/podium-lib/podlet/commit/81119feda716c226777751564ac9153c7c393096))
+* **deps:** update dependency @podium/proxy to v5.0.26 ([59699f0](https://github.com/podium-lib/podlet/commit/59699f029ee32ff4997c7e971bb543ee6a971251))
+* include some app info as a default metric ([5c9fdcb](https://github.com/podium-lib/podlet/commit/5c9fdcb269f9b1867f8df127fcd412f150d3ca95))
+* type the known context values in an extendable way ([#427](https://github.com/podium-lib/podlet/issues/427)) ([f90ef57](https://github.com/podium-lib/podlet/commit/f90ef577cf6f0fdeabb08edb121a8a0107e77c4d))
+
 ## [5.1.18](https://github.com/podium-lib/podlet/compare/v5.1.17...v5.1.18) (2024-10-11)
 
 
