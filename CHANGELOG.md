@@ -1,156 +1,44 @@
-# [5.2.0-next.6](https://github.com/podium-lib/podlet/compare/v5.2.0-next.5...v5.2.0-next.6) (2024-10-11)
-
-
-### Features
-
-* replace early hints with link header ([815ea97](https://github.com/podium-lib/podlet/commit/815ea97df599676a6a1dd56dd6aeef4f91b27c95))
-
-# [5.2.0-next.5](https://github.com/podium-lib/podlet/compare/v5.2.0-next.4...v5.2.0-next.5) (2024-09-29)
+## [5.1.18](https://github.com/podium-lib/podlet/compare/v5.1.17...v5.1.18) (2024-10-11)
 
 
 ### Bug Fixes
 
-* sharpen up shadow dom usage assertion ([a47c8bc](https://github.com/podium-lib/podlet/commit/a47c8bc7bb33bc6c685d882a7f922cd39914a874))
+* include some app info as a default metric ([5c9fdcb](https://github.com/podium-lib/podlet/commit/5c9fdcb269f9b1867f8df127fcd412f150d3ca95))
 
-# [5.2.0-next.4](https://github.com/podium-lib/podlet/compare/v5.2.0-next.3...v5.2.0-next.4) (2024-09-22)
-
-
-### Bug Fixes
-
-* tag asset type when sending hint headers ([56c8614](https://github.com/podium-lib/podlet/commit/56c86144207956c63c7ce1d1103efe4f8ff7d7bf))
-
-# [5.2.0-next.3](https://github.com/podium-lib/podlet/compare/v5.2.0-next.2...v5.2.0-next.3) (2024-09-10)
-
-
-### Features
-
-* add DSD shadow DOM encapsulation support ([02c9a64](https://github.com/podium-lib/podlet/commit/02c9a64a6bb2f460c035416e43405ae380cb6d1c))
-
-# [5.2.0-next.2](https://github.com/podium-lib/podlet/compare/v5.2.0-next.1...v5.2.0-next.2) (2024-09-06)
+## [5.1.17](https://github.com/podium-lib/podlet/compare/v5.1.16...v5.1.17) (2024-09-23)
 
 
 ### Bug Fixes
 
-* force release 5.2.0-next.2 ([b2fc84c](https://github.com/podium-lib/podlet/commit/b2fc84cd6ced3716aa0964d76f55063db5c37fce))
-* force release 5.2.0-next.2 ([84223e8](https://github.com/podium-lib/podlet/commit/84223e823125544eb40cbd50b2558bcb78ba9ce6))
-* force release 5.2.0-next.2 ([4f5f19d](https://github.com/podium-lib/podlet/commit/4f5f19d9e486461b822dddf4bf278207927c63be))
-* force release 5.2.0-next.2 ([a5a1953](https://github.com/podium-lib/podlet/commit/a5a19536aab17130e79f14b2a8d7e7f58e61d0f0))
-* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+* type the known context values in an extendable way ([#427](https://github.com/podium-lib/podlet/issues/427)) ([f90ef57](https://github.com/podium-lib/podlet/commit/f90ef577cf6f0fdeabb08edb121a8a0107e77c4d))
 
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
+## [5.1.16](https://github.com/podium-lib/podlet/compare/v5.1.15...v5.1.16) (2024-09-23)
 
 
 ### Bug Fixes
 
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* force release 5.2.0-next.2 ([84223e8](https://github.com/podium-lib/podlet/commit/84223e823125544eb40cbd50b2558bcb78ba9ce6))
-* force release 5.2.0-next.2 ([4f5f19d](https://github.com/podium-lib/podlet/commit/4f5f19d9e486461b822dddf4bf278207927c63be))
-* force release 5.2.0-next.2 ([a5a1953](https://github.com/podium-lib/podlet/commit/a5a19536aab17130e79f14b2a8d7e7f58e61d0f0))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+* **deps:** update all dependencies (non-major) ([b8eddfd](https://github.com/podium-lib/podlet/commit/b8eddfd676810607adc56cdc71d2622e73b25e0e))
 
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
+## [5.1.15](https://github.com/podium-lib/podlet/compare/v5.1.14...v5.1.15) (2024-09-16)
 
 
 ### Bug Fixes
 
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* force release 5.2.0-next.2 ([4f5f19d](https://github.com/podium-lib/podlet/commit/4f5f19d9e486461b822dddf4bf278207927c63be))
-* force release 5.2.0-next.2 ([a5a1953](https://github.com/podium-lib/podlet/commit/a5a19536aab17130e79f14b2a8d7e7f58e61d0f0))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+* correct the JSDoc for fallback ([#423](https://github.com/podium-lib/podlet/issues/423)) ([7444897](https://github.com/podium-lib/podlet/commit/7444897b7cf45a9e2b9c310ce309f69f80fa91d1))
 
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
+## [5.1.14](https://github.com/podium-lib/podlet/compare/v5.1.13...v5.1.14) (2024-09-16)
 
 
 ### Bug Fixes
 
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* force release 5.2.0-next.2 ([a5a1953](https://github.com/podium-lib/podlet/commit/a5a19536aab17130e79f14b2a8d7e7f58e61d0f0))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+* **deps:** update dependency @podium/proxy to v5.0.26 ([59699f0](https://github.com/podium-lib/podlet/commit/59699f029ee32ff4997c7e971bb543ee6a971251))
 
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
+## [5.1.13](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.1.13) (2024-09-09)
 
 
 ### Bug Fixes
 
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
-
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
-
-
-### Bug Fixes
-
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
-
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-05)
-
-
-### Bug Fixes
-
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-09-03)
-
-
-### Bug Fixes
-
-* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
-* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
-
-
-### Features
-
-* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
-
-# [5.2.0-next.1](https://github.com/podium-lib/podlet/compare/v5.1.12...v5.2.0-next.1) (2024-08-19)
-
-
-### Bug Fixes
-
-* ensure both key/value and object conversion are supported for JS data attributes ([ccdfd1e](https://github.com/podium-lib/podlet/commit/ccdfd1e791c81b4c5aed045b47a316683911d929))
-* **types:** fix AssetJsLike type ([1c29350](https://github.com/podium-lib/podlet/commit/1c29350a9f0682df675b44cf4c5e88468ab24043))
-
-
-### Features
-
-* add res.assets for request bound, early hinted asset sending ([caca302](https://github.com/podium-lib/podlet/commit/caca302a2d80144e24d2078c3ae8f7a8f423b1dd))
+* **deps:** update all dependencies (non-major) ([81119fe](https://github.com/podium-lib/podlet/commit/81119feda716c226777751564ac9153c7c393096))
 
 ## [5.1.12](https://github.com/podium-lib/podlet/compare/v5.1.11...v5.1.12) (2024-08-19)
 
