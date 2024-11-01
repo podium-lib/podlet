@@ -51,7 +51,7 @@
     "eslint": "9.11.1",
     "express": "4.20.0",
     "json-stringify-safe": "5.0.1",
-    "npm-run-all2": "6.2.3",
+    "npm-run-all2": "6.2.6",
     "prettier": "3.3.3",
     "semantic-release": "24.1.2",
     "tap": "18.8.0",
