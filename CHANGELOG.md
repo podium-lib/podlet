@@ -1,3 +1,10 @@
+# [5.2.0-next.8](https://github.com/podium-lib/podlet/compare/v5.2.0-next.7...v5.2.0-next.8) (2024-11-04)
+
+
+### Bug Fixes
+
+* use more appropriate strategy instead of scope ([0674a81](https://github.com/podium-lib/podlet/commit/0674a812abe9c246f4c007e1869723dc7c0293a0))
+
 # [5.2.0-next.7](https://github.com/podium-lib/podlet/compare/v5.2.0-next.6...v5.2.0-next.7) (2024-10-22)
 
 
