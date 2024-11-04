@@ -1,3 +1,10 @@
+# [5.2.0-next.9](https://github.com/podium-lib/podlet/compare/v5.2.0-next.8...v5.2.0-next.9) (2024-11-04)
+
+
+### Bug Fixes
+
+* update @podium/schemas to 5.1.0 ([412f03b](https://github.com/podium-lib/podlet/commit/412f03b1dc8dfdc7e89be99825e7966127c9d990))
+
 # [5.2.0-next.8](https://github.com/podium-lib/podlet/compare/v5.2.0-next.7...v5.2.0-next.8) (2024-11-04)
 
 
