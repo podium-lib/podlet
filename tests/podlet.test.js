@@ -2125,7 +2125,7 @@ tap.test(
 );
 
 tap.test(
-    'useShadowDOM - css assets with all strategy - should not render link tags inside shadow DOM',
+    'useShadowDOM - css assets with no strategy - should not render link tags inside shadow DOM',
     async (t) => {
         const options = {
             ...DEFAULT_OPTIONS,
@@ -2134,7 +2134,7 @@ tap.test(
         };
 
         const podlet = new Podlet(options);
-        podlet.css({ value: '/foo', strategy: 'all' });
+        podlet.css({ value: '/foo' });
 
         const server = new FakeExpressServer(podlet, (req, res) => {
             res.podiumSend('<h1>OK!</h1>');
