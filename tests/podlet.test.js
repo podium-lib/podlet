@@ -2098,7 +2098,7 @@ tap.test(
 );
 
 tap.test(
-    'useShadowDOM - css assets with shadow-dom scope - should render link tags inside shadow DOM',
+    'useShadowDOM - css assets with shadow-dom strategy - should render link tags inside shadow DOM',
     async (t) => {
         const options = {
             ...DEFAULT_OPTIONS,
@@ -2107,7 +2107,7 @@ tap.test(
         };
 
         const podlet = new Podlet(options);
-        podlet.css({ value: '/foo', scope: 'shadow-dom' });
+        podlet.css({ value: '/foo', strategy: 'shadow-dom' });
 
         const server = new FakeExpressServer(podlet, (req, res) => {
             res.podiumSend('<h1>OK!</h1>');
@@ -2125,7 +2125,7 @@ tap.test(
 );
 
 tap.test(
-    'useShadowDOM - css assets with all scope - should not render link tags inside shadow DOM',
+    'useShadowDOM - css assets with no strategy - should not render link tags inside shadow DOM',
     async (t) => {
         const options = {
             ...DEFAULT_OPTIONS,
@@ -2134,7 +2134,7 @@ tap.test(
         };
 
         const podlet = new Podlet(options);
-        podlet.css({ value: '/foo', scope: 'all' });
+        podlet.css({ value: '/foo' });
 
         const server = new FakeExpressServer(podlet, (req, res) => {
             res.podiumSend('<h1>OK!</h1>');
