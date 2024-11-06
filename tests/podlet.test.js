@@ -8,6 +8,7 @@ import express from 'express';
 import http from 'http';
 import url from 'url';
 import fs from 'fs';
+import { request } from 'undici';
 
 import Podlet from '../lib/podlet.js';
 
@@ -26,6 +27,7 @@ const SIMPLE_REQ = {
 
 const SIMPLE_RES = {
     locals: {},
+    writeEarlyHints: () => {},
 };
 
 /**
@@ -81,31 +83,13 @@ class FakeHttpServer {
     }
 
     get(options = {}) {
-        return new Promise((resolve, reject) => {
-            let opts = {};
-            if (options.pathname) {
-                opts = url.parse(`${this.address}${options.pathname}`);
-            } else {
-                opts = url.parse(this.address);
-            }
-
-            http.get(opts, (res) => {
-                const chunks = [];
-                res.on('data', (chunk) => {
-                    chunks.push(chunk);
-                });
-                res.on('end', () => {
-                    resolve({
-                        headers: res.headers,
-                        response: options.raw
-                            ? chunks.join('')
-                            : JSON.parse(chunks.join('')),
-                    });
-                });
-            }).on('error', (error) => {
-                reject(error);
-            });
-        });
+        const url = new URL(`${this.address}${options.pathname}`);
+        return {
+            async result() {
+                const { statusCode, headers, body } = await request(url);
+                return { statusCode, headers, body };
+            },
+        };
     }
 }
 
@@ -170,6 +154,7 @@ class FakeExpressServer {
 
             http.get(opts, (res) => {
                 const chunks = [];
+                options?.onHeaders && options.onHeaders(res.headers);
                 res.on('data', (chunk) => {
                     chunks.push(chunk);
                 });
@@ -946,7 +931,6 @@ tap.test(
             {
                 value: '/foo/bar',
                 data: {
-                    // @ts-expect-error Testing older input
                     bar: 'a',
                     foo: 'b',
                 },
@@ -1014,7 +998,8 @@ tap.test(
         });
 
         await server.listen();
-        await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+        const res = server.get({ pathname: '/podium-resource/foo/bar' });
+        await res.result();
         await server.close();
     },
 );
@@ -1044,7 +1029,8 @@ tap.test(
         });
 
         await server.listen();
-        await server.get({ raw: true, pathname: '/podium-resource/foo/bar' });
+        const res = server.get({ pathname: '/podium-resource/foo/bar' });
+        await res.result();
         await server.close();
     },
 );
@@ -1896,5 +1882,271 @@ tap.test(
         await server.get({ path: '/foo/1234' });
         await server.close();
         t.end();
+    },
+);
+
+// #############################################
+// Asset sending using Link header
+// #############################################
+
+tap.test('assets - .js() - should send Link header', async (t) => {
+    t.plan(1);
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
+
+    podlet.js({
+        value: '/scripts.js',
+        type: 'module',
+        async: true,
+        data: { foo: 'bar' },
+    });
+
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    t.equal(
+        result.headers.link,
+        '</scripts.js>; async=true; type=module; data-foo=bar; asset-type=script',
+    );
+    await server.close();
+});
+
+tap.test('assets - .css() - should send assets respecting scope', async (t) => {
+    t.plan(1);
+    const podlet = new Podlet({
+        name: 'foo',
+        version: 'v1.0.0',
+        pathname: '/',
+        development: true,
+    });
+
+    podlet.css([
+        { value: '/styles1.css', scope: 'content' },
+        { value: '/styles2.css', scope: 'fallback' },
+    ]);
+
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+    t.equal(
+        result.headers.link,
+        '</styles1.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+    );
+    await server.close();
+});
+
+tap.test(
+    'assets - .css() - should send assets using Link header respecting scope - fallback',
+    async (t) => {
+        t.plan(1);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
+            fallback: '/fallback',
+        });
+
+        podlet.css([
+            { value: '/styles1.css', scope: 'content' },
+            { value: '/styles2.css', scope: 'fallback' },
+        ]);
+
+        const server = new FakeExpressServer(
+            podlet,
+            undefined,
+            undefined,
+            (req, res) => {
+                res.podiumSend('<h1>OK!</h1>');
+            },
+        );
+
+        await server.listen();
+        const result = await server.get({ path: '/fallback', raw: true });
+        t.equal(
+            result.headers.link,
+            '</styles2.css>; type=text/css; rel=stylesheet; scope=fallback; asset-type=style',
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'assets - .js() and .css() - should send assets using Link header',
+    async (t) => {
+        t.plan(1);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
+        });
+
+        podlet.js({
+            value: '/scripts.js',
+            type: 'module',
+            async: true,
+            data: [{ key: 'foo', value: 'bar' }],
+            scope: 'content',
+        });
+        podlet.css({ value: '/styles.css', scope: 'content' });
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+        t.equal(
+            result.headers.link,
+            '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'assets - .js() and .css() - Link headers - should be sent before body',
+    async (t) => {
+        t.plan(4);
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            development: true,
+        });
+
+        podlet.js({
+            value: '/scripts.js',
+            type: 'module',
+            async: true,
+            data: [{ key: 'foo', value: 'bar' }],
+            scope: 'content',
+        });
+        podlet.css({ value: '/styles.css', scope: 'content' });
+
+        const orderArray = [];
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.sendHeaders();
+            setTimeout(() => {
+                res.podiumSend('<h1>OK!</h1>');
+            }, 1000);
+        });
+
+        await server.listen();
+        let start = 0;
+        const result = await server.get({
+            raw: true,
+            onHeaders(headers) {
+                t.equal(
+                    headers.link,
+                    '</scripts.js>; async=true; type=module; data-foo=bar; scope=content; asset-type=script, </styles.css>; type=text/css; rel=stylesheet; scope=content; asset-type=style',
+                );
+                orderArray.push('assets');
+                start = Date.now();
+            },
+        });
+        const timeTaken = Date.now() - start;
+        orderArray.push('body');
+        t.match(result.response, /<h1>OK!<\/h1>/);
+        t.same(orderArray, ['assets', 'body']);
+        t.ok(timeTaken > 900);
+        await server.close();
+    },
+);
+
+// #############################################
+// Wrap content using shadow DOM
+// #############################################
+
+tap.test(
+    'useShadowDOM - use of useShadowDOM flag - should render content inside shadow DOM',
+    async (t) => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            name: 'my-podlet',
+            useShadowDOM: true,
+        };
+
+        const podlet = new Podlet(options);
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+
+        t.match(
+            result.response.replaceAll(/\s+/g, ''),
+            /<my-podlet><templateshadowrootmode="open"><h1>OK!<\/h1><\/template><\/my-podlet>/,
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'useShadowDOM - css assets with shadow-dom strategy - should render link tags inside shadow DOM',
+    async (t) => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            name: 'my-podlet',
+            useShadowDOM: true,
+        };
+
+        const podlet = new Podlet(options);
+        podlet.css({ value: '/foo', strategy: 'shadow-dom' });
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+
+        t.match(
+            result.response.replaceAll(/\s+/g, ''),
+            /<my-podlet><templateshadowrootmode="open"><linkhref="\/foo"type="text\/css"rel="stylesheet"><h1>OK!<\/h1><\/template><\/my-podlet>/,
+        );
+        await server.close();
+    },
+);
+
+tap.test(
+    'useShadowDOM - css assets with no strategy - should not render link tags inside shadow DOM',
+    async (t) => {
+        const options = {
+            ...DEFAULT_OPTIONS,
+            name: 'my-podlet',
+            useShadowDOM: true,
+        };
+
+        const podlet = new Podlet(options);
+        podlet.css({ value: '/foo' });
+
+        const server = new FakeExpressServer(podlet, (req, res) => {
+            res.podiumSend('<h1>OK!</h1>');
+        });
+
+        await server.listen();
+        const result = await server.get({ raw: true });
+
+        t.match(
+            result.response.replaceAll(/\s+/g, ''),
+            /<my-podlet><templateshadowrootmode="open"><h1>OK!<\/h1><\/template><\/my-podlet>/,
+        );
+        await server.close();
     },
 );

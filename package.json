@@ -1,6 +1,6 @@
 {
   "name": "@podium/podlet",
-  "version": "5.1.19",
+  "version": "5.2.0-next.10",
   "type": "module",
   "description": "Module for building page fragment servers in a micro frontend architecture.",
   "license": "MIT",
@@ -34,8 +34,8 @@
   },
   "dependencies": {
     "@metrics/client": "2.5.3",
+    "@podium/schemas": "5.1.0",
     "@podium/proxy": "5.0.29",
-    "@podium/schemas": "5.0.6",
     "@podium/utils": "5.3.1",
     "abslog": "2.4.4",
     "ajv": "8.17.1",
@@ -55,6 +55,7 @@
     "prettier": "3.3.3",
     "semantic-release": "24.1.2",
     "tap": "18.8.0",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "undici": "^6.19.7"
   }
 }

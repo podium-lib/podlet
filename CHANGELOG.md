@@ -1,3 +1,10 @@
+# [5.2.0-next.10](https://github.com/podium-lib/podlet/compare/v5.2.0-next.9...v5.2.0-next.10) (2024-11-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @podium/proxy to v5.0.29 ([0bbc78b](https://github.com/podium-lib/podlet/commit/0bbc78b07a7f3059cb8f659a23c75896c1081b2f))
+
 ## [5.1.19](https://github.com/podium-lib/podlet/compare/v5.1.18...v5.1.19) (2024-11-04)
 
 
