@@ -1,3 +1,27 @@
+# [5.2.0](https://github.com/podium-lib/podlet/compare/v5.1.19...v5.2.0) (2024-11-06)
+
+
+### Bug Fixes
+
+* ensure both key/value and object conversion are supported for JS data attributes ([f243d60](https://github.com/podium-lib/podlet/commit/f243d607356166cd77c83eb72ef7ea84f4b95d80))
+* force release 5.2.0-next.2 ([b2fc84c](https://github.com/podium-lib/podlet/commit/b2fc84cd6ced3716aa0964d76f55063db5c37fce))
+* force release 5.2.0-next.2 ([84223e8](https://github.com/podium-lib/podlet/commit/84223e823125544eb40cbd50b2558bcb78ba9ce6))
+* force release 5.2.0-next.2 ([4f5f19d](https://github.com/podium-lib/podlet/commit/4f5f19d9e486461b822dddf4bf278207927c63be))
+* force release 5.2.0-next.2 ([a5a1953](https://github.com/podium-lib/podlet/commit/a5a19536aab17130e79f14b2a8d7e7f58e61d0f0))
+* sharpen up shadow dom usage assertion ([a47c8bc](https://github.com/podium-lib/podlet/commit/a47c8bc7bb33bc6c685d882a7f922cd39914a874))
+* tag asset type when sending hint headers ([56c8614](https://github.com/podium-lib/podlet/commit/56c86144207956c63c7ce1d1103efe4f8ff7d7bf))
+* **types:** fix AssetJsLike type ([19494f5](https://github.com/podium-lib/podlet/commit/19494f51c338468c362668678654c119993795db))
+* update @podium/schemas to 5.1.0 ([412f03b](https://github.com/podium-lib/podlet/commit/412f03b1dc8dfdc7e89be99825e7966127c9d990))
+* update @podium/utils ([719c1e0](https://github.com/podium-lib/podlet/commit/719c1e0ae4e06144e084e8b95bd04d94313b116e))
+* use more appropriate strategy instead of scope ([0674a81](https://github.com/podium-lib/podlet/commit/0674a812abe9c246f4c007e1869723dc7c0293a0))
+
+
+### Features
+
+* add DSD shadow DOM encapsulation support ([02c9a64](https://github.com/podium-lib/podlet/commit/02c9a64a6bb2f460c035416e43405ae380cb6d1c))
+* automatically send assets with content/fallback requests as 103 early hints ([c4c8c88](https://github.com/podium-lib/podlet/commit/c4c8c889bc491b8a3c4a896220d1205164e6fde4))
+* replace early hints with link header ([815ea97](https://github.com/podium-lib/podlet/commit/815ea97df599676a6a1dd56dd6aeef4f91b27c95))
+
 # [5.2.0-next.10](https://github.com/podium-lib/podlet/compare/v5.2.0-next.9...v5.2.0-next.10) (2024-11-06)
 
 
