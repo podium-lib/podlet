@@ -1,3 +1,10 @@
+## [5.2.2](https://github.com/podium-lib/podlet/compare/v5.2.1...v5.2.2) (2024-11-14)
+
+
+### Bug Fixes
+
+* set content-type header  ([#443](https://github.com/podium-lib/podlet/issues/443)) ([5af702a](https://github.com/podium-lib/podlet/commit/5af702a59e38eb700befce6c41e1065742df1ce3)), closes [#442](https://github.com/podium-lib/podlet/issues/442)
+
 ## [5.2.1](https://github.com/podium-lib/podlet/compare/v5.2.0...v5.2.1) (2024-11-11)
 
 
