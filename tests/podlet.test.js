@@ -1258,6 +1258,20 @@ tap.test(
     },
 );
 
+tap.test('res.podiumSend() - should set content-type text/html', async (t) => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    t.equal(result.response, '<h1>OK!</h1>');
+    t.equal(result.headers['content-type'], 'text/html; charset=utf-8');
+    await server.close();
+});
+
 // #############################################
 // .defaults()
 // #############################################
