@@ -112,6 +112,10 @@ class FakeExpressServer {
         }
         if (onFallbackRoute)
             this.app.get(podlet.fallback({ prefix: true }), onFallbackRoute);
+        this.app.get(podlet.manifest(), (req, res) => {
+            const manifest = JSON.parse(JSON.stringify(podlet));
+            res.status(200).json(manifest);
+        });
         this.app.use(
             onRequest ||
                 ((req, res) => {
@@ -1271,6 +1275,24 @@ tap.test('res.podiumSend() - should set content-type text/html', async (t) => {
     t.equal(result.headers['content-type'], 'text/html; charset=utf-8');
     await server.close();
 });
+
+tap.test(
+    'manifest.json - should set content-type application/json',
+    async (t) => {
+        const podlet = new Podlet(DEFAULT_OPTIONS);
+        const server = new FakeExpressServer(podlet);
+
+        await server.listen();
+        const result = await server.get({ raw: true, path: podlet.manifest() });
+
+        t.ok(JSON.parse(result.response));
+        t.equal(
+            result.headers['content-type'],
+            'application/json; charset=utf-8',
+        );
+        await server.close();
+    },
+);
 
 // #############################################
 // .defaults()
