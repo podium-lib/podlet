@@ -1,3 +1,10 @@
+## [5.2.4](https://github.com/podium-lib/podlet/compare/v5.2.3...v5.2.4) (2024-11-25)
+
+
+### Bug Fixes
+
+* don't set content-type text/html for manifest route ([#445](https://github.com/podium-lib/podlet/issues/445)) ([62e90b6](https://github.com/podium-lib/podlet/commit/62e90b6e37a903817191ee422d8d5dc56f975592))
+
 ## [5.2.3](https://github.com/podium-lib/podlet/compare/v5.2.2...v5.2.3) (2024-11-18)
 
 
