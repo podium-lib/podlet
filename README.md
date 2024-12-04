@@ -6,7 +6,6 @@ See the [official Podium documentation](https://podium-lib.io/) site.
 
 [![Dependencies](https://img.shields.io/david/podium-lib/podlet.svg?style=flat-square)](https://david-dm.org/podium-lib/podlet)
 [![GitHub Actions status](https://github.com/podium-lib/podlet/workflows/Run%20Lint%20and%20Tests/badge.svg)](https://github.com/podium-lib/podlet/actions?query=workflow%3A%22Run+Lint+and+Tests%22)
-[![Known Vulnerabilities](https://snyk.io/test/github/podium-lib/podlet/badge.svg?targetFile=package.json&style=flat-square)](https://snyk.io/test/github/podium-lib/podlet?targetFile=package.json)
 
 This is a module for building a podlet server. A podlet server is responsible for
 generating HTML fragments which can then be used in a [@podium/layout] server to compose a
