@@ -18,22 +18,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
-      - name: npm install
-        run: npm install
+      - run: npm ci
 
-      - name: npm lint
-        run: npm run lint
+      - run: npm run lint
 
-      - name: npm types
-        run: npm run types
+      - run: npm run types
 
-      - name: npm test
-        run: npm test
+      - run: npm test
 
-      - name: npx semantic-release
-        run: npx semantic-release
+      - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
