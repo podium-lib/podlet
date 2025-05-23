@@ -1048,3 +1048,4 @@ SOFTWARE.
 [abslog]: https://github.com/trygve-lie/abslog 'abslog'
 [pathname]: https://developer.mozilla.org/en-US/docs/Web/API/HTMLHyperlinkElementUtils/pathname 'pathname'
 [url]: https://developer.mozilla.org/en-US/docs/Web/API/URL 'URL'
+[Fastify Podlet Plugin]: https://github.com/podium-lib/fastify-podlet 'Fastify Podlet Plugin'
