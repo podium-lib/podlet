@@ -47,7 +47,7 @@
     "@podium/test-utils": "3.0.17",
     "@podium/typescript-config": "1.0.0",
     "@types/node": "20.17.57",
-    "@types/readable-stream": "4.0.18",
+    "@types/readable-stream": "4.0.20",
     "eslint": "9.25.1",
     "express": "4.20.0",
     "json-stringify-safe": "5.0.1",
