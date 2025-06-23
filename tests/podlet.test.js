@@ -10,7 +10,7 @@ import url from 'url';
 import fs from 'fs';
 import { request } from 'undici';
 
-import Podlet from '../lib/podlet.js';
+import Podlet, { html } from '../lib/podlet.js';
 
 const currentDirectory = dirname(url.fileURLToPath(import.meta.url));
 
@@ -1266,6 +1266,20 @@ tap.test('res.podiumSend() - should set content-type text/html', async (t) => {
     const podlet = new Podlet(DEFAULT_OPTIONS);
     const server = new FakeExpressServer(podlet, (req, res) => {
         res.podiumSend('<h1>OK!</h1>');
+    });
+
+    await server.listen();
+    const result = await server.get({ raw: true });
+
+    t.equal(result.response, '<h1>OK!</h1>');
+    t.equal(result.headers['content-type'], 'text/html; charset=utf-8');
+    await server.close();
+});
+
+tap.test('res.podiumSend() - html tagged template literal', async (t) => {
+    const podlet = new Podlet(DEFAULT_OPTIONS);
+    const server = new FakeExpressServer(podlet, (req, res) => {
+        res.podiumSend(html`<h1>OK!</h1>`);
     });
 
     await server.listen();
