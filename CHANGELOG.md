@@ -1,3 +1,10 @@
+# [5.3.0](https://github.com/podium-lib/podlet/compare/v5.2.4...v5.3.0) (2025-06-24)
+
+
+### Features
+
+* add support for html tagged template literal ([#460](https://github.com/podium-lib/podlet/issues/460)) ([356244a](https://github.com/podium-lib/podlet/commit/356244a6d345f688037298830b05824487a12399))
+
 ## [5.2.4](https://github.com/podium-lib/podlet/compare/v5.2.3...v5.2.4) (2024-11-25)
 
 
