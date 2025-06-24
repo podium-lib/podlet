@@ -1,5 +1,7 @@
 # [5.3.0](https://github.com/podium-lib/podlet/compare/v5.2.4...v5.3.0) (2025-06-24)
 
+This release introduces the html template literal, a safer way to use podiumSend.
+See the [release blog post](https://podium-lib.io/blog/html-template-literal) for more information.
 
 ### Features
 
