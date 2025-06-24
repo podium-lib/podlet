@@ -33,7 +33,7 @@ Building a simple podlet server using [Express].
 
 ```js
 import express from 'express';
-import Podlet from '@podium/podlet';
+import Podlet, { html } from '@podium/podlet';
 
 // create a new podlet instance
 const podlet = new Podlet({
@@ -56,7 +56,7 @@ app.get(podlet.manifest(), (req, res) => {
 
 // create a route to serve the podlet's content
 app.get(podlet.content(), (req, res) => {
-    res.podiumSend(`<div>hello world</div>`);
+    res.podiumSend(html`<div>hello world</div>`);
 });
 
 // start the app on port 7100
@@ -273,7 +273,7 @@ Please note the following caveats when using this feature:
 You can include a `<style>` tag before your content
 
 ```js
-res.podiumSend(`
+res.podiumSend(html`
 	<style>
 		...styles here...
 	</style>
@@ -285,7 +285,7 @@ You can have your podlet CSS included for you by using the "shadow-dom" scope
 
 ```js
 podlet.css({ value: '/path/to/css', scope: 'shadow-dom' });
-res.podiumSend(`
+res.podiumSend(html`
 	<div>...content here...</div>
 `);
 ```
@@ -868,7 +868,7 @@ app.post(podlet.proxy({ target: '/api', name: 'api' }), (req, res) => { ... });
 // content route serving an HTML form
 app.get(podlet.content(), (req, res) => {
     const ctx = res.locals.podium.context;
-    res.podiumSend(`
+    res.podiumSend(html`
         <form action="${ctx.mountOrigin}${ctx.publicPathname}/api" method="post">
             [ ... ]
         </form>
@@ -891,7 +891,7 @@ _Example of sending an HTML fragment:_
 
 ```js
 app.get(podlet.content(), (req, res) => {
-    res.podiumSend('<h1>Hello World</h1>');
+    res.podiumSend(html`<h1>Hello World</h1>`);
 });
 ```
 
@@ -969,6 +969,49 @@ podlet.view(data => `<!doctype html>
     </body>
 </html>`;
 );
+```
+
+## html
+
+Tagged template literal that automatically escapes the different inputs to prevent XSS.
+
+There are two exceptions that do not get escaped:
+
+- [The result of a podlet `fetch`](https://github.com/podium-lib/client#fetchincoming-options) (relevant for layouts).
+- [Strings wrapped in `DangerouslyIncludeUnescapedHTML`](#dangerouslyincludeunescapedhtml).
+
+Use with [podiumSend](#respodiumsendfragment).
+
+```js
+import { html } from "@podium/podlet";
+```
+
+## escape
+
+The same escape function used by [`html`](#html) in case you want to escape something manually, for example in APIs.
+
+```js
+import { escape } from "@podium/podlet";
+```
+
+## DangerouslyIncludeUnescapedHTML
+
+Lets you opt a string you trust out of being escaped.
+
+```js
+import { html, DangerouslyIncludeUnescapedHTML } from "@podium/podlet";
+
+const greeting = new DangerouslyIncludeUnescapedHTML({ __content:  "<em>Howdy</em>" });
+const result = html`<p>${greeting} partner!</p>`
+```
+
+## TemplateResult
+
+This is the class type returned by the [`html`](#html) tagged template literal.
+You can use it for typing, or for advanced cases if `html` does not work for you.
+
+```js
+import { TemplateResult } from "@podium/podlet";
 ```
 
 ## Development mode
