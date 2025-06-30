@@ -33,7 +33,7 @@
     "types:fixup": "node ./fixup.js"
   },
   "dependencies": {
-    "@metrics/client": "2.5.4",
+    "@metrics/client": "2.5.5",
     "@podium/schemas": "5.1.0",
     "@podium/proxy": "5.0.33",
     "@podium/utils": "5.5.0",
