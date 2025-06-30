@@ -1,3 +1,10 @@
+## [5.3.2](https://github.com/podium-lib/podlet/compare/v5.3.1...v5.3.2) (2025-06-30)
+
+
+### Bug Fixes
+
+* update type for podiumSend to allow TemplateResult ([7a0f53f](https://github.com/podium-lib/podlet/commit/7a0f53f0888ce97862147a44cb04fad3192d5aa2)), closes [#460](https://github.com/podium-lib/podlet/issues/460)
+
 ## [5.3.1](https://github.com/podium-lib/podlet/compare/v5.3.0...v5.3.1) (2025-06-30)
 
 
