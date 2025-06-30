@@ -1,3 +1,10 @@
+## [5.3.1](https://github.com/podium-lib/podlet/compare/v5.3.0...v5.3.1) (2025-06-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency @metrics/client to v2.5.5 ([#461](https://github.com/podium-lib/podlet/issues/461)) ([d6a2b4e](https://github.com/podium-lib/podlet/commit/d6a2b4e21c0f98e6d40cc6ab163c62397cdbfd01))
+
 # [5.3.0](https://github.com/podium-lib/podlet/compare/v5.2.4...v5.3.0) (2025-06-24)
 
 This release introduces the html template literal, a safer way to use podiumSend.
