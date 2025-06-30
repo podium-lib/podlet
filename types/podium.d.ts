@@ -66,7 +66,7 @@ declare global {
              *     res.podiumSend('<h1>Hello World</h1>');
              * });
              */
-            podiumSend(fragment: string, ...args: unknown[]): Response;
+            podiumSend(fragment: string | TemplateResult, ...args: unknown[]): Response;
         }
     }
 }
