@@ -13,18 +13,16 @@ permissions:
   id-token: write # to enable use of OIDC for npm provenance, Trusted Publisher
   issues: write # to be able to comment on released issues
   pull-requests: write # to be able to comment on released pull requests
-  
+
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
 
       - run: npm ci
 
@@ -37,4 +35,3 @@ jobs:
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
