@@ -1,3 +1,10 @@
+## [5.3.3](https://github.com/podium-lib/podlet/compare/v5.3.2...v5.3.3) (2025-12-15)
+
+
+### Bug Fixes
+
+* **deps:** update all dependencies (non-major) ([#477](https://github.com/podium-lib/podlet/issues/477)) ([2399878](https://github.com/podium-lib/podlet/commit/2399878ae6312e5dba305f576eb8b280dda8db3c))
+
 ## [5.3.2](https://github.com/podium-lib/podlet/compare/v5.3.1...v5.3.2) (2025-06-30)
 
 
