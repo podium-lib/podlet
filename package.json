@@ -44,7 +44,7 @@
   "devDependencies": {
     "@podium/eslint-config": "1.0.19",
     "@podium/semantic-release-config": "2.0.7",
-    "@podium/test-utils": "3.0.23",
+    "@podium/test-utils": "3.0.24",
     "@podium/typescript-config": "1.0.0",
     "@types/node": "24.10.9",
     "@types/readable-stream": "4.0.21",
