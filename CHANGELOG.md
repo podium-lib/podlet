@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/podium-lib/podlet/compare/v5.3.4...v5.4.0) (2026-04-07)
+
+
+### Features
+
+* add support for fetchpriority in podlet assets ([#487](https://github.com/podium-lib/podlet/issues/487)) ([11a85e5](https://github.com/podium-lib/podlet/commit/11a85e57293e4fb4a4bd2cc5dc792a4131bd0f3b))
+
 ## [5.3.4](https://github.com/podium-lib/podlet/compare/v5.3.3...v5.3.4) (2026-02-16)
 
 
