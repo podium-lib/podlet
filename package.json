@@ -56,6 +56,6 @@
         "semantic-release": "25.0.3",
         "tap": "21.5.0",
         "typescript": "5.9.3",
-        "undici": "7.24.0"
+        "undici": "7.28.0"
     }
 }
