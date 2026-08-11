@@ -40,7 +40,7 @@ const podlet = new Podlet({
     name: 'myPodlet',
     version: '1.3.1',
     pathname: '/',
-    development: true,
+    isLocalhost: true,
 });
 
 // create a new express app instance
@@ -84,7 +84,7 @@ const podlet = new Podlet(options);
 | content      | `string`  | `/`              |          |
 | fallback     | `string`  |                  |          |
 | logger       | `object`  |                  |          |
-| development  | `boolean` | `false`          |          |
+| isLocalhost  | `boolean` | `false`          |          |
 | useShadowDOM | `boolean` | `false`          |          |
 
 #### name
@@ -245,16 +245,16 @@ _Example:_
 
 ```js
 const podlet = new Podlet({
-    logger: console;
+    logger: console,
 });
 ```
 
 Under the hood [abslog] is used to abstract out logging. Please see [abslog] for
 further details.
 
-#### development
+#### isLocalhost
 
-Turns development mode on or off. See the section about development mode.
+Turns development mode on or off. See the section about [development mode](#development-mode).
 
 #### useShadowDOM
 
@@ -315,7 +315,7 @@ used directly by library users to create podlet servers.
 
 What it does:
 
--   Handles detection of development mode and sets appropriate defaults
+-   Handles detection of [development mode](#development-mode) and sets appropriate defaults
 -   Runs context deserializing on the incoming request and sets a context object at `HttpIncoming.context`.
 
 Returns an [HttpIncoming] object.
@@ -883,7 +883,7 @@ app.listen(7100);
 Method on the `http.ServerResponse` object for sending an HTML fragment. Calls
 the send / write method on the `http.ServerResponse` object.
 
-When in development mode this method will wrap the provided fragment in a
+When in [development mode](#development-mode) this method will wrap the provided fragment in a
 default HTML document before dispatching. When not in development mode, this
 method will just dispatch the fragment.
 
@@ -897,7 +897,7 @@ app.get(podlet.content(), (req, res) => {
 
 ### .defaults(context)
 
-Alters the default context set when in development mode.
+Alters the default context set when in [development mode](#development-mode).
 
 By default this context has the following shape:
 
@@ -946,11 +946,11 @@ podlet.defaults({
 ```
 
 N.B. The default development mode context will only be appended to the response
-when the constructor argument `development` is set to `true`.
+when the constructor argument `isLocalhost` is set to `true`.
 
 ### .view(template)
 
-Override the default encapsulating HTML document when in development mode.
+Override the default encapsulating HTML document when in [development mode](#development-mode).
 
 Takes a function in the following shape:
 
@@ -1028,7 +1028,7 @@ podlet without either an encapsulating HTML document or a Podium context that
 the podlet might need to function properly.
 
 To solve this it is possible to switch a podlet to development mode by setting
-the `development` argument in the constructor to `true`.
+the `isLocalhost` argument in the constructor to `true`.
 
 When in development mode a default context on the HTTP response will be set and
 an encapsulating HTML document will be provided (so long as `res.podiumSend()`
@@ -1051,7 +1051,7 @@ _Example of turning on development mode only in local development:_
 
 ```js
 const podlet = new Podlet({
-    development: process.env.NODE_ENV !== 'production';
+    isLocalhost: process.env.NODE_ENV !== 'production';
 });
 ```
 
