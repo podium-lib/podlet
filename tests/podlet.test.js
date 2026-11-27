@@ -1412,6 +1412,34 @@ tap.test(
 );
 
 tap.test(
+    '.defaults() - constructor argument "isLocalhost" is to "true" - should append a default context to "res.locals"',
+    async (t) => {
+        const podlet = new Podlet({
+            name: 'foo',
+            version: 'v1.0.0',
+            pathname: '/',
+            isLocalhost: true,
+        });
+        const server = new FakeExpressServer(podlet);
+        const address = await server.listen();
+        const result = await server.get();
+
+        t.equal(result.response.podium.context.debug, 'false');
+        t.equal(result.response.podium.context.locale, 'en-US');
+        t.equal(result.response.podium.context.deviceType, 'desktop');
+        t.equal(result.response.podium.context.requestedBy, 'foo');
+        t.equal(result.response.podium.context.mountOrigin, address);
+        t.equal(result.response.podium.context.mountPathname, '/');
+        t.equal(
+            result.response.podium.context.publicPathname,
+            '/podium-resource/foo',
+        );
+
+        await server.close();
+    },
+);
+
+tap.test(
     '.defaults() - set "context" argument where a key overrides one existing context value - should override default context value but keep rest untouched',
     async (t) => {
         const podlet = new Podlet({
